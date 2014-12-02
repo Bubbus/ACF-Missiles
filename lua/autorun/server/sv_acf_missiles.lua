@@ -17,41 +17,6 @@
 if not ACF then error("ACF is not installed - ACF Missiles require it!") end
 
 
-if not ACF_CreateBulletSWEP then
-
-	function ACF_CreateBulletSWEP( BulletData, Swep, LagComp )
-
-		if not IsValid(Swep) then error("Tried to create swep round with no swep or owner!") return end
-		
-		local owner = Swep:IsPlayer() and Swep or Swep.Owner or BulletData.Owner or Ply or error("Tried to create swep round with unowned swep!")
-
-		BulletData = table.Copy(BulletData)
-		
-		if LagComp then
-			BulletData.LastThink = SysTime()
-			
-			BulletData.Owner = owner
-			BulletData.HandlesOwnIteration = true
-			BulletData.OnRemoved = ACF_SWEP_OnRemoved
-		end
-		
-		BulletData.TraceBackComp = 0
-		--BulletData.TraceBackComp = owner:GetVelocity():Dot(BulletData.Flight:GetNormalized())
-		BulletData.Gun = Swep
-		
-		BulletData.Filter = BulletData.Filter or {}
-		BulletData.Filter[#BulletData.Filter + 1] = Swep
-		BulletData.Filter[#BulletData.Filter + 1] = owner
-		
-		ACF_CustomBulletLaunch(BulletData)
-		
-		return BulletData
-		
-	end
-	
-end
-
-
 
 
 if not ACF_BulletLaunch then
@@ -98,25 +63,6 @@ if not ACF_BulletLaunch then
 
 end
 
-
-
-if not ACF_CustomBulletLaunch then
-
-	function ACF_CustomBulletLaunch(BData)
-
-		ACF_BulletLaunch(BData)
-		
-		if BData.HandlesOwnIteration then
-			bullets[BData.Owner] = bullets[BData.Owner] or {}
-			local btbl = bullets[BData.Owner]
-			local btblIdx = #btbl+1
-			BData.OwnerIndex = btblIdx
-			btbl[btblIdx] = BData
-		end
-		
-	end
-
-end
 
 
 
