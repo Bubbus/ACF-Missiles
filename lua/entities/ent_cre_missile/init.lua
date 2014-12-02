@@ -29,7 +29,7 @@ if SERVER then
 		BulletData.IsShortForm = true
 		
 		missile:SetBulletData(BulletData)
-		missile:SetGuidance(ACF.Guidance.Dumb())
+		missile:SetGuidance(ACF.Guidance.Radar())
 		
 		missile:Spawn()
 	end)
@@ -59,10 +59,10 @@ function ENT:Initialize()
 	--util.SpriteTrail(self.Entity, 0, Color(255,255,255,255), false, 8, 128, 3, 1/16, "trails/smoke.vmt")
 
 	local Time = SysTime()
-	self.MotorLength = 1
+	self.MotorLength = 10
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = 0.0028
-	self.Motor = 15000
+	self.Motor = 7500
 	self.FlightTime = 0
 	self.CutoutTime = Time + self.MotorLength
 	self.CurPos = self:GetPos()
@@ -186,7 +186,7 @@ function ENT:CalcFlight()
 	local TargetPos = Guidance.TargetPos
 	if TargetPos then
 	
-		local Dist = Pos:Distance(TargetPos)
+		--local Dist = Pos:Distance(TargetPos)
 	
 		-- TODO: move into guidance fuse
 		-- if Dist < Speed / 2 then
@@ -205,15 +205,26 @@ function ENT:CalcFlight()
 		local DirAng = Dir:Angle()
 		local TargetDirRaw = TargetPos - Pos
 		local TargetAngMul = math.max(TargetDirRaw:GetNormalized():Dot(Dir), 0)
-		local NewTargetPos = TargetPos
-		local TargetVel = (NewTargetPos - self.TargetPos) * DeltaTime
+		--local NewTargetPos = TargetPos
+		--local TargetVel = (NewTargetPos - self.TargetPos) * DeltaTime
 
 		--(TargetDirRaw + (Vector(0,0,1.1) - Vel + TargetVel * 20) * Dist / (Speed * 1.1) * TargetAngMul):GetNormalized()
-		local TargetDir = TargetDirRaw
-		local TargetAng = math.acos(TargetDir:Dot(Dir))
+		local TargetDir = TargetDirRaw:GetNormalized()
+		
+		if self.Motor ~= 0 then
+			-- constant, prebake this
+			local gravComp = math.deg(math.asin(self.Gravity / self.Motor))
+			local newTargetAng = TargetDir:Angle()
+			newTargetAng:RotateAroundAxis(DirAng:Right(), gravComp)
+			TargetDir = newTargetAng:Forward()
+		end
+		
+		local TargetAng = math.deg(math.acos(TargetDir:Dot(Dir)))
 
 		local TargetRot = TargetDir:Cross(Dir)
-		DirAng:RotateAroundAxis(TargetRot, -math.min(TargetAng * 60, math.min(Speed / 30,2)))
+		--print(TargetAng)
+		local speedBounds = math.min(Speed / 30,2)
+		DirAng:RotateAroundAxis(TargetRot, -math.Clamp(TargetAng*32, -speedBounds, speedBounds))
 		Dir = DirAng:Forward()
 		--DirAng:RotateAroundAxis(TargetRot,-math.min(TargetAng * 50,100))
 		--self.TargetPos = NewTargetPos
