@@ -67,7 +67,7 @@ end
 
 function this.NewBaseClass()
 	local ret = {}
-	return this.SetSuper(ret, ret)
+	return this.NewSubOf(nil)
 end
 
 
