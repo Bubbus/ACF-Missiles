@@ -32,6 +32,12 @@ this.SeekDelay = 0.2
 -- Missiles may detonate at some point under this range - unless they're travelling so fast that they step right on through.
 this.FuseRange = 300
 
+-- Entities to ignore by default
+this.DefaultFilter = 
+{
+    ent_cre_missile = true
+}
+
 
 -- function this:Draw(ent, duration)
 	-- local Guidance = self:GetGuidance(ent)
@@ -41,8 +47,19 @@ this.FuseRange = 300
 
 function this:Init()
 	self.LastSeek = CurTime() - self.SeekDelay - 0.000001
+    self.Filter = self.DefaultFilter
 end
 
+
+
+-- Use this to make sure you don't alter the shared default filter unintentionally
+function this:GetSeekFilter(class)
+    if self.Filter == self.DefaultFilter then
+        self.Filter = table.Copy(self.DefaultFilter)
+    end
+    
+    return self.Filter
+end
 
 
 
@@ -114,9 +131,10 @@ function this:AcquireLock(missile)
 	local foundAnimIdx = 1
 	local foundEnt
 	
+    local filter = self.Filter
 	for i=1, #found do
 		foundEnt = found[i]
-		if IsValid(foundEnt:GetPhysicsObject()) then
+		if IsValid(foundEnt:GetPhysicsObject()) and not self.Filter[foundEnt:GetClass()] then
 			foundAnim[foundAnimIdx] = foundEnt
 			foundAnimIdx = foundAnimIdx + 1
 		end
