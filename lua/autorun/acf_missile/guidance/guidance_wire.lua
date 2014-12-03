@@ -100,7 +100,8 @@ function this:GetGuidance(missile)
     
     local posOutput = outputs[self.InputName]
     
-	return {TargetPos = posOutput.Value}
+    self.TargetPos = posOutput.Value
+	return {TargetPos = self.TargetPos}
 	
 end
 

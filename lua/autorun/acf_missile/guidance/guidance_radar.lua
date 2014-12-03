@@ -29,9 +29,6 @@ this.SeekTolerance = 0.95
 -- This instance must wait this long between target seeks.
 this.SeekDelay = 0.2
 
--- Missiles may detonate at some point under this range - unless they're travelling so fast that they step right on through.
-this.FuseRange = 300
-
 -- Entities to ignore by default
 this.DefaultFilter = 
 {
@@ -89,6 +86,7 @@ function this:GetGuidance(missile)
 		self.Target = nil
 		return {}
 	else
+        self.TargetPos = targetPos
 		return {TargetPos = targetPos}
 	end
 	
