@@ -155,3 +155,63 @@ if not ACF_MakeCrateForBullet then
     end
     
 end
+
+
+
+
+if not ACF_PrintTableAs then
+
+    function ACF_PrintTableAs(tbl, name)
+        local typ = nil
+        local typ2 = nil
+        local vstr = nil
+        for k, v in pairsByKeys(tbl) do
+            typ = type(k)
+            typ2 = type(v)
+            
+            vstr = typ2 == "string" and "\"" .. v .. "\"" or tostring(v)
+            
+            --print(typ, typ2, vstr)
+            
+            if typ2 == "string" then
+                Msg(name, "[\"", tostring(k), "\"]\t\t= ", vstr, "\n")
+            elseif typ2 == "number" then
+                Msg(name, "[\"", tostring(k), "\"]\t\t= ", vstr, "\n")
+            elseif typ2 == "Vector" then
+                Msg(name, "[\"", tostring(k), "\"]\t\t= ", string.format("Vector(%f, %f, %f)", v.x, v.y, v.z), "\n")
+            elseif typ2 == "table" and v.r and v.g and v.b then
+                Msg(name, "[\"", tostring(k), "\"]\t\t= ", string.format("Color(%d, %d, %d)", v.r, v.g, v.b), "\n")
+            elseif typ2 == "boolean" then
+                Msg(name, "[\"", tostring(k), "\"]\t\t= ", vstr, "\n")
+            else		// can't really do these
+                Msg("UNKNOWN TYPE: ", typ2, " AT ", tostring(k), " = ", tostring(vstr), "\n")
+            end
+        end
+        plst = tbl -- reference!
+    end
+
+end
+
+
+
+if not ACF_CompactBulletData then
+
+    function ACF_CompactBulletData(crate)
+        local compact = {}
+        
+        compact["Id"] = 			crate.RoundId
+        compact["Type"] = 		    crate.RoundType
+        compact["PropLength"] = 	crate.RoundPropellant
+        compact["ProjLength"] = 	crate.RoundProjectile
+        compact["Data5"] = 		    crate.RoundData5
+        compact["Data6"] = 		    crate.RoundData6
+        compact["Data7"] = 		    crate.RoundData7
+        compact["Data8"] = 		    crate.RoundData8
+        compact["Data9"] = 		    crate.RoundData9
+        compact["Data10"] = 		crate.RoundData10
+        compact["Colour"] = 		crate:GetColor()
+        
+        return compact
+    end
+    
+end
