@@ -28,8 +28,11 @@ if SERVER then
 		BulletData["Type"]		= "HE"
 		BulletData.IsShortForm = true
 		
+        missile.Launcher = ply
+        
 		missile:SetBulletData(BulletData)
-		missile:SetGuidance(ACF.Guidance.Radar())
+		missile:SetGuidance(ACF.Guidance.Wire())
+        missile:SetFuse(ACF.Fuse.Timed())
 		
 		missile:Spawn()
 	end)
@@ -77,12 +80,12 @@ function ENT:Initialize()
 	self.TorqueMul = Length * 25	--Kinda cheated here because it was unrealistic
 	self.RotAxis = Vector(0,0,0)
 	
-	self.Launcher = self.Entity:GetOwner() or self	--Replace owner with the launcher/rail entity
+	--self.Launcher = self.Entity:GetOwner() or self	--Replace owner with the launcher/rail entity
 	--self.CurTarget = Entity(178) --Replace with any entity you want to target - I generally use Entity( n ) to target a spawned prop with the EntIndex "n"
 	--if IsValid(self.CurTarget) then self.TargetPos = self.CurTarget:GetPos()
 	--else self.TargetPos = Vector(0,0,0) end
 	
-	self:Launch()
+	--self:Launch()
 end
 
 
@@ -121,6 +124,8 @@ end
 
 function ENT:CalcFlight()
 
+    if self.MissileDetonated then return end
+
 	local Ent = self.Entity
 	local Pos = self.CurPos
 	local Dir = self.CurDir
@@ -156,10 +161,12 @@ function ENT:CalcFlight()
 	local tracedata={}
 	tracedata.start = Pos
 	tracedata.endpos = EndPos
-	tracedata.filter = {Ent, Ent:GetOwner()}
+	tracedata.filter = self.Filter
 	local trace = util.TraceLine(tracedata)
 
 	if trace.Hit then		
+        print("DET ")
+        --pbn(trace)
 		self:DoFlight(trace.HitPos)
 		self:Detonate()
 		
@@ -168,19 +175,6 @@ function ENT:CalcFlight()
 
 	
 	local Guidance = self.Guidance:GetGuidance(self)
-	
-	
-	if Guidance.Detonate then
-	
-		local DetonatePos = Guidance.EndPos
-		if DetonatePos then
-			self:DoFlight(DetonatePos)
-		end
-		
-		self:Detonate()
-		return
-		
-	end
 	
 	
 	local TargetPos = Guidance.TargetPos
@@ -223,8 +217,9 @@ function ENT:CalcFlight()
 
 		local TargetRot = TargetDir:Cross(Dir)
 		--print(TargetAng)
-		local speedBounds = math.min(Speed / 30,2)
-		DirAng:RotateAroundAxis(TargetRot, -math.Clamp(TargetAng*32, -speedBounds, speedBounds))
+		local speedBounds = math.min(Speed / 10,8)
+        print(speedBounds, -math.Clamp(TargetAng*64, -speedBounds, speedBounds))
+		DirAng:RotateAroundAxis(TargetRot, -math.Clamp(TargetAng*64, -speedBounds, speedBounds))
 		Dir = DirAng:Forward()
 		--DirAng:RotateAroundAxis(TargetRot,-math.min(TargetAng * 50,100))
 		--self.TargetPos = NewTargetPos
@@ -249,7 +244,19 @@ function ENT:CalcFlight()
 	end
 
 	--print("Vel = "..math.Round(Vel:Length()))
-
+    
+    if self.Fuse:GetDetonate(self, self.Guidance) then
+	
+		local DetonatePos = Guidance.EndPos
+		if DetonatePos then
+			self:DoFlight(DetonatePos)
+		end
+		print("FUSE DET")
+		self:Detonate()
+		return
+		
+	end
+    
 	self.LastVel = Vel
 	self.LastPos = Pos
 	self.CurPos = EndPos
@@ -269,6 +276,19 @@ function ENT:SetGuidance(guidance)
 	self.Guidance = guidance
 	guidance:Configure(self)
 
+    return guidance
+    
+end
+
+
+
+function ENT:SetFuse(fuse)
+
+	self.Fuse = fuse
+    fuse:Configure(self, self.Guidance or self:SetGuidance(ACF.Guidance.Dumb()))
+
+    return fuse
+
 end
 
 
@@ -278,10 +298,35 @@ function ENT:Launch()
 	if not self.Guidance then
 		self:SetGuidance(ACF.Guidance.Dumb())
 	end
+    
+    if not self.Fuse then
+        self:SetFuse(ACF.Fuse.Contact())
+    end
 
+    self.Guidance:Configure(self)
+    self.Fuse:Configure(self, self.Guidance)
+    
 	self.Launched = true
 	self.ThinkDelay = 1 / 66
-	
+	self.Filter = self.Filter or {self}
+    
+    self:SetParent(nil)
+    
+    local Time = SysTime()
+	self.MotorLength = 10
+	self.Gravity = GetConVar("sv_gravity"):GetFloat()
+	self.DragCoef = 0.0028
+	self.Motor = 7500
+	self.FlightTime = 0
+	self.CutoutTime = Time + self.MotorLength
+	self.CurPos = self:GetPos()
+	self.CurDir = self:GetForward()
+	self.LastPos = self.CurPos
+    self.Hit = false
+	self.FirstThink = true
+    
+    
+    
 	local phys = self:GetPhysicsObject()
 	phys:EnableMotion(false)
 	
@@ -306,6 +351,7 @@ end
 function ENT:Detonate()
 
 	self.BulletData.Flight = self.Vel
+    self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
 
 	self.BaseClass.Detonate(self)
 
