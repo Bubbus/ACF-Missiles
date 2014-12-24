@@ -19,20 +19,3 @@ end
 function ENT:Draw()
 	self.Entity:DrawModel() 
 end
-
-
-
-function ENT:OnRemove()
-	if GetConVarNumber("shellshock_enabled") <= 0 then return end
-
-	local ply = LocalPlayer()
-	local Pos = self:GetPos()
-
-	if !IsValid(ply) then return end
-
-	local ShootPos = ply:GetShootPos()
-
-	if (ShootPos - Pos):Length() < 300 then
-		TriggerShellshockFx( 2 )
-	end
-end

@@ -31,7 +31,7 @@ if SERVER then
         missile.Launcher = ply
         
 		missile:SetBulletData(BulletData)
-		missile:SetGuidance(ACF.Guidance.Wire())
+		missile:SetGuidance(ACF.Guidance.Radar())
         missile:SetFuse(ACF.Fuse.Timed())
 		
 		missile:Spawn()
@@ -45,7 +45,6 @@ function ENT:Initialize()
 
 	if !IsValid(self.Entity.Owner) then
 		self.Owner = player.GetAll()[1]
-		--self:Remove()
 	end
 
 	self.Entity:SetOwner(self.Entity.Owner)
@@ -61,13 +60,15 @@ function ENT:Initialize()
 	self.PhysObj:EnableMotion( false )
 	--util.SpriteTrail(self.Entity, 0, Color(255,255,255,255), false, 8, 128, 3, 1/16, "trails/smoke.vmt")
 
-	local Time = SysTime()
+	local Time = CurTime()
 	self.MotorLength = 10
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = 0.0028
 	self.Motor = 7500
 	self.FlightTime = 0
 	self.CutoutTime = Time + self.MotorLength
+	self.LastAngDiff = 0
+	self.LastAngDiffAxis = Vector()
 	self.CurPos = self:GetPos()
 	self.CurDir = self:GetForward()
 	self.LastPos = self.CurPos
@@ -85,7 +86,7 @@ function ENT:Initialize()
 	--if IsValid(self.CurTarget) then self.TargetPos = self.CurTarget:GetPos()
 	--else self.TargetPos = Vector(0,0,0) end
 	
-	--self:Launch()
+	self:Launch()
 end
 
 
@@ -131,29 +132,102 @@ function ENT:CalcFlight()
 	local Dir = self.CurDir
 
 	local LastPos = self.LastPos
-	local InitVel = self.InitialVel
+	local LastVel = self.LastVel
+	local Speed = LastVel:Length()
 	local Flight = self.FlightTime
 
-    local Time = SysTime()
+    local Time = CurTime()
     local DeltaTime = Time - self.LastThink
     self.LastThink = Time
 	Flight = Flight + DeltaTime
 
+	if Speed == 0 then
+		LastVel = Dir
+		Speed = 1
+	end
 
+
+	--Guidance calculations
+	local Guidance = self.Guidance:GetGuidance(self)
+	local TargetPos = Guidance.TargetPos
+
+	if TargetPos then
+		local Dist = Pos:Distance(TargetPos)
+		local TargetVel = Guidance.TargetVel / DeltaTime * 0.03
+		print("TargetVel = "..tostring(TargetVel))
+		local DirRaw = TargetPos - Pos
+		local DirRawNorm = DirRaw:GetNormalized()
+
+		local LockOffset = ((TargetVel - LastVel) * Dist / Speed) or Dir
+		local ProjOffset = LockOffset - LockOffset:Dot(DirRawNorm) * DirRawNorm
+		DirRaw = TargetPos + ProjOffset - Pos
+
+		--TODO:		[x] Add a second rotation that smoothes the oscillations out
+		--			[ ] Prevent the missile from correcting so far that the target falls out of the FOV
+
+		local Axis = LastVel:Cross(DirRaw)
+		local AxisNorm = Axis:GetNormalized()
+		local AngDiff = math.deg(math.asin(Axis:Length() / (Dist * Speed)))
+		print("AngDiff = "..AngDiff)
+
+		if AngDiff > 0 then
+			local Ang = Dir:Angle()
+			Ang:RotateAroundAxis( AxisNorm, math.Clamp(AngDiff,-1,1) )
+
+			print("LastAngDiff = "..self.LastAngDiff)
+			local DeltaAngDiff = (AngDiff - self.LastAngDiff) / DeltaTime * 0.03
+			print("DeltaAngDiff = "..DeltaAngDiff)
+			local LastAxis = self.LastAngDiffAxis or AxisNorm
+			print("LastAxis = "..tostring(LastAxis).."\n")
+
+			Ang:RotateAroundAxis( LastAxis, math.Clamp(DeltaAngDiff,-1,1) )
+			Dir = Ang:Forward()
+
+			self.LastAngDiff = AngDiff
+			self.LastAngDiffAxis = AxisNorm
+		end
+
+
+		debugoverlay.Cross( TargetPos + ProjOffset, 100, 0.05, Color(255,0,0,255), true ) 
+
+	else
+		local DirAng = Dir:Angle()
+		local VelNorm = LastVel:GetNormalized()
+		local AimDiff = Dir - VelNorm
+		local DiffLength = AimDiff:Length()
+		if DiffLength >= 0.01 then
+			local Torque = DiffLength * self.TorqueMul
+			local AngVelDiff = Torque / self.Inertia * DeltaTime
+			local DiffAxis = AimDiff:Cross(Dir):GetNormalized()
+			self.RotAxis = self.RotAxis + DiffAxis * AngVelDiff
+		end
+
+		self.RotAxis = self.RotAxis * 0.99
+        DirAng:RotateAroundAxis(self.RotAxis, self.RotAxis:Length())
+		Dir = DirAng:Forward()
+	end
+
+	
+	
 	--Motor cutout
+	local Vel = Vector()
 	if Time > self.CutoutTime then
 		if self.Motor ~= 0 then
 			self.Entity:StopParticles()
 			self.Motor = 0
 		end
-	end
 
-	--Physics calculations
-	local Vel = self.LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
-	local SpeedSq = Vel:LengthSqr()
-	local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
-	Vel = Vel - Drag
-	local Speed = Vel:Length()
+		--Physics calculations
+		Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
+		local SpeedSq = Vel:LengthSqr()
+		local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
+		Vel = Vel - Drag
+	else
+		Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * 5 * DeltaTime ^ 2
+		local SpeedSq = Vel:LengthSqr()
+		local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale * 5
+		Vel = Vel - Drag
+	end
 
 	local EndPos = Pos + Vel
 
@@ -173,75 +247,7 @@ function ENT:CalcFlight()
 		return
 	end
 
-	
-	local Guidance = self.Guidance:GetGuidance(self)
-	
-	
-	local TargetPos = Guidance.TargetPos
-	if TargetPos then
-	
-		--local Dist = Pos:Distance(TargetPos)
-	
-		-- TODO: move into guidance fuse
-		-- if Dist < Speed / 2 then
-			-- -- TODO: replace self.Hit with instant move-to + detonate.
-			-- self.Hit = true
-			-- self.BulletData.Flight = self.Vel
-			
-			-- tracedata.start = Pos
-			-- tracedata.endpos = TargetPos
-			-- tracedata.filter = {Ent, Ent:GetOwner()}
-			-- local trace = util.TraceLine(tracedata)
-			
-			-- EndPos = trace.HitPos
-		-- end
 
-		local DirAng = Dir:Angle()
-		local TargetDirRaw = TargetPos - Pos
-		local TargetAngMul = math.max(TargetDirRaw:GetNormalized():Dot(Dir), 0)
-		--local NewTargetPos = TargetPos
-		--local TargetVel = (NewTargetPos - self.TargetPos) * DeltaTime
-
-		--(TargetDirRaw + (Vector(0,0,1.1) - Vel + TargetVel * 20) * Dist / (Speed * 1.1) * TargetAngMul):GetNormalized()
-		local TargetDir = TargetDirRaw:GetNormalized()
-		
-		if self.Motor ~= 0 then
-			-- constant, prebake this
-			local gravComp = math.deg(math.asin(self.Gravity / self.Motor))
-			local newTargetAng = TargetDir:Angle()
-			newTargetAng:RotateAroundAxis(DirAng:Right(), gravComp)
-			TargetDir = newTargetAng:Forward()
-		end
-		
-		local TargetAng = math.deg(math.acos(TargetDir:Dot(Dir)))
-
-		local TargetRot = TargetDir:Cross(Dir)
-		--print(TargetAng)
-		local speedBounds = math.min(Speed / 10,8)
-        print(speedBounds, -math.Clamp(TargetAng*64, -speedBounds, speedBounds))
-		DirAng:RotateAroundAxis(TargetRot, -math.Clamp(TargetAng*64, -speedBounds, speedBounds))
-		Dir = DirAng:Forward()
-		--DirAng:RotateAroundAxis(TargetRot,-math.min(TargetAng * 50,100))
-		--self.TargetPos = NewTargetPos
-
-		--print((math.Round(TargetAng * 100) / 100), -math.min(TargetAng * 50,math.min(Speed / 30,2)))
-
-	else
-		local DirAng = Dir:Angle()
-		local VelNorm = Vel:GetNormalized()
-		local AimDiff = Dir - VelNorm
-		local DiffLength = AimDiff:Length()
-		if DiffLength >= 0.01 then
-			local Torque = DiffLength * self.TorqueMul
-			local AngVelDiff = Torque / self.Inertia * DeltaTime
-			local DiffAxis = AimDiff:Cross(Dir):GetNormalized()
-			self.RotAxis = self.RotAxis + DiffAxis * AngVelDiff
-		end
-
-		self.RotAxis = self.RotAxis * 0.93
-        DirAng:RotateAroundAxis(self.RotAxis, self.RotAxis:Length())
-		Dir = DirAng:Forward()
-	end
 
 	--print("Vel = "..math.Round(Vel:Length()))
     
@@ -263,8 +269,8 @@ function ENT:CalcFlight()
 	self.CurDir = Dir
 	self.FlightTime = Flight
 	
-	debugoverlay.Line(self.LastPos, self.LastPos + self.LastVel:GetNormalized() * 50, 10, Color(0, 255, 0))
-	debugoverlay.Line(self.LastPos, self.LastPos + self.CurDir:GetNormalized()  * 50, 10, Color(0, 0, 255))
+	debugoverlay.Line(EndPos, EndPos + Vel:GetNormalized() * 50, 10, Color(0, 255, 0))
+	debugoverlay.Line(EndPos, EndPos + Dir:GetNormalized()  * 50, 10, Color(0, 0, 255))
 	
 	self:DoFlight()
 end
@@ -312,13 +318,15 @@ function ENT:Launch()
     
     self:SetParent(nil)
     
-    local Time = SysTime()
+    local Time = CurTime()
 	self.MotorLength = 10
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = 0.0028
 	self.Motor = 7500
 	self.FlightTime = 0
 	self.CutoutTime = Time + self.MotorLength
+	self.LastAngDiff = 0
+	self.LastAngDiffAxis = Vector()
 	self.CurPos = self:GetPos()
 	self.CurDir = self:GetForward()
 	self.LastPos = self.CurPos
@@ -340,6 +348,8 @@ end
 
 
 function ENT:DoFlight(ToPos, ToDir)
+	--if !IsValid(self.Entity) or self.MissileDetonated then return end
+
 	local setPos = ToPos or self.CurPos
 	local setDir = ToDir or self.CurDir
 	self:SetPos(setPos)
@@ -360,7 +370,7 @@ end
 
 
 function ENT:Think()
-	local Time = SysTime()
+	local Time = CurTime()
 
 	if self.Launched then
 	
@@ -371,7 +381,7 @@ function ENT:Think()
 
 		if self.FirstThink == true then
 			self.FirstThink = false
-			self.LastThink = SysTime()
+			self.LastThink = CurTime()
 			self.LastVel = self.Launcher:GetVelocity() / 66
 
 		end

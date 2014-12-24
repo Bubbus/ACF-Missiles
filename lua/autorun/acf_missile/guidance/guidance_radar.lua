@@ -32,7 +32,9 @@ this.SeekDelay = 0.2
 -- Entities to ignore by default
 this.DefaultFilter = 
 {
-    ent_cre_missile = true
+    ent_cre_missile 	= true;
+	debris				= true;
+	player				= true
 }
 
 
@@ -45,6 +47,7 @@ this.DefaultFilter =
 function this:Init()
 	self.LastSeek = CurTime() - self.SeekDelay - 0.000001
     self.Filter = self.DefaultFilter
+	self.LastTargetPos = Vector()
 end
 
 
@@ -75,19 +78,32 @@ function this:GetGuidance(missile)
 	if not IsValid(self.Target) then 
 		return {} 
 	end
-	
+
 	local missilePos = missile:GetPos()
 	local missileForward = missile:GetForward()
+	local targetPhysObj = self.Target:GetPhysicsObject()
 	local targetPos = self.Target:GetPos()
+	if IsValid(targetPhysObj) then
+		targetPos = util.LocalToWorld( self.Target, targetPhysObj:GetMassCenter(), nil )
+		print(tostring(targetPos))
+	end
+
 	local angleFrom = math.deg(math.acos((targetPos - missilePos):GetNormalized():Dot(missileForward)))
 	
 	if angleFrom > this.ViewCone then
 		if IsValid(self.Target) then print(missile, "lost lock", self.Target) end
 		self.Target = nil
+		self.TargetVel = Vector()
+		self.LastTargetPos = Vector()
 		return {}
 	else
         self.TargetPos = targetPos
-		return {TargetPos = targetPos}
+		local targetVel = targetPos - self.LastTargetPos
+		self.LastTargetPos = targetPos
+
+		if self.LastTargetPos == Vector() then targetVel = Vector() end
+
+		return {TargetPos = targetPos, TargetVel = targetVel}
 	end
 	
 end
@@ -98,12 +114,21 @@ end
 function this:CheckTarget(missile)
 
 	if not IsValid(self.Target) then	
-		self.Target = self:AcquireLock(missile)
+		local target = self:AcquireLock(missile)
 		
-		if IsValid(self.Target) then 
+		if IsValid(target) then 
+			while IsValid( target ) do
+				local parent = target:GetParent()
+				if IsValid(parent) then target = parent
+				else break end
+			end
+			self.Target = target
 			print(missile, "acquired lock", self.Target)
+			
+			self.TargetVel = Vector()
+			self.LastTargetPos = Vector()
 		else
-			print(missile, "could not lock")
+			--print(missile, "could not lock")
 		end
 	end
 	
@@ -162,6 +187,6 @@ function this:AcquireLock(missile)
 			if currentDot >= self.SeekTolerance then return currentEnt end
 		end
 	end
-	
+
 	return mostCentralEnt
 end
