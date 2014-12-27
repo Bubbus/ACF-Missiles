@@ -353,6 +353,7 @@ function ENT:AddMissile()
     missile:SetPos(muzzle.Pos)
     missile:SetAngles(muzzle.Ang)
     missile.Owner = ply
+    --missile.DoNotDuplicate = true
     
     local BulletData = {}
     BulletData["Colour"]		= Color(255, 255, 255)
@@ -708,6 +709,7 @@ function ENT:FireMissile()
                 
                 missile.Filter = filter
                 
+                missile:SetParent(nil)
                 missile:SetPos(MuzzlePos)
                 missile:SetAngles(ShootVec:Angle())
                 missile:Launch()
@@ -749,10 +751,9 @@ function ENT:MuzzleEffect( attach )
 	local Effect = EffectData()
 		Effect:SetEntity( self )
 		Effect:SetScale( self.BulletData["PropMass"] )
-		Effect:SetMagnitude( self.ReloadTime )
-		Effect:SetRadius(attach or 0)
+		Effect:SetAttachment( attach )
 		Effect:SetSurfaceProp( ACF.RoundTypes[self.BulletData["Type"]]["netid"]  )	--Encoding the ammo type into a table index
-	util.Effect( "ACF_MuzzleFlash", Effect, true, true )
+	util.Effect( "ACF_MissileLaunch", Effect, true, true )
 
 end
 
