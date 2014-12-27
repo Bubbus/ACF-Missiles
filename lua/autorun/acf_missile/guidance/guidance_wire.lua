@@ -99,9 +99,14 @@ function this:GetGuidance(missile)
 	end
     
     local posOutput = outputs[self.InputName]
+    local posVec = posOutput.Value
     
-    self.TargetPos = posOutput.Value
-	return {TargetPos = self.TargetPos}
+    if not posVec or posVec == Vector() then
+        return {} 
+    end
+    
+    self.TargetPos = posVec
+	return {TargetPos = posVec}
 	
 end
 
