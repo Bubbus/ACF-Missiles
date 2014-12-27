@@ -35,6 +35,7 @@ if SERVER then
         missile:SetFuse(ACF.Fuse.Timed())
 		
 		missile:Spawn()
+        missile:Launch()
 	end)
 end
 
@@ -86,7 +87,7 @@ function ENT:Initialize()
 	--if IsValid(self.CurTarget) then self.TargetPos = self.CurTarget:GetPos()
 	--else self.TargetPos = Vector(0,0,0) end
 	
-	self:Launch()
+	--self:Launch()
 end
 
 
@@ -153,8 +154,8 @@ function ENT:CalcFlight()
 
 	if TargetPos then
 		local Dist = Pos:Distance(TargetPos)
-		local TargetVel = Guidance.TargetVel / DeltaTime * 0.03
-		print("TargetVel = "..tostring(TargetVel))
+		local TargetVel = (Guidance.TargetVel or Vector(0,0,0)) / DeltaTime * 0.03
+		--print("TargetVel = "..tostring(TargetVel))
 		local DirRaw = TargetPos - Pos
 		local DirRawNorm = DirRaw:GetNormalized()
 
@@ -168,17 +169,17 @@ function ENT:CalcFlight()
 		local Axis = LastVel:Cross(DirRaw)
 		local AxisNorm = Axis:GetNormalized()
 		local AngDiff = math.deg(math.asin(Axis:Length() / (Dist * Speed)))
-		print("AngDiff = "..AngDiff)
+		--print("AngDiff = "..AngDiff)
 
 		if AngDiff > 0 then
 			local Ang = Dir:Angle()
 			Ang:RotateAroundAxis( AxisNorm, math.Clamp(AngDiff,-1,1) )
 
-			print("LastAngDiff = "..self.LastAngDiff)
+			--print("LastAngDiff = "..self.LastAngDiff)
 			local DeltaAngDiff = (AngDiff - self.LastAngDiff) / DeltaTime * 0.03
-			print("DeltaAngDiff = "..DeltaAngDiff)
+			--print("DeltaAngDiff = "..DeltaAngDiff)
 			local LastAxis = self.LastAngDiffAxis or AxisNorm
-			print("LastAxis = "..tostring(LastAxis).."\n")
+			--print("LastAxis = "..tostring(LastAxis).."\n")
 
 			Ang:RotateAroundAxis( LastAxis, math.Clamp(DeltaAngDiff,-1,1) )
 			Dir = Ang:Forward()
@@ -239,7 +240,7 @@ function ENT:CalcFlight()
 	local trace = util.TraceLine(tracedata)
 
 	if trace.Hit then		
-        print("DET ")
+        --print("DET ")
         --pbn(trace)
 		self:DoFlight(trace.HitPos)
 		self:Detonate()
@@ -257,7 +258,7 @@ function ENT:CalcFlight()
 		if DetonatePos then
 			self:DoFlight(DetonatePos)
 		end
-		print("FUSE DET")
+		--print("FUSE DET")
 		self:Detonate()
 		return
 		
@@ -339,7 +340,7 @@ function ENT:Launch()
 	phys:EnableMotion(false)
 	
 	if self.Motor > 0 or self.MotorLength > 0.1 then
-		ParticleEffectAttach( "Rocket Motor", PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0 )
+		self.CacheParticleEffect = Time + 0.01
 	end
 	
 	self:Think()
@@ -387,6 +388,11 @@ function ENT:Think()
 		end
 		self:CalcFlight()
 		
+        if self.CacheParticleEffect and self.CacheParticleEffect <= CurTime() then
+            ParticleEffectAttach( "Rocket Motor", PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0 )
+            self.CacheParticleEffect = nil
+        end
+        
 	end
 	
 	return self.BaseClass.Think(self)
