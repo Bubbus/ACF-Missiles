@@ -11,7 +11,6 @@ ACF.Guidance[ClassName] = this
 ---
 
 
-
 this.Name = ClassName
 
 --Currently acquired target.
@@ -24,7 +23,7 @@ this.SeekCone = 15
 this.ViewCone = 30
 
 -- Targets this close to the front are good enough.
-this.SeekTolerance = 0.95
+this.SeekTolerance = math.cos( math.rad( 5 ) )
 
 -- This instance must wait this long between target seeks.
 this.SeekDelay = 0.2
@@ -85,7 +84,7 @@ function this:GetGuidance(missile)
 	local targetPos = self.Target:GetPos()
 	if IsValid(targetPhysObj) then
 		targetPos = util.LocalToWorld( self.Target, targetPhysObj:GetMassCenter(), nil )
-		print(tostring(targetPos))
+		--print(tostring(targetPos))
 	end
 
 	local angleFrom = math.deg(math.acos((targetPos - missilePos):GetNormalized():Dot(missileForward)))
@@ -123,7 +122,7 @@ function this:CheckTarget(missile)
 				else break end
 			end
 			self.Target = target
-			print(missile, "acquired lock", self.Target)
+			--print(missile, "acquired lock", self.Target)
 			
 			self.TargetVel = Vector()
 			self.LastTargetPos = Vector()
