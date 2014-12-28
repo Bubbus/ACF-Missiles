@@ -73,10 +73,8 @@ if not ACF_ExpandBulletData then
         //print("expand bomb")
         //print(debug.traceback())
 
-        /*
-        print("\n\nBEFORE EXPAND:\n")
-        printByName(bullet)
-        //*/
+        --print("\n\nBEFORE EXPAND:\n")
+        --printByName(bullet)
 
         local toconvert = {}
         toconvert["Id"] =             bullet["Id"] or "12.7mmMG"
@@ -91,10 +89,8 @@ if not ACF_ExpandBulletData then
         toconvert["Data10"] =         bullet["Tracer"] or bullet["Data10"] or 0
         toconvert["Colour"] =         bullet["Colour"] or Color(255, 255, 255)
             
-        /*
-        print("\n\nTO EXPAND:\n")
-        printByName(toconvert)
-        //*/
+        --print("\n\nTO EXPAND:\n")
+        --printByName(toconvert)
             
         local rounddef = ACF.RoundTypes[bullet.Type] or error("No definition for the shell-type", bullet.Type)
         local conversion = rounddef.convert
@@ -113,10 +109,9 @@ if not ACF_ExpandBulletData then
         ret.Accel = Vector(0,0,cvarGrav:GetInt()*-1)
         if ret.Tracer == 0 and bullet["Tracer"] and bullet["Tracer"] > 0 then ret.Tracer = bullet["Tracer"] end
         ret.Colour = toconvert["Colour"]
-        /*
-        print("\n\nAFTER EXPAND:\n")
-        printByName(ret)
-        //*/
+        
+        --print("\n\nAFTER EXPAND:\n")
+        --printByName(ret)
         
         return ret
 
@@ -194,24 +189,60 @@ end
 
 
 
-if not ACF_CompactBulletData then
+
+-- TODO: modify ACF to use this global table, so any future tweaks won't break anything here.
+ACF.FillerDensity = 
+{
+    SM =    2000,
+    HE =    1000,
+    HP =    1,
+    HEAT =  1450,
+    APHE =  1000
+}
+
+
+
+
+--if not ACF_CompactBulletData then
 
     function ACF_CompactBulletData(crate)
-        local compact = {}
+    
+        --print(crate)
+        --if type(crate) == "table" then printByName(crate) end
         
-        compact["Id"] = 			crate.RoundId
-        compact["Type"] = 		    crate.RoundType
-        compact["PropLength"] = 	crate.RoundPropellant
-        compact["ProjLength"] = 	crate.RoundProjectile
-        compact["Data5"] = 		    crate.RoundData5
-        compact["Data6"] = 		    crate.RoundData6
-        compact["Data7"] = 		    crate.RoundData7
-        compact["Data8"] = 		    crate.RoundData8
-        compact["Data9"] = 		    crate.RoundData9
-        compact["Data10"] = 		crate.RoundData10
-        compact["Colour"] = 		crate:GetColor()
+        local compact = {}
+
+        compact["Id"] = 			crate.Id            or crate.RoundId
+        compact["Type"] = 		    crate.Type          or crate.RoundType
+        compact["PropLength"] = 	crate.PropLength    or crate.RoundPropellant
+        compact["ProjLength"] = 	crate.ProjLength    or crate.RoundProjectile
+        compact["Data5"] = 		    crate.Data5         or crate.RoundData5         or crate.FillerVol      or crate.CavVol             or crate.Flechettes
+        compact["Data6"] = 		    crate.Data6         or crate.RoundData6         or crate.ConeAng        or crate.FlechetteSpread
+        compact["Data7"] = 		    crate.Data7         or crate.RoundData7
+        compact["Data8"] = 		    crate.Data8         or crate.RoundData8
+        compact["Data9"] = 		    crate.Data9         or crate.RoundData9
+        compact["Data10"] = 		crate.Data10        or crate.RoundData10        or crate.Tracer
+        
+        compact["Colour"] = 		crate.GetColor and crate:GetColor() or crate.Colour
+        
+        
+        if not compact.Data5 and crate.FillerMass then
+            local Filler = ACF.FillerDensity[compact.Type]
+            
+            if Filler then
+                compact.Data5 = crate.FillerMass / ACF.HEDensity * Filler
+            end
+        end
         
         return compact
     end
     
-end
+--end
+
+
+include("autorun/server/duplicatorDeny.lua")
+
+hook.Add( "InitPostEntity", "ACFMissiles_DupeDeny", function()
+    -- Need to ensure this is called after InitPostEntity because Adv. Dupe 2 resets its whitelist upon this event.
+    timer.Simple(1, function() duplicator.Deny("ent_cre_missile") end)
+end )

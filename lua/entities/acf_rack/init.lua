@@ -8,6 +8,19 @@ include('shared.lua')
 
 
 
+if SERVER then
+    concommand.Add("loadRack", function(ply, args)
+		local lookAt = ply:GetEyeTrace()
+        local lookEnt = lookAt.Entity
+        if IsValid(lookEnt) and lookEnt:GetClass() == "acf_rack" then
+            lookEnt:LoadAmmo(0, false)
+        end
+	end)
+end
+
+
+
+
 ENT.PermittedAmmoTypes = 
 {
     HE    = true,
@@ -35,14 +48,20 @@ function ENT:Initialize()
 	self.CurAmmo = 1
 	self.Sequence = 1
 	
-	self.BulletData = {}
-		self.BulletData["Type"] = "Empty"
-		self.BulletData["FillerMass"] = 0
-		self.BulletData["ConeAng"] = 0
-		self.BulletData["PropLength"] = 0
-		self.BulletData["ProjLength"] = 0
-		self.BulletData["PropMass"] = 0
-		self.BulletData["ProjMass"] = 0
+    if not self.BulletData then
+    
+        self.BulletData = 
+        {
+            Type        = "Empty",
+            FillerMass  = 0,
+            ConeAng     = 0,
+            PropLength  = 0,
+            ProjLength  = 0,
+            PropMass    = 0,
+            ProjMass    = 0
+        }
+        
+     end
 	
 	self.Inaccuracy 	= 1
 	
@@ -326,7 +345,7 @@ function ENT:PopMissile()
     local NextIdx = #self.Missiles
 	if NextIdx <= 0 then return false end
 
-    print(NextIdx)
+    --print(NextIdx)
     local missile = self.Missiles[NextIdx]
     self.Missiles[NextIdx] = nil
 
@@ -338,7 +357,7 @@ end
 
 
 function ENT:AddMissile()
-    print("------------------")
+    --print("------------------")
     
     self:TrimNullMissiles()
     
@@ -372,7 +391,7 @@ function ENT:AddMissile()
     missile.Launcher = self
     
     missile:SetBulletData(BulletData)
-    missile:SetGuidance(ACF.Guidance.Wire())
+    missile:SetGuidance(ACF.Guidance.Radar())
     missile:SetFuse(ACF.Fuse.Timed())
     
     missile:Spawn()
@@ -392,17 +411,17 @@ end
 function ENT:LoadAmmo( AddTime, Reload )
     
     local Ammo = table.Count(self.Missiles)
-	print("a", Ammo, self.MagSize)
+	--print("a", Ammo, self.MagSize)
 	if Ammo >= self.MagSize then return false end
 	
 	local curtime = CurTime()
-    print("b", self.Ready, Ammo, curtime, self.NextFire)
+    --print("b", self.Ready, Ammo, curtime, self.NextFire)
 	if not self.Ready and not (Ammo <= 0 and curtime > self.NextFire) then return false end
 	
-    print("420 load it", Ammo)
+    --print("420 load it", Ammo)
     
     local missile = self:AddMissile()
-    print("missile", missile)
+    --print("missile", missile)
     
     self:TrimNullMissiles()
     Ammo = table.Count(self.Missiles)
@@ -574,9 +593,9 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
 	end 	
 	
     
-	print("--", "rack bdata")
-	printByName(Rack.ShortBulletData)
-	print("--", "end rack bdata")
+	--print("--", "rack bdata")
+	--printByName(Rack.ShortBulletData)
+	--print("--", "end rack bdata")
 	
 	hook.Call("ACF_RackCreate", nil, Rack)
 	
@@ -685,7 +704,7 @@ function ENT:FireMissile()
 			end
 			//*/
             local missile, curShot = self:PopMissile()
-            print("popped", missile)
+            --print("popped", missile)
             if missile then
             
                 local attach, muzzle = self:GetMuzzle(curShot)
@@ -778,7 +797,10 @@ end
 function ENT:PreEntityCopy()
 
     local squashedammo = ACF_CompactBulletData(self.BulletData)
-    printByName(squashedammo)
+    --print("SQUASHED AMMO:")
+    --printByName(squashedammo)
+    --print("         SELFID", self.Id)
+    duplicator.StoreEntityModifier( self, "ACFRackInfo", {Id = self.Id} )
     duplicator.StoreEntityModifier( self, "ACFRackAmmo", squashedammo )
 	
 	//Wire dupe info
@@ -799,23 +821,25 @@ function ENT:PostEntityPaste( Player, Ent, CreatedEntities )
 	end
 
 	local squashedammo = Ent.EntityMods and Ent.EntityMods.ACFRackAmmo or nil
-	//*
-	print("SQUASHED AMMO:")
-	printByName(squashedammo)
-	//*/
+	--print("         SQUASHED AMMO:")
+	--printByName(squashedammo)
 	if squashedammo then
 		local ammoclass = squashedammo.Id// or error("Tried to copy an ACF Rack but it was loaded with invalid ammo! (" .. tostring(squashedammo.ProjClass) ", " .. tostring(squashedammo.Id) .. ", " .. tostring(squashedammo.Type) .. ")")
-		//print(squashedammo.ProjClass, permittedRackAmmo[squashedammo.ProjClass])
-		if ammoclass and self.PermittedAmmoTypes[ammoclass] then
+        
+		if squashedammo.Id and self.PermittedAmmoTypes[squashedammo.Type] then
 			self.BulletData = ACF_ExpandBulletData(squashedammo)
-			printByName(self.BulletData)
-			Ent.EntityMods.ACFRackAmmo = nil
+            --print("         UNSQUASHED AMMO:")
+            --printByName(self.BulletData)
+			
+			--Ent.EntityMods.ACFRackAmmo = nil
 		end
 	end
 	
+    self.Id = Ent.EntityMods.ACFRackInfo.Id
+    
 	//printByName(self.BulletData)
 	
-	MakeACF_Rack(self.Owner, self:GetPos(), self:GetAngles(), self.BulletData.Id, self, self.BulletData)
+	MakeACF_Rack(self.Owner, self:GetPos(), self:GetAngles(), self.Id, self, self.BulletData)
 
 end
 

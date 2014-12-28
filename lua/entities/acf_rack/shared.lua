@@ -42,7 +42,7 @@ end
 
 function ENT:GetMunitionAngPos(rack, attach, attachname)
 	local angpos
-	print(rack, attach, attachname)
+	--print(rack, attach, attachname)
 	
 	if attach ~= 0 then
 		angpos = self:GetAttachment(attach)
@@ -53,7 +53,7 @@ function ENT:GetMunitionAngPos(rack, attach, attachname)
 	local gun = ACF.Weapons.Guns[rack.Id]
 	if not gun then return angpos end
 	
-    pbn(gun)
+    --pbn(gun)
 	if not gun then return angpos end
 	
     local offset = (rack.Caliber or gun.caliber) / 2.54
