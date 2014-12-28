@@ -40,6 +40,8 @@ if SERVER then
 end
 
 
+
+
 function ENT:Initialize()
 
 	self.BaseClass.Initialize(self)
@@ -61,66 +63,11 @@ function ENT:Initialize()
 	self.PhysObj:EnableMotion( false )
 	--util.SpriteTrail(self.Entity, 0, Color(255,255,255,255), false, 8, 128, 3, 1/16, "trails/smoke.vmt")
 
-	local Time = CurTime()
-	self.MotorLength = 10
-	self.Gravity = GetConVar("sv_gravity"):GetFloat()
-	self.DragCoef = 0.0028
-	self.Motor = 7500
-	self.FlightTime = 0
-	self.CutoutTime = Time + self.MotorLength
-	self.LastAngDiff = 0
-	self.LastAngDiffAxis = Vector()
-	self.CurPos = self:GetPos()
-	self.CurDir = self:GetForward()
-	self.LastPos = self.CurPos
-    self.Hit = false
-	self.FirstThink = true
-
-	local Length = 118
-	local Width = 5
-	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length) -- cylinder, non-roll axes
-	self.TorqueMul = Length * 25	--Kinda cheated here because it was unrealistic
-	self.RotAxis = Vector(0,0,0)
-	
-	--self.Launcher = self.Entity:GetOwner() or self	--Replace owner with the launcher/rail entity
-	--self.CurTarget = Entity(178) --Replace with any entity you want to target - I generally use Entity( n ) to target a spawned prop with the EntIndex "n"
-	--if IsValid(self.CurTarget) then self.TargetPos = self.CurTarget:GetPos()
-	--else self.TargetPos = Vector(0,0,0) end
+	self:ConfigureFlight()
 	
 	--self:Launch()
 end
 
-
-
--- function ENT:Detonate()
-	-- local Ent = self.Entity
-	-- local Pos = Ent:GetPos()
-
-	-- local exp = ents.Create( "env_explosion" )
-	-- exp:SetPos( Pos )
-	-- exp:SetOwner( Ent.Owner )
-	-- exp:Spawn()
-	-- exp:SetKeyValue( "iMagnitude", "140" )
-	-- exp:Fire( "Explode", 0, 0 )
-	-- exp:EmitSound( "^weapons/hegrenade/explode"..math.random(3,5)..".wav", 400, 100 )
-
-	-- local shake = ents.Create( "env_shake" )
-	-- shake:SetPos( Pos )
-	-- shake:Spawn()
-	-- shake:SetKeyValue( "Amplitude", "12" )
-	-- shake:SetKeyValue( "Frequency", "50" )
-	-- shake:SetKeyValue( "Radius", "1500" )
-	-- shake:SetKeyValue( "Duration", "0.6" )
-	-- shake:Fire( "StartShake", 0, 0 )
-
-	-- local effect = EffectData()
-	-- effect:SetStart( Pos )
-	-- effect:SetOrigin( Pos )
-	-- effect:SetScale( 70 )
-	-- util.Effect( "cre_generic_explosion", effect )
-
-	-- Ent:Remove()
--- end
 
 
 
@@ -278,6 +225,7 @@ end
 
 
 
+
 function ENT:SetGuidance(guidance)
 
 	self.Guidance = guidance
@@ -289,6 +237,7 @@ end
 
 
 
+
 function ENT:SetFuse(fuse)
 
 	self.Fuse = fuse
@@ -297,6 +246,7 @@ function ENT:SetFuse(fuse)
     return fuse
 
 end
+
 
 
 
@@ -319,8 +269,25 @@ function ENT:Launch()
     
     self:SetParent(nil)
     
+    self:ConfigureFlight()
+    
+	local phys = self:GetPhysicsObject()
+	phys:EnableMotion(false)
+	
+	if self.Motor > 0 or self.MotorLength > 0.1 then
+		self.CacheParticleEffect = CurTime() + 0.01
+	end
+	
+	self:Think()
+end
+
+
+
+
+function ENT:ConfigureFlight()
+
     local Time = CurTime()
-	self.MotorLength = 10
+	self.MotorLength = 1
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = 0.0028
 	self.Motor = 7500
@@ -334,17 +301,15 @@ function ENT:Launch()
     self.Hit = false
 	self.FirstThink = true
     
+    local Mass = 74.48
+    local Length = 118
+	local Width = 5
+	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length) -- cylinder, non-roll axes
+	self.TorqueMul = Length * 25	--Kinda cheated here because it was unrealistic
+	self.RotAxis = Vector(0,0,0)
     
-    
-	local phys = self:GetPhysicsObject()
-	phys:EnableMotion(false)
-	
-	if self.Motor > 0 or self.MotorLength > 0.1 then
-		self.CacheParticleEffect = Time + 0.01
-	end
-	
-	self:Think()
 end
+
 
 
 
@@ -359,6 +324,7 @@ end
 
 
 
+
 function ENT:Detonate()
 
 	self.BulletData.Flight = self.Vel
@@ -367,6 +333,7 @@ function ENT:Detonate()
 	self.BaseClass.Detonate(self)
 
 end
+
 
 
 
@@ -400,9 +367,11 @@ end
 
 
 
+
 function ENT:PhysicsCollide()
 	if self.Launched then self:Detonate() end
 end
+
 
 
 
