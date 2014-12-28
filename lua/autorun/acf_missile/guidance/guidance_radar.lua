@@ -26,7 +26,7 @@ this.ViewCone = 30
 this.SeekTolerance = math.cos( math.rad( 5 ) )
 
 -- This instance must wait this long between target seeks.
-this.SeekDelay = 0.2
+this.SeekDelay = 100000 -- The re-seek cycle is expensive, let's disable it until we figure out some optimization.
 
 -- Entities to ignore by default
 this.DefaultFilter = 
@@ -90,7 +90,7 @@ function this:GetGuidance(missile)
 	local angleFrom = math.deg(math.acos((targetPos - missilePos):GetNormalized():Dot(missileForward)))
 	
 	if angleFrom > this.ViewCone then
-		if IsValid(self.Target) then print(missile, "lost lock", self.Target) end
+		--if IsValid(self.Target) then print(missile, "lost lock", self.Target) end
 		self.Target = nil
 		self.TargetVel = Vector()
 		self.LastTargetPos = Vector()
