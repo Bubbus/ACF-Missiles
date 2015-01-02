@@ -34,14 +34,15 @@ ACF_defineGunClass("AAM", {
 ACF_defineGun("40mmAAM", { --id
 	name = "40mm Air-to-air Missile",
 	desc = "Someone glued a radar dish to a firework.  It's puny, short-range and goes pop instead of boom. It's also fast and agile, like the tiny aircraft you'll be putting this on.",
-	model = "<whatever the tiny missile model is>",
+	model = "models/missiles/70mmffar.mdl",
 	gunclass = "AAM",
+    rack = "4xRK",  -- Which rack to spawn this missile on?
 	caliber = 4.0,
 	weight = 35,    -- Don't scale down the weight though!
 	year = 1953,
 	round = {
-		model		= "<whatever the tiny missile model is>",
-		rackmdl		= "<whatever the tiny missile model is>",
+		model		= "models/missiles/70mmffar.mdl",
+		rackmdl		= "models/missiles/70mmffar.mdl",
 		maxlength	= 32,
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		propweight	= 1,	        -- motor mass - motor casing
@@ -68,14 +69,15 @@ ACF_defineGun("40mmAAM", { --id
 ACF_defineGun("70mmAAM", { --id
 	name = "70mm Air-to-air Missile",
 	desc = "The gold standard in airborne jousting sticks: decent agility, decent boom.  Lock on and rock on.",
-	model = "<whatever the sidewinder model is>",
+	model = "models/missiles/aim9.mdl",
 	gunclass = "AAM",
+    rack = "2xRK",  -- Which rack to spawn this missile on?
 	caliber = 7.0,
 	weight = 85,    -- Don't scale down the weight though!
 	year = 1953,
 	round = {
-		model		= "<whatever the sidewinder model is>",
-		rackmdl		= "<whatever the sidewinder model is>",
+		model		= "models/missiles/aim9.mdl",
+		rackmdl		= "models/missiles/aim9.mdl",
 		maxlength	= 26*1.75,
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		propweight	= 1.75,	        -- motor mass - motor casing
@@ -102,14 +104,15 @@ ACF_defineGun("70mmAAM", { --id
 ACF_defineGun("120mmAAM", { --id
 	name = "120mm Air-to-air Missile",
 	desc = "The big guy of the skies - you're not getting any closer to a nuclear dogfight than this.",
-	model = "<whatever the phoenix model is>",
+	model = "models/missiles/aim120.mdl",
 	gunclass = "AAM",
+    rack = "1xRK",  -- Which rack to spawn this missile on?
 	caliber = 12.0,
 	weight = 200,
 	year = 1974,
 	round = {
-		model		= "models/missiles/ffar_70mm.mdl",
-		rackmdl		= "models/missiles/ffar_70mm_closed.mdl",
+		model		= "models/missiles/aim120.mdl",
+		rackmdl		= "models/missiles/aim120.mdl",
 		maxlength	= 32*1.75,
 		casing		= 0.4,	        -- thickness of missile casing, cm
 		propweight	= 3.5,	        -- motor mass - motor casing

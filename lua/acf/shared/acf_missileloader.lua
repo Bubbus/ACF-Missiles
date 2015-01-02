@@ -13,10 +13,25 @@ local Racks =           ACF.Weapons.Rack
 local RackClasses =     ACF.Classes.Rack
 
 
+-- setup base classes
+local gun_base = {
+	ent = "acf_gun",
+	type = "Guns"
+}
+
 local rack_base = {
 	ent =   "acf_rack",
 	type =  "Rack"
 }
+
+
+
+-- add gui stuff to base classes if this is client
+if CLIENT then
+	gun_base.guicreate = function( Panel, Table ) ACFGunGUICreate( Table ) end or nil
+	gun_base.guiupdate = function() return end
+end
+
 
 
 function ACF_DefineRack( id, data )
@@ -32,6 +47,28 @@ function ACF_DefineRackClass( id, data )
 	RackClasses[ id ] = data
 end
 
+
+
+local Weapons = list.GetForEdit("ACFEnts")
+local Classes = list.GetForEdit("ACFClasses")
+
+
+-- some factory functions for defining ents
+function ACF_defineGunClass( id, data )
+	data.id = id
+    
+    Classes.GunClass[ id ] = data
+	ACF.Classes.GunClass[ id ] = data
+end
+
+function ACF_defineGun( id, data )
+	data.id = id
+	data.round.id = id
+	table.Inherit( data, gun_base )
+    
+	Weapons.Guns[ id ] = data
+    ACF.Weapons.Guns[ id ] = data
+end
 
 
 
