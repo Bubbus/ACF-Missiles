@@ -15,7 +15,7 @@ ACF.Fuse[ClassName] = this
 this.Name = ClassName
 
 -- Time to explode, begins ticking after configuration.
-this.Timer = 3
+this.Timer = 10
 
 
 -- function this:Draw(ent, duration)

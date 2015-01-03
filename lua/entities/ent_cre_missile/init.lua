@@ -10,7 +10,7 @@ DEFINE_BASECLASS("acf_grenade")
 if SERVER then
 	concommand.Add("makeMissile", function(ply, args)
 		local missile = ents.Create("ent_cre_missile")
-		missile:SetPos(ply:GetShootPos() + ply:GetAimVector() * 16)
+		missile:SetPos(ply:GetShootPos() + ply:GetAimVector() * 50)
 		missile:SetAngles(ply:GetAimVector():Angle())
 		missile.Owner = ply
 		
@@ -102,41 +102,44 @@ function ENT:CalcFlight()
 	if TargetPos then
 		local Dist = Pos:Distance(TargetPos)
 		local TargetVel = (Guidance.TargetVel or Vector(0,0,0)) / DeltaTime * 0.03
-		--print("TargetVel = "..tostring(TargetVel))
 		local DirRaw = TargetPos - Pos
 		local DirRawNorm = DirRaw:GetNormalized()
 
+		--Target position projection
 		local LockOffset = ((TargetVel - LastVel) * Dist / Speed) or Dir
 		local ProjOffset = LockOffset - LockOffset:Dot(DirRawNorm) * DirRawNorm
-		DirRaw = TargetPos + ProjOffset - Pos
+		local DirProj = TargetPos + ProjOffset - Pos
+		local DirProjNorm = DirProj:GetNormalized()
 
 		--TODO:		[x] Add a second rotation that smoothes the oscillations out
-		--			[ ] Prevent the missile from correcting so far that the target falls out of the FOV
+		--			[x] Prevent the missile from correcting so far that the target falls out of the FOV
+		--			[ ] Add fins to allow steering without a motor
+		--			[ ] Make rotations depend on velocity
 
-		local Axis = LastVel:Cross(DirRaw)
-		local AxisNorm = Axis:GetNormalized()
-		local AngDiff = math.deg(math.asin(Axis:Length() / (Dist * Speed)))
-		--print("AngDiff = "..AngDiff)
+		local VelAxis = LastVel:Cross(DirProj)
+		local VelAxisNorm = VelAxis:GetNormalized()
+		local AngDiff = math.deg(math.asin(VelAxis:Length() / (Dist * Speed)))
 
 		if AngDiff > 0 then
+			--Target facing
 			local Ang = Dir:Angle()
-			Ang:RotateAroundAxis( AxisNorm, math.Clamp(AngDiff,-1,1) )
+			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff,-1,1) )
+			local NewDir = Ang:Forward()
 
-			--print("LastAngDiff = "..self.LastAngDiff)
-			local DeltaAngDiff = (AngDiff - self.LastAngDiff) / DeltaTime * 0.03
-			--print("DeltaAngDiff = "..DeltaAngDiff)
-			local LastAxis = self.LastAngDiffAxis or AxisNorm
-			--print("LastAxis = "..tostring(LastAxis).."\n")
+			--Velocity stabilisation
+			local DirAxis = NewDir:Cross(DirRawNorm)
+			local RawDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
+			local RawAng = math.deg(math.acos(RawDotSimple))		--Since both vectors are normalised, calculating the dot product should be faster this way
+				Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng,-1,1) * 6 )
+			NewDir = Ang:Forward()
 
-			Ang:RotateAroundAxis( LastAxis, math.Clamp(DeltaAngDiff,-1,1) )
-			Dir = Ang:Forward()
-
-			self.LastAngDiff = AngDiff
-			self.LastAngDiffAxis = AxisNorm
+			--FOV check
+			local TotalDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
+			local TotalAng = math.deg(math.acos(TotalDotSimple))
+			if TotalAng <= Guidance.ViewCone then
+				Dir = NewDir
+			end
 		end
-
-
-		debugoverlay.Cross( TargetPos + ProjOffset, 100, 0.05, Color(255,0,0,255), true ) 
 
 	else
 		local DirAng = Dir:Angle()
@@ -158,28 +161,21 @@ function ENT:CalcFlight()
 	
 	
 	--Motor cutout
-	local Vel = Vector()
 	if Time > self.CutoutTime then
 		if self.Motor ~= 0 then
 			self.Entity:StopParticles()
 			self.Motor = 0
 		end
-
-		--Physics calculations
-		Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
-		local SpeedSq = Vel:LengthSqr()
-		local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
-		Vel = Vel - Drag
-	else
-		Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * 5 * DeltaTime ^ 2
-		local SpeedSq = Vel:LengthSqr()
-		local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale * 5
-		Vel = Vel - Drag
 	end
 
+	--Physics calculations
+	Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
+	local SpeedSq = Vel:LengthSqr()
+	local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
+	local Vel = Vel - Drag
 	local EndPos = Pos + Vel
 
-	--Hit detetion
+	--Hit detection
 	local tracedata={}
 	tracedata.start = Pos
 	tracedata.endpos = EndPos
@@ -187,17 +183,14 @@ function ENT:CalcFlight()
 	local trace = util.TraceLine(tracedata)
 
 	if trace.Hit then		
-        --print("DET ")
-        --pbn(trace)
 		self:DoFlight(trace.HitPos)
 		self:Detonate()
-		
 		return
 	end
 
 
 
-	--print("Vel = "..math.Round(Vel:Length()))
+	--print("Vel = "..math.Round(Vel:Length() / DeltaTime))
     
     if self.Fuse:GetDetonate(self, self.Guidance) then
 	
@@ -287,14 +280,12 @@ end
 function ENT:ConfigureFlight()
 
     local Time = CurTime()
-	self.MotorLength = 1
+	self.MotorLength = 10
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
-	self.DragCoef = 0.0028
-	self.Motor = 7500
+	self.DragCoef = 0.0025
+	self.Motor = 10000
 	self.FlightTime = 0
 	self.CutoutTime = Time + self.MotorLength
-	self.LastAngDiff = 0
-	self.LastAngDiffAxis = Vector()
 	self.CurPos = self:GetPos()
 	self.CurDir = self:GetForward()
 	self.LastPos = self.CurPos
