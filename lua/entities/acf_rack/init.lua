@@ -487,8 +487,8 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
 	if not Owner:CheckLimit("_acf_gun") then return false end
 	
 	local Rack = UpdateRack or ents.Create("acf_rack")
-	local List = list.Get("ACFEnts")
-	local Classes = list.Get("ACFClasses")
+	local List = ACF.Weapons.Rack
+	local Classes = ACF.Classes.Rack
     
 	if not Rack:IsValid() then return false end
     
@@ -508,7 +508,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
 	Rack.Id = Id
 	Rack.BulletData.Id = Id
 	
-	local gundef = List["Guns"][Id] or error("Couldn't find the " .. tostring(Id) .. " gun-definition!")
+	local gundef = List[Id] or error("Couldn't find the " .. tostring(Id) .. " gun-definition!")
 	
 	Rack.Caliber	= gundef["caliber"]
 	Rack.Model = gundef["model"]
@@ -539,7 +539,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
 	-- end
 	
     
-	local gunclass = Classes["GunClass"][Rack.Class] or error("Couldn't find the " .. tostring(Rack.Class) .. " gun-class!")
+	local gunclass = Classes[Rack.Class] or error("Couldn't find the " .. tostring(Rack.Class) .. " gun-class!")
     
 	Rack:SetNWString( "Class" , Rack.Class )
 	Rack:SetNWString( "ID" , Rack.Id )
