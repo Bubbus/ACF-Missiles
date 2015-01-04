@@ -15,8 +15,8 @@ function ENT:Initialize()
 	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
 	self.ShouldTrace = false
 	
-	self.Model = "models/missiles/aim54.mdl"
-	self:SetModelEasy(self.Model)
+	-- self.Model = "models/missiles/aim54.mdl"
+	-- self:SetModelEasy(self.Model)
 	
 	self.Inputs = Wire_CreateInputs( self, { "Detonate" } )
 	self.Outputs = Wire_CreateOutputs( self, {} )
@@ -105,19 +105,7 @@ function ENT:CreateBomb(Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, 
 	self.RoundData9 = ( Data9 or 0 )
 	self.RoundData10 = ( Data10 or 0 )
 	
-	local PlayerData = bdata or 
-	{
-		Id 		= self.RoundId,
-		Type 	= self.RoundType,
-		PropLength = self.RoundPropellant,
-		ProjLength = self.RoundProjectile,
-		Data5 	= self.RoundData5,
-		Data6 	= self.RoundData6,
-		Data7 	= self.RoundData7,
-		Data8 	= self.RoundData8,
-		Data9 	= self.RoundData9,
-		Data10 	= self.RoundData10
-	}
+	local PlayerData = bdata or ACF_CompactBulletData(self)
 	
 	local guntable = ACF.Weapons.Guns
 	local gun = guntable[self.RoundId] or {}
@@ -131,12 +119,10 @@ end
 function ENT:SetModelEasy(mdl)
 	local curMdl = self:GetModel()
 	
-	if not mdl or curMdl == mdl or not Model(mdl) then
+	if not mdl or curMdl == mdl then
 		self.Model = self:GetModel()
 		return 
 	end
-	
-	mdl = Model(mdl)
 	
 	self:SetModel( mdl )
 	self.Model = mdl
@@ -161,6 +147,8 @@ function ENT:SetBulletData(bdata)
 
 	if not (bdata.IsShortForm or bdata.Data5) then error("acf_grenade requires short-form bullet-data but was given expanded bullet-data.") print(bdata) end
 	
+    bdata = ACF_CompactBulletData(bdata)
+    
 	self:CreateBomb(
 		bdata.Data1 or bdata.Id,
 		bdata.Type or bdata.Data2,
