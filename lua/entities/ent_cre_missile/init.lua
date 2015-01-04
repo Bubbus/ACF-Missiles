@@ -51,10 +51,10 @@ function ENT:Initialize()
 	end
 
 	self.Entity:SetOwner(self.Entity.Owner)
-	self.Entity:SetModel( "models/missiles/aim9.mdl" )
-	self.Entity:PhysicsInit( SOLID_VPHYSICS )
-	self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
-	self.Entity:SetSolid( SOLID_VPHYSICS )
+	-- self:SetModelEasy( "models/missiles/aim9.mdl" )
+	-- self.Entity:PhysicsInit( SOLID_VPHYSICS )
+	-- self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
+	-- self.Entity:SetSolid( SOLID_VPHYSICS )
 
 	local Mass = 74.48
 	self.PhysObj = self.Entity:GetPhysicsObject()
@@ -66,6 +66,19 @@ function ENT:Initialize()
 	self:ConfigureFlight()
 	
 	--self:Launch()
+end
+
+
+
+
+function ENT:SetBulletData(bdata)
+
+    self.BaseClass.SetBulletData(self, bdata)
+    
+    local gun = list.Get("ACFEnts").Guns[bdata.Id]
+    
+    self:SetModelEasy( gun.round.model or gun.model or "models/missiles/aim9.mdl" )
+	
 end
 
 
