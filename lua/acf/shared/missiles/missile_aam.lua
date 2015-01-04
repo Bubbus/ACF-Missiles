@@ -1,14 +1,15 @@
 
 --define the class
 ACF_defineGunClass("AAM", {
-	spread = 1,
-	name = "Air-To-Air Missile",
-	desc = "Missiles specialized for air-to-air flight.  These missiles have limited range, but are agile and can be radar-guided.",
-	muzzleflash = "40mm_muzzleflash_noscale",
-	rofmod = 1,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
-	soundDistance = " ",
-	soundNormal = " "
+    type            = "missile",
+	spread          = 1,
+	name            = "Air-To-Air Missile",
+	desc            = "Missiles specialized for air-to-air flight.  These missiles have limited range, but are agile and can be radar-guided.",
+	muzzleflash     = "40mm_muzzleflash_noscale",
+	rofmod          = 1,
+	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	soundDistance   = " ",
+	soundNormal     = " "
 } )
 
 

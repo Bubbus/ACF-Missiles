@@ -1,14 +1,15 @@
 
 --define the class
 ACF_defineGunClass("BOMB", {
-	spread = 1,
-	name = "Bomb",
-	desc = "Free-falling bombs.  These are slower than missiles, but are more powerful and more manouverable when guided.",
-	muzzleflash = "40mm_muzzleflash_noscale",
-	rofmod = 1,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
-	soundDistance = " ",
-	soundNormal = " "
+    type            = "missile",  -- i know i know
+	spread          = 1,
+	name            = "Bomb",
+	desc            = "Free-falling bombs.  These are slower than missiles, but are more powerful and more manouverable when guided.",
+	muzzleflash     = "40mm_muzzleflash_noscale",
+	rofmod          = 1,
+	sound           = "acf_extra/airfx/rocket_fire2.wav",
+	soundDistance   = " ",
+	soundNormal     = " "
 } )
 
 
