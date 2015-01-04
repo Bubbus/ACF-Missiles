@@ -77,7 +77,9 @@ function ENT:Initialize()
 	self.lastCol = self:GetColor() or Color(255, 255, 255)
 	self.nextColCheck = CurTime() + 2
     
-    self.Missiles = {}    
+    self.Missiles = {}   
+
+    self.AmmoLink = {}
     
 end
 
@@ -162,9 +164,40 @@ end
 
 
 
-function ENT:CanLinkBulletData(bdata)
-    print("TODO: CanLinkBulletData")
+function ENT:CanLinkCrate(crate)
+    
+    local bdata = crate.BulletData
+    
+    -- Don't link if it's a refill crate
+	if bdata["RoundType"] == "Refill" or bdata["Type"] == "Refill" then
+		return false, "Refill crates cannot be linked!"
+	end
+    
+    -- Don't link if it's a blacklisted round type for this gun
+	local Blacklist = ACF.AmmoBlacklist[ bdata.RoundType or bdata.Type ] or {}
+	
+	if table.HasValue( Blacklist, self.Class ) then
+		return false, "That round type cannot be used with this gun!"
+	end
+    
+    -- Don't link if it's not a missile.
+    local gun = list.Get("ACFEnts").Guns[bdata.Id]
+    local Classes = list.Get("ACFClasses").GunClass
+    pbn(bdata)
+    if "missile" ~= Classes[gun.gunclass].type then 
+        return false, "Racks cannot be linked to ammo crates of type '" .. bdata.gunclass .. "'!" 
+    end
+    
+	-- Don't link if it's already linked
+	for k, v in pairs( self.AmmoLink ) do
+		if v == crate then
+			return false, "That crate is already linked to this gun!"
+		end
+	end
+    
+    
     return true
+    
 end
 
 
@@ -177,24 +210,27 @@ function ENT:Link( Target )
 		return false, "Racks can only be linked to ammo crates!"
 	end
 	
-	-- Don't link if it's a refill crate
-	if Target.BulletData["RoundType"] == "Refill" or Target.BulletData["Type"] == "Refill" then
-		return false, "Refill crates cannot be linked!"
+	
+    local ret, msg = self:CanLinkCrate(Target)
+	if not ret then
+		return false, msg
 	end
 	
-	if not self:CanLinkBulletData(Target.BulletData) then
-		return false, "This rack doesn't hold that ammo type!"
+    
+	table.insert( self.AmmoLink, Target )
+	table.insert( Target.Master, self )
+	
+	if self.BulletData.Type == "Empty" and Target.Load then
+		self:UnloadAmmo()
 	end
 	
-	MakeACF_Rack(self.Owner, self:GetPos(), self:GetAngles(), nil, self, Target.BulletData)
-	
-	//self.ReloadTime = ( ( Target.BulletData["RoundVolume"] / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
-	//self.RateOfFire = 60 / self.ReloadTime
-	Wire_TriggerOutput( self, "Fire Rate", self.RateOfFire )
-	Wire_TriggerOutput( self, "Muzzle Weight", math.floor( Target.BulletData["ProjMass"] * 1000 ) )
-	Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( Target.BulletData["MuzzleVel"] * ACF.VelScale ) )
+	local ReloadTime = ( ( Target.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
+	local RateOfFire = 60 / ReloadTime
+	Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
+	Wire_TriggerOutput( self, "Muzzle Weight", math.floor( Target.BulletData.ProjMass * 1000 ) )
+	Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( Target.BulletData.MuzzleVel * ACF.VelScale ) )
 
-	return true, "This rack now loads that ammo!"
+	return true, "Link successful!"
 	
 end
 
@@ -203,10 +239,27 @@ end
 
 function ENT:Unlink( Target )
 
-	return false, "Racks do not support permanent ammo-links!"
+	local Success = false
+	for Key,Value in pairs(self.AmmoLink) do
+		if Value == Target then
+			table.remove(self.AmmoLink,Key)
+			Success = true
+		end
+	end
+	
+	if Success then
+		return true, "Unlink successful!"
+	else
+		return false, "That entity is not linked to this gun!"
+	end
 	
 end
 
+
+
+function ENT:UnloadAmmo()
+    -- we're ok with mixed munitions.
+end
 
 
 
@@ -330,7 +383,7 @@ end
 function ENT:TrimNullMissiles()
     for k, v in pairs(self.Missiles) do
         if not IsValid(v) then
-            self.Missiles[k] = nil
+            table.remove(self.Missiles, k)
         end
     end
 end
@@ -338,31 +391,74 @@ end
 
 
 
-function ENT:PopMissile()
+function ENT:PeekMissile()
 
     self:TrimNullMissiles()
 
     local NextIdx = #self.Missiles
 	if NextIdx <= 0 then return false end
 
-    --print(NextIdx)
     local missile = self.Missiles[NextIdx]
-    self.Missiles[NextIdx] = nil
 
-    return missile, curShot
+    return missile, NextIdx
 
 end
 
 
 
 
-function ENT:AddMissile()
-    --print("------------------")
+function ENT:PopMissile()
+
+    local missile, curShot = self:PeekMissile()
+
+    if missile == false then return false end
     
+    self.Missiles[curShot] = nil
+    
+    return missile
+    
+end
+
+
+
+
+function ENT:FindNextCrate()
+
+	local MaxAmmo = table.getn(self.AmmoLink)
+	local AmmoEnt = nil
+	local i = 0
+	
+	while i <= MaxAmmo and not (AmmoEnt and AmmoEnt:IsValid() and AmmoEnt.Ammo > 0) do
+		
+		self.CurAmmo = self.CurAmmo + 1
+		if self.CurAmmo > MaxAmmo then self.CurAmmo = 1 end
+		
+		AmmoEnt = self.AmmoLink[self.CurAmmo]
+		if AmmoEnt and AmmoEnt:IsValid() and AmmoEnt.Ammo > 0 and AmmoEnt.Load then
+            print("AmmoEnt = ", AmmoEnt)
+			return AmmoEnt
+		end
+		AmmoEnt = nil
+		
+		i = i + 1
+	end
+	
+    print("AmmoEnt = nil")
+	return false
+end
+
+
+
+
+function ENT:AddMissile()
+
     self:TrimNullMissiles()
     
     local Ammo = table.Count(self.Missiles)
 	if Ammo >= self.MagSize then return false end
+    
+    local Crate = self:FindNextCrate()
+    if not IsValid(Crate) then return false end
     
     local NextIdx = #self.Missiles
     
@@ -372,21 +468,10 @@ function ENT:AddMissile()
     missile:SetPos(muzzle.Pos)
     missile:SetAngles(muzzle.Ang)
     missile.Owner = ply
-    --missile.DoNotDuplicate = true
+    missile.DoNotDuplicate = true
     
-    local BulletData = {}
-    BulletData["Colour"]		= Color(255, 255, 255)
-    BulletData["Data10"]		= "0.00"
-    BulletData["Data5"]		= "301.94"
-    BulletData["Data6"]		= "30.000000"
-    BulletData["Data7"]		= "0"
-    BulletData["Data8"]		= "0"
-    BulletData["Data9"]		= "0"
-    BulletData["Id"]		= "80mmM"
-    BulletData["ProjLength"]		= "12.00"
-    BulletData["PropLength"]		= "0.01"
-    BulletData["Type"]		= "HE"
-    BulletData.IsShortForm = true
+    local BulletData = ACF_CompactBulletData(Crate)
+    BulletData.IsShortForm = true    
     
     missile.Launcher = self
     
@@ -401,6 +486,8 @@ function ENT:AddMissile()
     
     self.Missiles[NextIdx+1] = missile
     
+    Crate.Ammo = Crate.Ammo - 1
+    
     return missile
     
 end
@@ -411,30 +498,38 @@ end
 function ENT:LoadAmmo( AddTime, Reload )
     
     local Ammo = table.Count(self.Missiles)
-	--print("a", Ammo, self.MagSize)
-	if Ammo >= self.MagSize then return false end
+	if Ammo >= self.MagSize then 
+        print(Ammo, ">=", self.MagSize)
+        return false 
+    end
 	
 	local curtime = CurTime()
-    --print("b", self.Ready, Ammo, curtime, self.NextFire)
-	if not self.Ready and not (Ammo <= 0 and curtime > self.NextFire) then return false end
-	
-    --print("420 load it", Ammo)
+	if not self.Ready and not (Ammo <= 0 and curtime > self.NextFire) then 
+        print("not self.Ready = ", not self.Ready, "not (Ammo <= 0 and curtime > self.NextFire) = ", not (Ammo <= 0 and curtime > self.NextFire))
+        return false 
+    end
     
     local missile = self:AddMissile()
-    --print("missile", missile)
-    
+
     self:TrimNullMissiles()
     Ammo = table.Count(self.Missiles)
 	self:SetNetworkedBeamInt("Ammo",	Ammo)
 	
-	-- local phys = self:GetPhysicsObject()  	
-	-- if (phys:IsValid()) then 
-		-- phys:SetMass(self.Mass + (self.BulletData.ProjMass or 0) * Ammo)
-	-- end 
-	
-	self.NextFire = curtime + self.ReloadTime
+    local ReloadTime = 1
+    
+    if IsValid(missile) then
+        local bdata = missile.BulletData
+        ReloadTime = ( ( bdata.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
+        local RateOfFire = 60 / ReloadTime
+        
+        Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
+        Wire_TriggerOutput( self, "Muzzle Weight", math.floor( bdata.ProjMass * 1000 ) )
+        Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( bdata.MuzzleVel * ACF.VelScale ) )
+    end
+    
+	self.NextFire = curtime + ReloadTime
 	if AddTime then
-		self.NextFire = curtime + self.ReloadTime + AddTime
+		self.NextFire = curtime + ReloadTime + AddTime
 	end
 	self.Ready = false
 	Wire_TriggerOutput(self, "Ready", 0)
@@ -580,11 +675,11 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
     
 	Rack.BulletData.Colour = Rack:GetColor()
     
-    local volume = Rack.BulletData["RoundVolume"]
-	if volume then
-		Rack.ReloadTime = ( ( volume / 500 ) ^ 0.60 ) * Rack.RoFmod * Rack.PGRoFmod
-		Rack.RateOfFire = 60 / Rack.ReloadTime
-	end
+    -- local volume = Rack.BulletData["RoundVolume"]
+	-- if volume then
+		-- Rack.ReloadTime = ( ( volume / 500 ) ^ 0.60 ) * Rack.RoFmod * Rack.PGRoFmod
+		-- Rack.RateOfFire = 60 / Rack.ReloadTime
+	-- end
 	
     
 	local phys = Rack:GetPhysicsObject()  	
@@ -670,11 +765,11 @@ function ENT:FireMissile()
 	
 	if self.Ready and self:GetPhysicsObject():GetMass() >= self.Mass and not self:GetParent():IsValid() then
 		
-		local type = self.BulletData["Type"]
-		local Blacklist = ACF.AmmoBlacklist[type] or {}
-		local ammoblist = ACF.Weapons.Guns[self.BulletData["Id"]].blacklist or {}
+		--local type = self.BulletData["Type"]
+		--local Blacklist = ACF.AmmoBlacklist[type] or {}
+		--local ammoblist = ACF.Weapons.Guns[self.BulletData["Id"]].blacklist or {}
 		
-		if ACF.RoundTypes[type] and not table.HasValue( Blacklist, self.Class ) and not ammoblist[type] then		--Check if the roundtype loaded actually exists
+		--if ACF.RoundTypes[type] and not table.HasValue( Blacklist, self.Class ) and not ammoblist[type] then		--Check if the roundtype loaded actually exists
 		
 			-- local attach, muzzle = self:GetMuzzle(self.CurrentShot)
 			-- //PrintTable(muzzle)
@@ -703,9 +798,12 @@ function ENT:FireMissile()
 				Gun:ApplyForceCenter( self:GetForward() * -(self.BulletData["ProjMass"] * self.BulletData["MuzzleVel"] * 39.37 + self.BulletData["PropMass"] * 3000 * 39.37))			
 			end
 			//*/
+            local ReloadTime = 0.25
             local missile, curShot = self:PopMissile()
             --print("popped", missile)
             if missile then
+            
+                ReloadTime = ( ( missile.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
             
                 local attach, muzzle = self:GetMuzzle(curShot)
             
@@ -724,8 +822,6 @@ function ENT:FireMissile()
                 filter[#filter+1] = self
                 filter[#filter+1] = missile
                 
-                --pbn(filter)
-                
                 missile.Filter = filter
                 
                 missile:SetParent(nil)
@@ -733,7 +829,7 @@ function ENT:FireMissile()
                 missile:SetAngles(ShootVec:Angle())
                 missile:Launch()
                 
-                self:MuzzleEffect( attach )
+                self:MuzzleEffect( attach, missile.BulletData )
                 
                 self:TrimNullMissiles()
                 Ammo = table.Count(self.Missiles)
@@ -750,12 +846,12 @@ function ENT:FireMissile()
             Wire_TriggerOutput(self, "Ready", 0)
 			self.NextFire = CurTime() + self.ReloadTime
 			
-		else
-			self.Ready = false
-			Wire_TriggerOutput(self, "Ready", 0)
-			self.NextFire = CurTime() + self.ReloadTime
-			self:LoadAmmo(0, true)	
-		end
+		-- else
+			-- self.Ready = false
+			-- Wire_TriggerOutput(self, "Ready", 0)
+			-- self.NextFire = CurTime() + self.ReloadTime
+			-- self:LoadAmmo(0, true)	
+		-- end
 	else
 		self:EmitSound("weapons/pistol/pistol_empty.wav",500,100)
 	end
@@ -765,13 +861,13 @@ end
 
 
 
-function ENT:MuzzleEffect( attach )
+function ENT:MuzzleEffect( attach, bdata )
 	
 	local Effect = EffectData()
 		Effect:SetEntity( self )
 		Effect:SetScale( self.BulletData["PropMass"] )
 		Effect:SetAttachment( attach )
-		Effect:SetSurfaceProp( ACF.RoundTypes[self.BulletData["Type"]]["netid"]  )	--Encoding the ammo type into a table index
+		Effect:SetSurfaceProp( ACF.RoundTypes[bdata.Type]["netid"]  )	--Encoding the ammo type into a table index
 	util.Effect( "ACF_MissileLaunch", Effect, true, true )
 
 end
@@ -784,7 +880,7 @@ function ENT:ReloadEffect()
 	local Effect = EffectData()
 		Effect:SetEntity( self )
 		Effect:SetScale( 0 )
-		Effect:SetMagnitude( self.ReloadTime )
+		Effect:SetMagnitude( self.ReloadTime or 1 )
 		Effect:SetSurfaceProp( ACF.RoundTypes[self.BulletData["Type"]]["netid"]  )	--Encoding the ammo type into a table index
 	util.Effect( "ACF_MuzzleFlash", Effect, true, true )
 	
