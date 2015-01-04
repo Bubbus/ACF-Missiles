@@ -212,8 +212,8 @@ ACF.FillerDensity =
         
         local compact = {}
 
-        compact["Id"] = 			crate.Id            or crate.RoundId
-        compact["Type"] = 		    crate.Type          or crate.RoundType
+        compact["Id"] = 			crate.RoundId       or crate.Id
+        compact["Type"] = 		    crate.RoundType     or crate.Type
         compact["PropLength"] = 	crate.PropLength    or crate.RoundPropellant
         compact["ProjLength"] = 	crate.ProjLength    or crate.RoundProjectile
         compact["Data5"] = 		    crate.Data5         or crate.RoundData5         or crate.FillerVol      or crate.CavVol             or crate.Flechettes
