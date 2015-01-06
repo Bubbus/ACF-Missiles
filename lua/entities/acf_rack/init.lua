@@ -65,11 +65,12 @@ function ENT:Initialize()
 	
 	self.Inaccuracy 	= 1
 	
-	self.Inputs = WireLib.CreateSpecialInputs( self, { "Fire",      "Guidance Position" },
-                                                     { "NORMAL",    "VECTOR"    } )
+	self.Inputs = WireLib.CreateSpecialInputs( self, { "Fire",      "Reload",   "Target Pos" },
+                                                     { "NORMAL",    "NORMAL",   "VECTOR"    } )
                                                      
-	self.Outputs = WireLib.CreateSpecialOutputs( self, 	{ "Ready",	"Entity",	"Shots Left",	"Fire Rate",	"Muzzle Weight",	"Muzzle Velocity",  "Position" },
-														{ "NORMAL",	"ENTITY",	"NORMAL",		"NORMAL",		"NORMAL",			"NORMAL",           "VECTOR" } )
+	self.Outputs = WireLib.CreateSpecialOutputs( self, 	{ "Ready",	"Entity",	"Shots Left",  "Position" },
+														{ "NORMAL",	"ENTITY",	"NORMAL",      "VECTOR" } )
+                                                        
 	Wire_TriggerOutput(self, "Entity", self)
 	Wire_TriggerOutput(self, "Ready", 1)
 	self.WireDebugName = "ACF Rack"
@@ -226,9 +227,9 @@ function ENT:Link( Target )
 	
 	local ReloadTime = ( ( Target.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
 	local RateOfFire = 60 / ReloadTime
-	Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
-	Wire_TriggerOutput( self, "Muzzle Weight", math.floor( Target.BulletData.ProjMass * 1000 ) )
-	Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( Target.BulletData.MuzzleVel * ACF.VelScale ) )
+	//Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
+	//Wire_TriggerOutput( self, "Muzzle Weight", math.floor( Target.BulletData.ProjMass * 1000 ) )
+	//Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( Target.BulletData.MuzzleVel * ACF.VelScale ) )
 
 	return true, "Link successful!"
 	
@@ -308,7 +309,7 @@ end
 
 function ENT:TriggerInput( iname , value )
 	
-	if ( iname == "Fire" and value > 0 and ACF.GunfireEnabled ) then
+	if ( iname == "Fire" and value ~= 0 and ACF.GunfireEnabled ) then
 		if self.NextFire < CurTime() then
 			self.User = self:GetUser(self.Inputs["Fire"].Src)
 			if not IsValid(self.User) then self.User = self.Owner end
@@ -316,11 +317,24 @@ function ENT:TriggerInput( iname , value )
 			self:Think()
 		end
 		self.Firing = true
-	elseif ( iname == "Fire" and value <= 0 ) then
+	elseif ( iname == "Fire" and value == 0 ) then
 		self.Firing = false
-    elseif (iname == "Guidance Position" and value ~= nil) then
+    elseif (iname == "Reload" and value ~= 0 ) then
+        self:Reload()
+    elseif (iname == "Target Pos" and value ~= nil) then
         Wire_TriggerOutput(self, "Position", value)
 	end		
+end
+
+
+
+
+function ENT:Reload()
+
+    if !self.Ready then return end
+    
+    self:LoadAmmo(0, true)
+    
 end
 
 
@@ -365,10 +379,14 @@ function ENT:Think()
 	end
 	
 	if self.NextFire <= Time and Ammo > 0 and Ammo <= self.MagSize then
-		self.Ready = true
-		Wire_TriggerOutput(self, "Ready", 1)
+        self.Ready = true
+        Wire_TriggerOutput(self, "Ready", 1)
+		
 		if self.Firing then
 			self:FireMissile()
+        elseif self.ReloadTime and self.ReloadTime > 1 then
+            self:EmitSound( "acf_extra/airfx/weapon_select.wav", 500, 100 )
+            self.ReloadTime = nil
 		end
 	end
 
@@ -482,7 +500,9 @@ function ENT:AddMissile()
     missile:Spawn()
     missile:SetParent(self)
     
-    debugoverlay.Line(self:GetPos(), missile:GetPos(), 10, Color(0, 255, 0), true)
+    self:EmitSound( "acf_extra/tankfx/clunk.wav", 500, 100 )
+    
+    --debugoverlay.Line(self:GetPos(), missile:GetPos(), 10, Color(0, 255, 0), true)
     
     self.Missiles[NextIdx+1] = missile
     
@@ -520,11 +540,14 @@ function ENT:LoadAmmo( AddTime, Reload )
     if IsValid(missile) then
         local bdata = missile.BulletData
         ReloadTime = ( ( bdata.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
+        
+        print("ReloadTime =", ( ( bdata.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod)
+        
         local RateOfFire = 60 / ReloadTime
         
-        Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
-        Wire_TriggerOutput( self, "Muzzle Weight", math.floor( bdata.ProjMass * 1000 ) )
-        Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( bdata.MuzzleVel * ACF.VelScale ) )
+        //Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
+        //Wire_TriggerOutput( self, "Muzzle Weight", math.floor( bdata.ProjMass * 1000 ) )
+        //Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( bdata.MuzzleVel * ACF.VelScale ) )
     end
     
 	self.NextFire = curtime + ReloadTime
@@ -532,6 +555,8 @@ function ENT:LoadAmmo( AddTime, Reload )
 		self.NextFire = curtime + ReloadTime + AddTime
 	end
 	self.Ready = false
+    self.ReloadTime = ReloadTime
+    
 	Wire_TriggerOutput(self, "Ready", 0)
 	
 	self:OnLoaded()
@@ -752,9 +777,11 @@ end
 
 
 
+
 function ENT:GetInaccuracy()
     return self.Inaccuracy * ACF.GunInaccuracyScale
 end
+
 
 
 
@@ -765,42 +792,9 @@ function ENT:FireMissile()
 	
 	if self.Ready and self:GetPhysicsObject():GetMass() >= self.Mass and not self:GetParent():IsValid() then
 		
-		--local type = self.BulletData["Type"]
-		--local Blacklist = ACF.AmmoBlacklist[type] or {}
-		--local ammoblist = ACF.Weapons.Guns[self.BulletData["Id"]].blacklist or {}
-		
-		--if ACF.RoundTypes[type] and not table.HasValue( Blacklist, self.Class ) and not ammoblist[type] then		--Check if the roundtype loaded actually exists
-		
-			-- local attach, muzzle = self:GetMuzzle(self.CurrentShot)
-			-- //PrintTable(muzzle)
-			-- local MuzzlePos = muzzle.Pos
-			-- local MuzzleVec = muzzle.Ang:Forward()
-			-- local Inaccuracy = VectorRand() / 360 * self.Inaccuracy
-			
-			//print("\n\n\nfiredata\n\n\n")
-			//PrintTable(self.BulletData)
-			
-			-- self.BulletData["Pos"] = MuzzlePos
-			-- self.BulletData["Forward"] = MuzzleVec
-			-- self.BulletData["Flight"] = (MuzzleVec+Inaccuracy):GetNormalized() * self.BulletData["MuzzleVel"] * 39.37 + self:GetVelocity()
-			-- self.BulletData["Owner"] = self.User
-			-- self.BulletData["Gun"] = self
-			-- self.BulletData["Filter"] = {self}
-			-- local CreateShell = ACF.RoundTypes[type]["create"]
-			-- CreateShell( self, self.BulletData )
-			
-			-- self:MuzzleEffect( attach )
-		
-			//TODO: simulate backblast
-			/*
-			local Gun = self:GetPhysicsObject()  	
-			if (Gun:IsValid()) then 	
-				Gun:ApplyForceCenter( self:GetForward() * -(self.BulletData["ProjMass"] * self.BulletData["MuzzleVel"] * 39.37 + self.BulletData["PropMass"] * 3000 * 39.37))			
-			end
-			//*/
             local ReloadTime = 0.25
             local missile, curShot = self:PopMissile()
-            --print("popped", missile)
+            
             if missile then
             
                 ReloadTime = ( ( missile.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
@@ -844,7 +838,8 @@ function ENT:FireMissile()
             
             self.Ready = false
             Wire_TriggerOutput(self, "Ready", 0)
-			self.NextFire = CurTime() + self.ReloadTime
+			self.NextFire = CurTime() + ReloadTime
+            self.ReloadTime = ReloadTime
 			
 		-- else
 			-- self.Ready = false
