@@ -100,8 +100,6 @@ function ENT:ACF_Activate( Recalc )
 		self.ACF.Volume = PhysObj:GetVolume() * 16.38
 	end
 	
-	//print(self.ACF.Volume, ACF.Threshold)
-	
 	local Armour = EmptyMass*1000 / self.ACF.Aera / 0.78 --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
 	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone 
 	local Percent = 1 
@@ -127,8 +125,6 @@ end
 function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This function needs to return HitRes
 
 	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
-	
-	//printByName(HitRes)
 	
 	local curammo = table.Count(self.Missiles)
 	
@@ -331,9 +327,10 @@ end
 
 function ENT:Reload()
 
-    if !self.Ready then return end
-    
-    self:LoadAmmo(0, true)
+
+    if self.Ready or not IsValid(self:PeekMissile()) then
+        self:LoadAmmo(0, true)
+    end
     
 end
 
@@ -381,9 +378,13 @@ function ENT:Think()
 	if self.NextFire <= Time and Ammo > 0 and Ammo <= self.MagSize then
         self.Ready = true
         Wire_TriggerOutput(self, "Ready", 1)
-		
+        
 		if self.Firing then
+            self.ReloadTime = nil
 			self:FireMissile()
+        elseif (self.Inputs["Reload"].Value ~= 0) and self:CanReload() then
+            self.ReloadTime = nil
+            self:Reload()
         elseif self.ReloadTime and self.ReloadTime > 1 then
             self:EmitSound( "acf_extra/airfx/weapon_select.wav", 500, 100 )
             self.ReloadTime = nil
@@ -453,7 +454,6 @@ function ENT:FindNextCrate()
 		
 		AmmoEnt = self.AmmoLink[self.CurAmmo]
 		if AmmoEnt and AmmoEnt:IsValid() and AmmoEnt.Ammo > 0 and AmmoEnt.Load then
-            print("AmmoEnt = ", AmmoEnt)
 			return AmmoEnt
 		end
 		AmmoEnt = nil
@@ -461,8 +461,25 @@ function ENT:FindNextCrate()
 		i = i + 1
 	end
 	
-    print("AmmoEnt = nil")
 	return false
+end
+
+
+
+
+function ENT:CanReload()
+    
+    local Ammo = table.Count(self.Missiles)
+	if Ammo >= self.MagSize then return false end
+    
+    local Crate = self:FindNextCrate()
+    if not IsValid(Crate) then return false end
+    
+    local curtime = CurTime()
+	if curtime < self.NextFire then return false end
+    
+    return true
+    
 end
 
 
@@ -500,9 +517,7 @@ function ENT:AddMissile()
     missile:Spawn()
     missile:SetParent(self)
     
-    self:EmitSound( "acf_extra/tankfx/clunk.wav", 500, 100 )
-    
-    --debugoverlay.Line(self:GetPos(), missile:GetPos(), 10, Color(0, 255, 0), true)
+    self:EmitSound( "acf_extra/tankfx/resupply_single.wav", 500, 100 )
     
     self.Missiles[NextIdx+1] = missile
     
@@ -519,13 +534,11 @@ function ENT:LoadAmmo( AddTime, Reload )
     
     local Ammo = table.Count(self.Missiles)
 	if Ammo >= self.MagSize then 
-        print(Ammo, ">=", self.MagSize)
         return false 
     end
 	
 	local curtime = CurTime()
 	if not self.Ready and not (Ammo <= 0 and curtime > self.NextFire) then 
-        print("not self.Ready = ", not self.Ready, "not (Ammo <= 0 and curtime > self.NextFire) = ", not (Ammo <= 0 and curtime > self.NextFire))
         return false 
     end
     
@@ -792,61 +805,55 @@ function ENT:FireMissile()
 	
 	if self.Ready and self:GetPhysicsObject():GetMass() >= self.Mass and not self:GetParent():IsValid() then
 		
-            local ReloadTime = 0.25
-            local missile, curShot = self:PopMissile()
+        local ReloadTime = 0.25
+        local missile, curShot = self:PopMissile()
+        
+        if missile then
+        
+            ReloadTime = ( ( missile.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
+        
+            local attach, muzzle = self:GetMuzzle(curShot)
+        
+            local MuzzlePos = self:LocalToWorld(muzzle.Pos)
+            local MuzzleVec = muzzle.Ang:Forward()
             
-            if missile then
+            local coneAng = math.tan(math.rad(self:GetInaccuracy())) 
+            local randUnitSquare = (self:GetUp() * (2 * math.random() - 1) + self:GetRight() * (2 * math.random() - 1))
+            local spread = randUnitSquare:GetNormalized() * coneAng * (math.random() ^ (1 / math.Clamp(ACF.GunInaccuracyBias, 0.5, 4)))
+            local ShootVec = (MuzzleVec + spread):GetNormalized()
             
-                ReloadTime = ( ( missile.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
-            
-                local attach, muzzle = self:GetMuzzle(curShot)
-            
-                local MuzzlePos = self:LocalToWorld(muzzle.Pos)
-                local MuzzleVec = muzzle.Ang:Forward()
-                
-                local coneAng = math.tan(math.rad(self:GetInaccuracy())) 
-                local randUnitSquare = (self:GetUp() * (2 * math.random() - 1) + self:GetRight() * (2 * math.random() - 1))
-                local spread = randUnitSquare:GetNormalized() * coneAng * (math.random() ^ (1 / math.Clamp(ACF.GunInaccuracyBias, 0.5, 4)))
-                local ShootVec = (MuzzleVec + spread):GetNormalized()
-                
-                local filter = {}
-                for k, v in pairs(self.Missiles) do
-                    filter[#filter+1] = v
-                end
-                filter[#filter+1] = self
-                filter[#filter+1] = missile
-                
-                missile.Filter = filter
-                
-                missile:SetParent(nil)
-                missile:SetPos(MuzzlePos)
-                missile:SetAngles(ShootVec:Angle())
-                missile:Launch()
-                
-                self:MuzzleEffect( attach, missile.BulletData )
-                
-                self:TrimNullMissiles()
-                Ammo = table.Count(self.Missiles)
-                self:SetNetworkedBeamInt("Ammo",	Ammo)
-                
-                local phys = self:GetPhysicsObject()  	
-                if (phys:IsValid()) then 
-                    phys:SetMass(self.Mass + (self.BulletData.ProjMass or 0) * Ammo)
-                end 
-                
+            local filter = {}
+            for k, v in pairs(self.Missiles) do
+                filter[#filter+1] = v
             end
+            filter[#filter+1] = self
+            filter[#filter+1] = missile
             
-            self.Ready = false
-            Wire_TriggerOutput(self, "Ready", 0)
-			self.NextFire = CurTime() + ReloadTime
-            self.ReloadTime = ReloadTime
-			
-		-- else
-			-- self.Ready = false
-			-- Wire_TriggerOutput(self, "Ready", 0)
-			-- self.NextFire = CurTime() + self.ReloadTime
-			-- self:LoadAmmo(0, true)	
-		-- end
+            missile.Filter = filter
+            
+            missile:SetParent(nil)
+            missile:SetPos(MuzzlePos)
+            missile:SetAngles(ShootVec:Angle())
+            missile:Launch()
+            
+            self:MuzzleEffect( attach, missile.BulletData )
+            
+            self:TrimNullMissiles()
+            Ammo = table.Count(self.Missiles)
+            self:SetNetworkedBeamInt("Ammo",	Ammo)
+            
+            local phys = self:GetPhysicsObject()  	
+            if (phys:IsValid()) then 
+                phys:SetMass(self.Mass + (self.BulletData.ProjMass or 0) * Ammo)
+            end 
+            
+        end
+        
+        self.Ready = false
+        Wire_TriggerOutput(self, "Ready", 0)
+        self.NextFire = CurTime() + ReloadTime
+        self.ReloadTime = ReloadTime
+        
 	else
 		self:EmitSound("weapons/pistol/pistol_empty.wav",500,100)
 	end
@@ -858,12 +865,14 @@ end
 
 function ENT:MuzzleEffect( attach, bdata )
 	
-	local Effect = EffectData()
-		Effect:SetEntity( self )
-		Effect:SetScale( self.BulletData["PropMass"] )
-		Effect:SetAttachment( attach )
-		Effect:SetSurfaceProp( ACF.RoundTypes[bdata.Type]["netid"]  )	--Encoding the ammo type into a table index
-	util.Effect( "ACF_MissileLaunch", Effect, true, true )
+    self:EmitSound( "phx/epicmetal_hard.wav", 500, 100 )
+    
+	-- local Effect = EffectData()
+		-- Effect:SetEntity( self )
+		-- Effect:SetScale( self.BulletData["PropMass"] )
+		-- Effect:SetAttachment( attach )
+		-- Effect:SetSurfaceProp( ACF.RoundTypes[bdata.Type]["netid"]  )	--Encoding the ammo type into a table index
+	-- util.Effect( "ACF_MissileLaunch", Effect, true, true )
 
 end
 
