@@ -284,7 +284,33 @@ function ENT:Launch()
 		self.CacheParticleEffect = CurTime() + 0.01
 	end
 	
+    self:LaunchEffect()
+    
 	self:Think()
+end
+
+
+
+
+function ENT:LaunchEffect()
+
+    local guns = list.Get("ACFEnts").Guns
+    local class = guns[self.BulletData.Id]
+    
+    if class then
+        if class.sound then
+            self:EmitSound(class.sound, 500, 100)
+        else
+            local classes = list.Get("ACFClasses").GunClass
+            class = classes[class.gunclass]
+            
+            if class then
+                local sound = class.round and class.round.sound or class.sound
+                if sound then self:EmitSound(sound, 500, 100) end
+            end
+        end
+    end
+    
 end
 
 

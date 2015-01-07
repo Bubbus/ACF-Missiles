@@ -378,19 +378,24 @@ function ENT:Think()
 	if self.NextFire <= Time and Ammo > 0 and Ammo <= self.MagSize then
         self.Ready = true
         Wire_TriggerOutput(self, "Ready", 1)
-        
+        --print(self.Firing , Ammo > 0)
 		if self.Firing then
             self.ReloadTime = nil
 			self:FireMissile()
-        elseif (self.Inputs["Reload"].Value ~= 0) and self:CanReload() then
+        elseif (self.Inputs.Reload and self.Inputs.Reload.Value ~= 0) and self:CanReload() then
             self.ReloadTime = nil
             self:Reload()
         elseif self.ReloadTime and self.ReloadTime > 1 then
             self:EmitSound( "acf_extra/airfx/weapon_select.wav", 500, 100 )
             self.ReloadTime = nil
 		end
-	end
-
+    elseif self.NextFire <= Time and Ammo == 0 then
+        if (self.Inputs.Reload and self.Inputs.Reload.Value ~= 0) and self:CanReload() then
+            self.ReloadTime = nil
+            self:Reload()
+        end
+    end
+    
 	self:NextThink(Time)
 	return true
 	
@@ -532,15 +537,7 @@ end
 
 function ENT:LoadAmmo( AddTime, Reload )
     
-    local Ammo = table.Count(self.Missiles)
-	if Ammo >= self.MagSize then 
-        return false 
-    end
-	
-	local curtime = CurTime()
-	if not self.Ready and not (Ammo <= 0 and curtime > self.NextFire) then 
-        return false 
-    end
+    if not self:CanReload() then return false end
     
     local missile = self:AddMissile()
 
@@ -554,8 +551,6 @@ function ENT:LoadAmmo( AddTime, Reload )
         local bdata = missile.BulletData
         ReloadTime = ( ( bdata.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
         
-        print("ReloadTime =", ( ( bdata.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod)
-        
         local RateOfFire = 60 / ReloadTime
         
         //Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
@@ -563,9 +558,9 @@ function ENT:LoadAmmo( AddTime, Reload )
         //Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( bdata.MuzzleVel * ACF.VelScale ) )
     end
     
-	self.NextFire = curtime + ReloadTime
+	self.NextFire = CurTime() + ReloadTime
 	if AddTime then
-		self.NextFire = curtime + ReloadTime + AddTime
+		self.NextFire = CurTime() + ReloadTime + AddTime
 	end
 	self.Ready = false
     self.ReloadTime = ReloadTime
@@ -805,7 +800,7 @@ function ENT:FireMissile()
 	
 	if self.Ready and self:GetPhysicsObject():GetMass() >= self.Mass and not self:GetParent():IsValid() then
 		
-        local ReloadTime = 0.25
+        local ReloadTime = 0.5
         local missile, curShot = self:PopMissile()
         
         if missile then
@@ -847,6 +842,8 @@ function ENT:FireMissile()
                 phys:SetMass(self.Mass + (self.BulletData.ProjMass or 0) * Ammo)
             end 
             
+        else
+            self:EmitSound("weapons/pistol/pistol_empty.wav",500,100)
         end
         
         self.Ready = false
