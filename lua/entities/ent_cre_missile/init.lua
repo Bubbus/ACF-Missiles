@@ -16,16 +16,16 @@ if SERVER then
 		
 		local BulletData = {}
 		BulletData["Colour"]		= Color(255, 255, 255)
-		BulletData["Data10"]		= "0.00"
-		BulletData["Data5"]		= "301.94"
-		BulletData["Data6"]		= "30.000000"
-		BulletData["Data7"]		= "0"
-		BulletData["Data8"]		= "0"
-		BulletData["Data9"]		= "0"
-		BulletData["Id"]		= "80mmM"
-		BulletData["ProjLength"]		= "12.00"
-		BulletData["PropLength"]		= "0.01"
-		BulletData["Type"]		= "HE"
+        BulletData["Data10"]		= "0.00"
+        BulletData["Data5"]		= "312.49"
+        BulletData["Data6"]		= "48.830002"
+        BulletData["Data7"]		= "0"
+        BulletData["Data8"]		= "0"
+        BulletData["Data9"]		= "0"
+        BulletData["Id"]		= "40mmAAM"
+        BulletData["ProjLength"]		= "31.99"
+        BulletData["PropLength"]		= "0.01"
+        BulletData["Type"]		= "HE"
 		BulletData.IsShortForm = true
 		
         missile.Launcher = ply
