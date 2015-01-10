@@ -1,8 +1,8 @@
 -- shared.lua
 
-DEFINE_BASECLASS("base_gmodentity")
+DEFINE_BASECLASS("base_wire_entity")
 ENT.Type        	= "anim"
-ENT.Base        	= "base_gmodentity"
+ENT.Base        	= "base_wire_entity"
 ENT.PrintName 		= "XCF Rack"
 ENT.Author 			= "Bubbus"
 ENT.Contact 		= "splambob@googlemail.com"
