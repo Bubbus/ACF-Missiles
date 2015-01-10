@@ -180,7 +180,7 @@ function ENT:CanLinkCrate(crate)
     -- Don't link if it's not a missile.
     local gun = list.Get("ACFEnts").Guns[bdata.Id]
     local Classes = list.Get("ACFClasses").GunClass
-    pbn(bdata)
+    --pbn(bdata)
     if "missile" ~= Classes[gun.gunclass].type then 
         return false, "Racks cannot be linked to ammo crates of type '" .. bdata.gunclass .. "'!" 
     end
