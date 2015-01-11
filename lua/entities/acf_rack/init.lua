@@ -48,20 +48,10 @@ function ENT:Initialize()
 	self.CurAmmo = 1
 	self.Sequence = 1
 	
-    if not self.BulletData then
-    
-        self.BulletData = 
-        {
-            Type        = "Empty",
-            FillerMass  = 0,
-            ConeAng     = 0,
-            PropLength  = 0,
-            ProjLength  = 0,
-            PropMass    = 0,
-            ProjMass    = 0
-        }
-        
-     end
+    self.BulletData = {}
+		self.BulletData.Type = "Empty"
+		self.BulletData.PropMass = 0
+		self.BulletData.ProjMass = 0
 	
 	self.Inaccuracy 	= 1
 	
@@ -141,7 +131,7 @@ function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This
 	end
 	
 	if HitRes.Kill then
-		local CanDo = hook.Run("ACF_AmmoExplode", self, self.BulletData )
+		local CanDo = hook.Run("ACF_AmmoExplode", self, nil ) --  which bulletdata to use?!  let's let them figure that out.
 		if CanDo == false then return HitRes end
 		self.Exploding = true
 		if( Inflictor and Inflictor:IsValid() and Inflictor:IsPlayer() ) then
@@ -217,16 +207,7 @@ function ENT:Link( Target )
 	table.insert( self.AmmoLink, Target )
 	table.insert( Target.Master, self )
 	
-	if self.BulletData.Type == "Empty" and Target.Load then
-		self:UnloadAmmo()
-	end
-	
-	local ReloadTime = ( ( Target.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
-	local RateOfFire = 60 / ReloadTime
-	//Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
-	//Wire_TriggerOutput( self, "Muzzle Weight", math.floor( Target.BulletData.ProjMass * 1000 ) )
-	//Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( Target.BulletData.MuzzleVel * ACF.VelScale ) )
-
+    
 	return true, "Link successful!"
 	
 end
@@ -347,14 +328,6 @@ end
 
 function ENT:Think()
 
-	local color = self:GetColor()
-	local lastCol = self.lastCol
-	if (CurTime() > self.nextColCheck) and (color.r ~= lastCol.r or color.g ~= lastCol.g or color.b ~= lastCol.b or color.a ~= lastCol.a) then
-		self.nextColCheck = CurTime() + 2
-		self.lastCol = color
-		MakeACF_Rack(self.Owner, self:GetPos(), self:GetAngles(), self.BulletData.Id, self)
-	end
-
     local Ammo = table.Count(self.Missiles)
 
 	local Time = CurTime()
@@ -365,10 +338,6 @@ function ENT:Think()
         self:TrimNullMissiles()
 		self:SetNetworkedBeamString("GunType",		self.Id)
 		self:SetNetworkedBeamInt(	"Ammo",			Ammo)
-		self:SetNetworkedBeamString("Type",			self.BulletData["Type"])
-		self:SetNetworkedBeamInt(	"Mass",			self.BulletData["ProjMass"]*100)
-		self:SetNetworkedBeamInt(	"Propellant",	self.BulletData["PropMass"]*1000)
-		self:SetNetworkedBeamInt(	"Filler", 		(self.BulletData["FillerMass"] or 0)*1000)
 		self:SetNetworkedBeamInt(	"FireRate",		self.RateOfFire)
 		
 		self.LastSend = Time
@@ -553,9 +522,7 @@ function ENT:LoadAmmo( AddTime, Reload )
         
         local RateOfFire = 60 / ReloadTime
         
-        //Wire_TriggerOutput( self, "Fire Rate", RateOfFire )
-        //Wire_TriggerOutput( self, "Muzzle Weight", math.floor( bdata.ProjMass * 1000 ) )
-        //Wire_TriggerOutput( self, "Muzzle Velocity", math.floor( bdata.MuzzleVel * ACF.VelScale ) )
+        Fire_TriggerOutput( self, "Fire Rate", RateOfFire )
     end
     
 	self.NextFire = CurTime() + ReloadTime
@@ -610,7 +577,7 @@ end
 
 
 
-function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
+function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 
 	if not Owner:CheckLimit("_acf_gun") then return false end
 	
@@ -634,7 +601,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
 	Rack:SetPlayer(Owner)
 	Rack.Owner = Owner
 	Rack.Id = Id
-	Rack.BulletData.Id = Id
+	--Rack.BulletData.Id = Id
 	
 	local gundef = List[Id] or error("Couldn't find the " .. tostring(Id) .. " gun-definition!")
 	
@@ -658,13 +625,6 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
 	if(gundef["magreload"]) then
 		Rack.MagReload = math.max(Rack.MagReload, gundef["magreload"])
 	end
-	
-    
-	-- if not UpdateRack then
-		-- Rack.CurrentShot = 0
-	-- else
-		-- Rack.CurrentShot = math.Clamp(Rack.CurrentShot, 0, Rack.MagSize)
-	-- end
 	
     
 	local gunclass = Classes[Rack.Class] or error("Couldn't find the " .. tostring(Rack.Class) .. " gun-class!")
@@ -691,40 +651,11 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack, UpdateBullet)
 	Rack.Muzzle = Rack:WorldToLocal(Muzzle.Pos)
 	
     
-	if UpdateBullet then
-        
-        if UpdateBullet.IsShortForm then
-            Rack.ShortBulletData = UpdateBullet
-            Rack.BulletData = ACF_ExpandBulletData(UpdateBullet)
-            Rack:UpdateCrateVariables()
-        else
-            Rack.BulletData = UpdateBullet
-            Rack:UpdateCrateVariables()
-            Rack.ShortBulletData = ACF_CompactBulletData(UpdateBullet)
-        end
-		
-        Rack:UpdateMissiles(Rack.BulletData)
-	end
-    
-	Rack.BulletData.Colour = Rack:GetColor()
-    
-    -- local volume = Rack.BulletData["RoundVolume"]
-	-- if volume then
-		-- Rack.ReloadTime = ( ( volume / 500 ) ^ 0.60 ) * Rack.RoFmod * Rack.PGRoFmod
-		-- Rack.RateOfFire = 60 / Rack.ReloadTime
-	-- end
-	
-    
 	local phys = Rack:GetPhysicsObject()  	
 	if (phys:IsValid()) then 
-		phys:SetMass(Rack.Mass + (Rack.BulletData.ProjMass or 0) * Rack.MagSize)
+		phys:SetMass(Rack.Mass)
 	end 	
-	
-    
-	--print("--", "rack bdata")
-	--printByName(Rack.ShortBulletData)
-	--print("--", "end rack bdata")
-	
+
 	hook.Call("ACF_RackCreate", nil, Rack)
 	
 	return Rack
@@ -733,27 +664,6 @@ end
 
 list.Set( "ACFCvars", "acf_rack" , {"id"} )
 duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
-
-
-
-
-function ENT:UpdateCrateVariables(bdata)
-
-    bdata = bdata or self.BulletData
-
-    --Data 1 to 4 are should always be Round ID, Round Type, Propellant lenght, Projectile lenght
-	self.RoundId = bdata.Id		--Weapon this round loads into, ie 140mmC, 105mmH ...
-	self.RoundType = bdata.Type		--Type of round, IE AP, HE, HEAT ...
-	self.RoundPropellant = bdata.PropLength or 0--Lenght of propellant
-	self.RoundProjectile = bdata.ProjLength or 0--Lenght of the projectile
-	self.RoundData5 = ( bdata.FillerVol or bdata.Data5 or 0 )
-	self.RoundData6 = ( bdata.ConeAng or bdata.Data6 or 0 )
-	self.RoundData7 = ( bdata.Data7 or 0 )
-	self.RoundData8 = ( bdata.Data8 or 0 )
-	self.RoundData9 = ( bdata.Data9 or 0 )
-	self.RoundData10 = ( bdata.Tracer or bdata.Data10 or 0 )
-
-end
 
 
 
@@ -794,12 +704,15 @@ end
 
 
 function ENT:FireMissile()
-
-	local CanDo = hook.Run("ACF_FireShell", self, self.BulletData )
-	if CanDo == false then return end
-	
+    
 	if self.Ready and self:GetPhysicsObject():GetMass() >= self.Mass and not self:GetParent():IsValid() then
-		
+        
+        local nextMsl = self:PeekMissile()
+    
+        local CanDo = true
+        if nextMsl then CanDo = hook.Run("ACF_FireShell", self, nextMsl.BulletData ) end
+        if CanDo == false then return end
+        
         local ReloadTime = 0.5
         local missile, curShot = self:PopMissile()
         
@@ -837,11 +750,6 @@ function ENT:FireMissile()
             Ammo = table.Count(self.Missiles)
             self:SetNetworkedBeamInt("Ammo",	Ammo)
             
-            local phys = self:GetPhysicsObject()  	
-            if (phys:IsValid()) then 
-                phys:SetMass(self.Mass + (self.BulletData.ProjMass or 0) * Ammo)
-            end 
-            
         else
             self:EmitSound("weapons/pistol/pistol_empty.wav",500,100)
         end
@@ -878,12 +786,12 @@ end
 
 function ENT:ReloadEffect()
 
-	local Effect = EffectData()
-		Effect:SetEntity( self )
-		Effect:SetScale( 0 )
-		Effect:SetMagnitude( self.ReloadTime or 1 )
-		Effect:SetSurfaceProp( ACF.RoundTypes[self.BulletData["Type"]]["netid"]  )	--Encoding the ammo type into a table index
-	util.Effect( "ACF_MuzzleFlash", Effect, true, true )
+	-- local Effect = EffectData()
+		-- Effect:SetEntity( self )
+		-- Effect:SetScale( 0 )
+		-- Effect:SetMagnitude( self.ReloadTime or 1 )
+		-- Effect:SetSurfaceProp( ACF.RoundTypes[self.BulletData["Type"]]["netid"]  )	--Encoding the ammo type into a table index
+	-- util.Effect( "ACF_MuzzleFlash", Effect, true, true )
 	
 end
 
@@ -893,18 +801,25 @@ end
 
 function ENT:PreEntityCopy()
 
-    local squashedammo = ACF_CompactBulletData(self.BulletData)
-    --print("SQUASHED AMMO:")
-    --printByName(squashedammo)
-    --print("         SELFID", self.Id)
-    duplicator.StoreEntityModifier( self, "ACFRackInfo", {Id = self.Id} )
-    duplicator.StoreEntityModifier( self, "ACFRackAmmo", squashedammo )
-	
-	//Wire dupe info
-	local DupeInfo = WireLib.BuildDupeInfo(self)
-	if(DupeInfo) then
-		duplicator.StoreEntityModifier(self,"WireDupeInfo",DupeInfo)
+    local info = {}
+	local entids = {}
+	for Key, Value in pairs(self.AmmoLink) do					--First clean the table of any invalid entities
+		if not Value:IsValid() then
+			table.remove(self.AmmoLink, Value)
+		end
 	end
+	for Key, Value in pairs(self.AmmoLink) do					--Then save it
+		table.insert(entids, Value:EntIndex())
+	end
+	info.entities = entids
+	if info.entities then
+		duplicator.StoreEntityModifier( self, "ACFAmmoLink", info )
+	end
+
+    duplicator.StoreEntityModifier( self, "ACFRackInfo", {Id = self.Id} )
+
+    //Wire dupe info
+	self.BaseClass.PreEntityCopy( self )
 	
 end
 
@@ -912,32 +827,28 @@ end
 
 
 function ENT:PostEntityPaste( Player, Ent, CreatedEntities )
-
-	if(Ent.EntityMods and Ent.EntityMods.WireDupeInfo) then
-		WireLib.ApplyDupeInfo(Player, Ent, Ent.EntityMods.WireDupeInfo, function(id) return CreatedEntities[id] end)
-	end
-
-	local squashedammo = Ent.EntityMods and Ent.EntityMods.ACFRackAmmo or nil
-	--print("         SQUASHED AMMO:")
-	--printByName(squashedammo)
-	if squashedammo then
-		local ammoclass = squashedammo.Id// or error("Tried to copy an ACF Rack but it was loaded with invalid ammo! (" .. tostring(squashedammo.ProjClass) ", " .. tostring(squashedammo.Id) .. ", " .. tostring(squashedammo.Type) .. ")")
-        
-		if squashedammo.Id and self.PermittedAmmoTypes[squashedammo.Type] then
-			self.BulletData = ACF_ExpandBulletData(squashedammo)
-            --print("         UNSQUASHED AMMO:")
-            --printByName(self.BulletData)
-			
-			--Ent.EntityMods.ACFRackAmmo = nil
-		end
-	end
 	
     self.Id = Ent.EntityMods.ACFRackInfo.Id
-    
-	//printByName(self.BulletData)
-	
-	MakeACF_Rack(self.Owner, self:GetPos(), self:GetAngles(), self.Id, self, self.BulletData)
 
+	MakeACF_Rack(self.Owner, self:GetPos(), self:GetAngles(), self.Id, self)
+
+    if (Ent.EntityMods) and (Ent.EntityMods.ACFAmmoLink) and (Ent.EntityMods.ACFAmmoLink.entities) then
+		local AmmoLink = Ent.EntityMods.ACFAmmoLink
+		if AmmoLink.entities and table.Count(AmmoLink.entities) > 0 then
+			for _,AmmoID in pairs(AmmoLink.entities) do
+				local Ammo = CreatedEntities[ AmmoID ]
+				if Ammo and Ammo:IsValid() and Ammo:GetClass() == "acf_ammo" then
+					self:Link( Ammo )
+				end
+			end
+		end
+		Ent.EntityMods.ACFAmmoLink = nil
+	end
+    
+    
+    //Wire dupe info
+	self.BaseClass.PostEntityPaste( self, Player, Ent, CreatedEntities )
+    
 end
 
 
