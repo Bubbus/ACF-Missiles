@@ -59,7 +59,17 @@ function ACF_defineGunClass( id, data )
     
     Classes.GunClass[ id ] = data
 	ACF.Classes.GunClass[ id ] = data
+    
+    if data.ammoBlacklist then
+        for k, v in pairs(data.ammoBlacklist) do
+            local ammobl = ACF.AmmoBlacklist[v]
+            ammobl[#ammobl+1] = id
+        end
+    end
 end
+
+
+
 
 function ACF_defineGun( id, data )
 	data.id = id

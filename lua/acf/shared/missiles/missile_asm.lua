@@ -9,6 +9,8 @@ ACF_defineGunClass("ASM", {
 	rofmod          = 1,
 	sound           = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance   = " ",
-	soundNormal     = " "
+	soundNormal     = " ",
+    
+    ammoBlacklist   = {"AP", "APHE"}
 } )
 
