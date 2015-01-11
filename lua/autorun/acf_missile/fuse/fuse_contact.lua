@@ -14,6 +14,8 @@ ACF.Fuse[ClassName] = this
 
 this.Name = ClassName
 
+this.desc = "This fuse triggers upon direct contact against solid surfaces."
+
 
 -- function this:Draw(ent, duration)
 	-- local Guidance = self:GetGuidance(ent)

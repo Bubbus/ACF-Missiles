@@ -21,6 +21,9 @@ this.Target = nil
 this.Distance = 2000
 
 
+this.desc = "This fuse tracks the guidance module's target and detonates when the distance becomes low enough."
+
+
 -- function this:Draw(ent, duration)
 	-- local Guidance = self:GetGuidance(ent)
 	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)

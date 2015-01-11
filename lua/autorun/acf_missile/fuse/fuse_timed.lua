@@ -18,6 +18,9 @@ this.Name = ClassName
 this.Timer = 10
 
 
+this.desc = "This fuse triggers upon direct contact, or when the timer ends."
+
+
 -- function this:Draw(ent, duration)
 	-- local Guidance = self:GetGuidance(ent)
 	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)

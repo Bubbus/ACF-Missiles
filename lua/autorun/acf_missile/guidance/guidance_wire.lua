@@ -21,6 +21,8 @@ this.InputSource = nil
 this.WireLength = 20000
 
 
+this.desc = "This guidance package reads a target-position from the launcher and guides the munition towards it."
+
 -- function this:Draw(ent, duration)
 	-- local Guidance = self:GetGuidance(ent)
 	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)

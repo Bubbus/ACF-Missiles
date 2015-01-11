@@ -37,6 +37,8 @@ this.DefaultFilter =
 }
 
 
+this.desc = "This guidance package detects a target in front of it when launched, and guides the munition towards it."
+
 -- function this:Draw(ent, duration)
 	-- local Guidance = self:GetGuidance(ent)
 	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)
