@@ -117,9 +117,11 @@ function ENT:CalcFlight()
 		local TargetVel = (Guidance.TargetVel or Vector(0,0,0)) / DeltaTime * 0.03
 		local DirRaw = TargetPos - Pos
 		local DirRawNorm = DirRaw:GetNormalized()
+		local SpeedMul = math.min((Speed / DeltaTime / self.MinimumSpeed) ^ 3,1)
+		--print(SpeedMul)
 
 		--Target position projection
-		local LockOffset = ((TargetVel - LastVel) * Dist / Speed) or Dir
+		local LockOffset = (((TargetVel - LastVel) / Speed + Vector(0,0,DeltaTime * self.Gravity / 1000)) * Dist) or NewDir
 		local ProjOffset = LockOffset - LockOffset:Dot(DirRawNorm) * DirRawNorm
 		local DirProj = TargetPos + ProjOffset - Pos
 		local DirProjNorm = DirProj:GetNormalized()
@@ -127,7 +129,7 @@ function ENT:CalcFlight()
 		--TODO:		[x] Add a second rotation that smoothes the oscillations out
 		--			[x] Prevent the missile from correcting so far that the target falls out of the FOV
 		--			[ ] Add fins to allow steering without a motor
-		--			[ ] Make rotations depend on velocity
+		--			[x] Make rotations depend on velocity
 
 		local VelAxis = LastVel:Cross(DirProj)
 		local VelAxisNorm = VelAxis:GetNormalized()
@@ -136,14 +138,14 @@ function ENT:CalcFlight()
 		if AngDiff > 0 then
 			--Target facing
 			local Ang = Dir:Angle()
-			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff,-1,1) )
+			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff * SpeedMul,-1,1) )
 			local NewDir = Ang:Forward()
 
 			--Velocity stabilisation
 			local DirAxis = NewDir:Cross(DirRawNorm)
 			local RawDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
 			local RawAng = math.deg(math.acos(RawDotSimple))		--Since both vectors are normalised, calculating the dot product should be faster this way
-				Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng,-1,1) * 6 )
+			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-1,1) * (self.MinimumSpeed / 2000))
 			NewDir = Ang:Forward()
 
 			--FOV check
@@ -182,10 +184,10 @@ function ENT:CalcFlight()
 	end
 
 	--Physics calculations
-	Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
+	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
 	local SpeedSq = Vel:LengthSqr()
 	local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
-	local Vel = Vel - Drag
+	Vel = Vel - Drag
 	local EndPos = Pos + Vel
 
 	--Hit detection
@@ -321,9 +323,11 @@ function ENT:ConfigureFlight()
     local Time = CurTime()
 	self.MotorLength = 10
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
-	self.DragCoef = 0.0025
+	self.DragCoef = 0.0018
 	self.Motor = 10000
+	self.MinimumSpeed = 10000
 	self.FlightTime = 0
+	self.FinMultiplier = 1
 	self.CutoutTime = Time + self.MotorLength
 	self.CurPos = self:GetPos()
 	self.CurDir = self:GetForward()
@@ -401,22 +405,3 @@ end
 function ENT:PhysicsCollide()
 	if self.Launched then self:Detonate() end
 end
-
-
-
-
-local function onRocketDamage( ent, dmginfo )
-	local inflictor = dmginfo:GetInflictor():GetClass()
-	if inflictor != "ent_cre_at4_rpg" then return end
-
-	if !ent:IsPlayer() and !ent:IsNPC() then return end
-
-	dmginfo:ScaleDamage(0)	--Disabling damage dealt by the rocket entity (to fix the killicons)
-	return dmginfo
-end
-
-
-
-
-
-hook.Add("EntityTakeDamage", "Cre_RocketDamage", onRocketDamage)
