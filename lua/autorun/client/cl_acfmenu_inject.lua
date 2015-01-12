@@ -7,8 +7,17 @@ function SetMissileGUIEnabled(panel, enabled)
 
     if enabled then
     
-    
         -- Create guidance selection combobox + description label
+    
+        if not acfmenupanel.CData.MissileSpacer then
+            local spacer = vgui.Create("DPanel")
+            spacer:SetSize(24, 24)
+            spacer.Paint = function() end
+            acfmenupanel.CData.MissileSpacer = spacer
+            
+            acfmenupanel.CustomDisplay:AddItem(spacer)
+        end
+    
     
         if not acfmenupanel.CData.GuidanceSelect then
             acfmenupanel.CData.GuidanceSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
@@ -24,16 +33,24 @@ function SetMissileGUIEnabled(panel, enabled)
                     local guidance = ACF.Guidance[data]
                     if guidance and guidance.desc then
                         acfmenupanel:CPanelText("GuidanceDesc", guidance.desc .. "\n")
+                        
+                        local configPanel = ACFMissiles_CreateMenuConfiguration(guidance, acfmenupanel.CData.GuidanceSelect, "acfmenu_data7", acfmenupanel.CData.GuidanceSelect.ConfigPanel)
+                        acfmenupanel.CData.GuidanceSelect.ConfigPanel = configPanel
                     else
                         acfmenupanel:CPanelText("GuidanceDesc", "Missiles and bombs can be given a guidance package to steer them during flight.\n")
                     end
                 end
                 
                 acfmenupanel.CData.GuidanceSelect:SetText("Munition Guidance")
-                RunConsoleCommand( "acfmenu_data7", "" )
+                
             acfmenupanel.CustomDisplay:AddItem( acfmenupanel.CData.GuidanceSelect )
             
             acfmenupanel:CPanelText("GuidanceDesc", "Missiles and bombs can be given a guidance package to steer them during flight.\n")
+            
+            local configPanel = vgui.Create("DScrollPanel")
+            acfmenupanel.CData.GuidanceSelect.ConfigPanel = configPanel
+            acfmenupanel.CustomDisplay:AddItem( configPanel )
+            
         else
             acfmenupanel.CData.GuidanceSelect:SetSize(100, 30)
             acfmenupanel.CData.GuidanceSelect:SetVisible(true)
@@ -57,7 +74,9 @@ function SetMissileGUIEnabled(panel, enabled)
                     
                     if fuse and fuse.desc then
                         acfmenupanel:CPanelText("FuseDesc", fuse.desc .. "\n")
-                        ACFMissiles_CreateMenuConfiguration("Fuse", fuse, acfmenupanel.CData.FuseSelect)
+                        
+                        local configPanel = ACFMissiles_CreateMenuConfiguration(fuse, acfmenupanel.CData.FuseSelect, "acfmenu_data8", acfmenupanel.CData.FuseSelect.ConfigPanel)
+                        acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
                     else
                         acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")
                     end
@@ -69,7 +88,12 @@ function SetMissileGUIEnabled(panel, enabled)
             
             acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")
             
-            ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
+            local configPanel = vgui.Create("DScrollPanel")
+            configPanel:SetTall(0)
+            acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
+            acfmenupanel.CustomDisplay:AddItem( configPanel )
+            
+            --ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
         else
             acfmenupanel.CData.FuseSelect:SetSize(100, 30)
             acfmenupanel.CData.FuseSelect:SetVisible(true)
@@ -80,7 +104,19 @@ function SetMissileGUIEnabled(panel, enabled)
     
         -- Delete everything!  Tried just making them invisible but they seem to break.
     
+        if acfmenupanel.CData.MissileSpacer then
+            acfmenupanel.CData.MissileSpacer:Remove()
+            acfmenupanel.CData.MissileSpacer = nil
+        end
+    
+    
         if acfmenupanel.CData.GuidanceSelect then
+        
+            if acfmenupanel.CData.GuidanceSelect.ConfigPanel then
+                acfmenupanel.CData.GuidanceSelect.ConfigPanel:Remove()
+                acfmenupanel.CData.GuidanceSelect.ConfigPanel = nil   
+            end
+        
             acfmenupanel.CData.GuidanceSelect:Remove()
             acfmenupanel.CData.GuidanceSelect = nil
         end
@@ -92,6 +128,12 @@ function SetMissileGUIEnabled(panel, enabled)
         
         
         if acfmenupanel.CData.FuseSelect then
+            
+            if acfmenupanel.CData.FuseSelect.ConfigPanel then
+                acfmenupanel.CData.FuseSelect.ConfigPanel:Remove()
+                acfmenupanel.CData.FuseSelect.ConfigPanel = nil   
+            end
+        
             acfmenupanel.CData.FuseSelect:Remove()
             acfmenupanel.CData.FuseSelect = nil           
         end
@@ -102,7 +144,7 @@ function SetMissileGUIEnabled(panel, enabled)
         end
         
     
-        ACFMissiles_RemoveMenuConfiguration("Fuse")
+        --ACFMissiles_RemoveMenuConfiguration("Fuse")
     
     end
     

@@ -1,80 +1,118 @@
-function ACFMissiles_MenuSlider(Name, Desc, conCmd, combo, Min, Max)
+function ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd)
 
-    print(Min, Max)
-
-	if not acfmenupanel["CData"][Name] then
-		acfmenupanel["CData"][Name] = vgui.Create( "DNumSlider", acfmenupanel.CustomDisplay )
-			acfmenupanel["CData"][Name].Label:SetSize( 0 ) --Note : this is intentional 
-			--acfmenupanel["CData"][Name]:SetTall( 50 ) -- make the slider taller to fit the new label
-			acfmenupanel["CData"][Name]:SetMin( Min )
-			acfmenupanel["CData"][Name]:SetMax( Max )
-			acfmenupanel["CData"][Name]:SetDecimals( 2 )
-		acfmenupanel["CData"][Name.."_label"] = vgui.Create( "DLabel", acfmenupanel["CData"][Name]) -- recreating the label
-			acfmenupanel["CData"][Name.."_label"]:SetPos( 0,0 )
-			acfmenupanel["CData"][Name.."_label"]:SetText( Desc )
-			acfmenupanel["CData"][Name.."_label"]:SizeToContents()
-			acfmenupanel["CData"][Name.."_label"]:SetDark( true )
-			acfmenupanel["CData"][Name].OnValueChanged = function( slider, val )
-				ACFMissiles_SetCommand(combo, slider, conCmd)
-			end
-		acfmenupanel.CustomDisplay:AddItem( acfmenupanel["CData"][Name] )
-	end
-	acfmenupanel["CData"][Name]:SetMin( Min ) 
-	acfmenupanel["CData"][Name]:SetMax( Max )
-	acfmenupanel["CData"][Name]:SetValue( Min )
-	
-	if not acfmenupanel["CData"][Name.."_text"] and Desc then
-		acfmenupanel["CData"][Name.."_text"] = vgui.Create( "DLabel" )
-			acfmenupanel["CData"][Name.."_text"]:SetText( Desc or "" )
-			acfmenupanel["CData"][Name.."_text"]:SetDark( true )
-			acfmenupanel["CData"][Name.."_text"]:SetTall( 20 )
-		acfmenupanel.CustomDisplay:AddItem( acfmenupanel["CData"][Name.."_text"] )
-	end
-	acfmenupanel["CData"][Name.."_text"]:SetText( Desc )
-	acfmenupanel["CData"][Name.."_text"]:SetSize( acfmenupanel.CustomDisplay:GetWide(), 10 )
-	acfmenupanel["CData"][Name.."_text"]:SizeToContentsX()
+    local slider = vgui.Create( "DNumSlider" )
+        slider.Label:SetText(config.DisplayName or "")
+        slider.Label:SetDark(true)
+        slider:SetMin( config.Min )
+        slider:SetMax( config.Max )
+        slider:SetValue( config.Min )
+        slider:SetDecimals( 2 )
+        --slider:Dock(FILL)
+        --slider:DockMargin(6,0,0,0)
+        slider.Configurable = config
+        
+        slider.GetConfigValue = function( slider )
+            return math.Round(slider:GetValue(), 3)
+        end
+        
+        slider.OnValueChanged = function( slider, val )
+            ACFMissiles_SetCommand(combo, controlGroup, conCmd)
+        end
+        
+        controlGroup[#controlGroup+1] = slider
+        
+    return slider
 
 end
 
 
 
-function ACFMissiles_SetCommand(combo, slider, conCmd)
+function ACFMissiles_SetCommand(combo, controlGroup, conCmd)
 
-    if not slider then
+    if not controlGroup then
         local name = combo:GetValue()
         RunConsoleCommand( conCmd, tostring(name) )
     else
         local name = combo:GetValue()
-        local val = slider:GetValue()
-        local value = math.Round(val, 3)
-        RunConsoleCommand( conCmd, tostring(name) .. ":" .. tostring(value) )
+        local kvString = ""
+        
+        if #controlGroup > 0 then
+            local i = 1
+            repeat
+                local control = controlGroup[i]
+                kvString = kvString .. ":" .. control.Configurable.CommandName .. "=" .. tostring(control:GetConfigValue())
+                i = i+1
+            until i > #controlGroup
+        end
+        
+        RunConsoleCommand( conCmd, tostring(name) .. tostring(kvString) )
     end
 
 end
 
 
 
-function ACFMissiles_RemoveMenuSlider(Name)
-    if acfmenupanel["CData"][Name] then
-        acfmenupanel["CData"][Name]:Remove()
-        acfmenupanel["CData"][Name] = nil
+-- function ACFMissiles_RemoveMenuSlider(Name)
+    -- if acfmenupanel["CData"][Name] then
+        -- acfmenupanel["CData"][Name]:Remove()
+        -- acfmenupanel["CData"][Name] = nil
+    -- end
+    
+    -- if acfmenupanel["CData"][Name.."_label"] then
+        -- acfmenupanel["CData"][Name.."_label"]:Remove()
+        -- acfmenupanel["CData"][Name.."_label"] = nil
+    -- end
+    
+    -- if acfmenupanel["CData"][Name.."_text"] then
+        -- acfmenupanel["CData"][Name.."_text"]:Remove()
+        -- acfmenupanel["CData"][Name.."_text"] = nil
+    -- end
+-- end
+
+
+
+
+ACFMissiles_ConfigurationFactory = 
+{
+    number =    function(config, controlGroup, combo, conCmd) 
+                    return ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd)
+                end
+}
+
+
+
+function ACFMissiles_CreateMenuConfiguration(tbl, combo, conCmd, existingPanel)
+    
+    local panel = existingPanel or vgui.Create("DScrollPanel")
+    
+    panel:Clear()
+    
+    if not tbl.Configurable or #tbl.Configurable < 1 then 
+        panel:SetTall(0)
+        return panel 
     end
     
-    if acfmenupanel["CData"][Name.."_label"] then
-        acfmenupanel["CData"][Name.."_label"]:Remove()
-        acfmenupanel["CData"][Name.."_label"] = nil
+    local controlGroup = {}
+    
+    local height = 0
+    
+    for _, config in pairs(tbl.Configurable) do
+        local control = ACFMissiles_ConfigurationFactory[config.Type](config, controlGroup, combo, conCmd)
+        control:SetPos(6, height)
+        
+        panel:Add(control)
+        
+        control:SetWide(panel:GetWide() - 6)   
+        
+        height = height + control:GetTall()
     end
     
-    if acfmenupanel["CData"][Name.."_text"] then
-        acfmenupanel["CData"][Name.."_text"]:Remove()
-        acfmenupanel["CData"][Name.."_text"] = nil
-    end
-end
-
-
-
-function ACFMissiles_CreateMenuConfiguration()
-    ErrorNoHalt("TODO: ACFMissiles_CreateMenuConfiguration")
+    panel:SetTall(height + 2)
+    
+    combo.ControlGroup = controlGroup
+    
+    return panel
+    
 end
 
 
