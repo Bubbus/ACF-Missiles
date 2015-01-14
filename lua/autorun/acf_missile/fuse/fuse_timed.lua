@@ -25,7 +25,7 @@ this.desc = "This fuse triggers upon direct contact, or when the timer ends."
 this.Configurable = 
 {
     {
-        Name = "Time",              -- name of the variable to change
+        Name = "Timer",             -- name of the variable to change
         DisplayName = "Trigger Delay",   -- name displayed to the user
         CommandName = "Tm",         -- shorthand name used in console commands
         
