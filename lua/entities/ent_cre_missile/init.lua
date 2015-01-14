@@ -78,7 +78,122 @@ function ENT:SetBulletData(bdata)
     local gun = list.Get("ACFEnts").Guns[bdata.Id]
     
     self:SetModelEasy( gun.round.model or gun.model or "models/missiles/aim9.mdl" )
+    
+    self:ParseBulletData(bdata)
 	
+end
+
+
+
+
+function ENT:ParseBulletData(bdata)
+    
+    local guidance  = bdata.Data7
+    local fuse      = bdata.Data8
+    
+    if guidance then        
+        xpcall( -- we're eating arbitrary user input, so let's not fuck up if they fuck up
+                function()
+                    guidance = self:CreateConfigurable(guidance, ACF.Guidance)
+                    if guidance then self:SetGuidance(guidance) end
+                end,
+                
+                ErrorNoHalt
+              )
+    end
+    
+    if fuse then
+        xpcall( -- we're eating arbitrary user input, so let's not fuck up if they fuck up
+                function()
+                    fuse = self:CreateConfigurable(fuse, ACF.Fuse)
+                    if fuse then self:SetFuse(fuse) end
+                end,
+                
+                ErrorNoHalt
+              )        
+    end
+    
+end
+
+
+
+
+local Cast = 
+{
+    number = function(str) return tonumber(str) end,
+    string = function(str) return str end,
+    boolean = function(str) return tobool(str) end
+}
+
+--TODO: move to global file.
+function ENT:CreateConfigurable(str, configurables)
+
+    -- we're parsing a string of the form "NAME:CMD=VAL:CMD=VAL"... potentially.
+
+    local parts = {}
+    -- split parts delimited by ':'
+    for part in string.gmatch(str, "[^:]+") do parts[#parts+1] = part end
+    
+    pbn(parts)
+    
+    if #parts <= 0 then return end
+    
+    
+    local name = table.remove(parts, 1)
+    if name and name ~= "" then
+        
+        -- base table for configurable object
+        local class = configurables[name]
+        if not class then return end
+        
+        
+        local args = {}
+        
+        for _, arg in pairs(parts) do
+            -- get CMD from 'CMD=VAL'
+            local cmd = string.match(arg, "^[^=]+")
+            if not cmd then continue end
+            
+            -- get VAL from 'CMD=VAL'
+            local val = string.match(arg, "[^=]+$")
+            if not val then continue end
+            
+            args[string.lower(cmd)] = val
+        end
+        
+        
+        -- construct new instance of configurable object
+        local instance = class()
+        if not instance.Configurable then return instance end
+        
+        
+        -- loop through config, match up with args and set values accordingly
+        for _, config in pairs(instance.Configurable) do
+        
+            local cmdName = config.CommandName
+            
+            if not cmdName then continue
+            else cmdName = string.lower(cmdName) end
+            
+            local arg = args[cmdName]
+            if not arg then continue end
+            
+            local type = config.Type
+            
+            print(cmdName, arg, type)
+            
+            if Cast[type] then 
+                instance[config.Name] = Cast[type](arg)
+            end
+        
+        end
+        
+        pbn(instance)
+        
+        return instance
+        
+    end
+
 end
 
 
@@ -199,6 +314,7 @@ function ENT:CalcFlight()
 
 	if trace.Hit then		
 		self:DoFlight(trace.HitPos)
+        self.LastVel = Vel
 		self:Detonate()
 		return
 	end
@@ -214,6 +330,7 @@ function ENT:CalcFlight()
 			self:DoFlight(DetonatePos)
 		end
 		--print("FUSE DET")
+        self.LastVel = Vel
 		self:Detonate()
 		return
 		
@@ -361,7 +478,7 @@ end
 
 function ENT:Detonate()
 
-	self.BulletData.Flight = self.Vel
+	self.BulletData.Flight = self.BulletData.MuzzleVel and (self.LastVel:GetNormalized() * self.BulletData.MuzzleVel) or self.LastVel
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
 
 	self.BaseClass.Detonate(self)

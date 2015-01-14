@@ -485,8 +485,6 @@ function ENT:AddMissile()
     missile.Launcher = self
     
     missile:SetBulletData(BulletData)
-    missile:SetGuidance(ACF.Guidance.Radar())
-    missile:SetFuse(ACF.Fuse.Timed())
     
     missile:Spawn()
     missile:SetParent(self)
