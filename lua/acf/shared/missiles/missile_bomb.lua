@@ -11,7 +11,7 @@ ACF_defineGunClass("BOMB", {
 	soundDistance   = " ",
 	soundNormal     = " ",
     
-    ammoBlacklist   = {"AP", "APHE"}
+    ammoBlacklist   = {"AP", "APHE", "FL"} -- Including FL would mean changing the way round classes work.
 } )
 
 
