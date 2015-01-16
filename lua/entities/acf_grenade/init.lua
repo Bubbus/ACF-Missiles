@@ -241,6 +241,10 @@ function ENT:Detonate()
 	bdata.Owner = 	bdata.Owner or self.Owner
 	bdata.Pos = 	pos + bdata.Flight:GetNormalized() * 3
 	bdata.NoOcc = 	self
+    bdata.Gun =     self
+    
+    if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
+    else bdata.Filter = {self} end
 	
 	//pbn(bdata)
 	

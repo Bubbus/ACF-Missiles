@@ -21,14 +21,12 @@ end
 
 
 
-ENT.PermittedAmmoTypes = 
-{
-    HE    = true,
-    HEAT  = true,
-    SM    = true,
-    FL    = true,
-    HP    = true
-}
+function ENT:GetReloadTime(nextMsl)
+    local interval = IsValid(nextMsl) and ( ( ( nextMsl.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod ) or 0 
+    self:SetNetworkedBeamInt(	"Interval",		interval)
+    
+    return interval
+end
 
 
 
@@ -170,7 +168,7 @@ function ENT:CanLinkCrate(crate)
     -- Don't link if it's not a missile.
     local gun = list.Get("ACFEnts").Guns[bdata.Id]
     local Classes = list.Get("ACFClasses").GunClass
-    --pbn(bdata)
+    
     if "missile" ~= Classes[gun.gunclass].type then 
         return false, "Racks cannot be linked to ammo crates of type '" .. bdata.gunclass .. "'!" 
     end
@@ -338,7 +336,9 @@ function ENT:Think()
         self:TrimNullMissiles()
 		self:SetNetworkedBeamString("GunType",		self.Id)
 		self:SetNetworkedBeamInt(	"Ammo",			Ammo)
-		self:SetNetworkedBeamInt(	"FireRate",		self.RateOfFire)
+        
+        local interval = self:GetReloadTime(self:PeekMissile())
+		self:SetNetworkedBeamInt(	"Interval",		interval)
 		
 		self.LastSend = Time
 	
@@ -485,8 +485,6 @@ function ENT:AddMissile()
     missile.Launcher = self
     
     missile:SetBulletData(BulletData)
-    missile:SetGuidance(ACF.Guidance.Radar())
-    missile:SetFuse(ACF.Fuse.Timed())
     
     missile:Spawn()
     missile:SetParent(self)
@@ -517,12 +515,7 @@ function ENT:LoadAmmo( AddTime, Reload )
     local ReloadTime = 1
     
     if IsValid(missile) then
-        local bdata = missile.BulletData
-        ReloadTime = ( ( bdata.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
-        
-        local RateOfFire = 60 / ReloadTime
-        
-        Fire_TriggerOutput( self, "Fire Rate", RateOfFire )
+        ReloadTime = self:GetReloadTime(missile)
     end
     
 	self.NextFire = CurTime() + ReloadTime
@@ -718,7 +711,7 @@ function ENT:FireMissile()
         
         if missile then
         
-            ReloadTime = ( ( missile.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod
+            ReloadTime = self:GetReloadTime(missile)
         
             local attach, muzzle = self:GetMuzzle(curShot)
         
