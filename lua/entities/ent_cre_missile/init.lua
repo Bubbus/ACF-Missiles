@@ -145,7 +145,7 @@ function ENT:CalcFlight()
 			local DirAxis = NewDir:Cross(DirRawNorm)
 			local RawDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
 			local RawAng = math.deg(math.acos(RawDotSimple))		--Since both vectors are normalised, calculating the dot product should be faster this way
-			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-1,1) * (self.MinimumSpeed / 2000))
+			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-1,1) * (self.MinimumSpeed / 2000 + self.FinMultiplier * 100))
 			NewDir = Ang:Forward()
 
 			--FOV check
@@ -172,9 +172,9 @@ function ENT:CalcFlight()
         DirAng:RotateAroundAxis(self.RotAxis, self.RotAxis:Length())
 		Dir = DirAng:Forward()
 	end
+	
 
-	
-	
+
 	--Motor cutout
 	if Time > self.CutoutTime then
 		if self.Motor ~= 0 then
@@ -185,6 +185,12 @@ function ENT:CalcFlight()
 
 	--Physics calculations
 	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
+	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
+	local Speed = Vel:Length()
+	local VelNorm = Vel / Speed
+	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
+	Vel = Vel - Up * Speed * DotSimple * self.FinMultiplier
+
 	local SpeedSq = Vel:LengthSqr()
 	local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
 	Vel = Vel - Drag
@@ -227,7 +233,8 @@ function ENT:CalcFlight()
 	
 	debugoverlay.Line(EndPos, EndPos + Vel:GetNormalized() * 50, 10, Color(0, 255, 0))
 	debugoverlay.Line(EndPos, EndPos + Dir:GetNormalized()  * 50, 10, Color(0, 0, 255))
-	
+	--debugoverlay.Line(EndPos, EndPos + Up * 50, 10, Color(255, 0, 0))
+
 	self:DoFlight()
 end
 
@@ -301,14 +308,14 @@ function ENT:LaunchEffect()
     
     if class then
         if class.sound then
-            self:EmitSound(class.sound, 500, 100)
+            self:EmitSound(class.sound, 511, 100)
         else
             local classes = list.Get("ACFClasses").GunClass
             class = classes[class.gunclass]
             
             if class then
                 local sound = class.round and class.round.sound or class.sound
-                if sound then self:EmitSound(sound, 500, 100) end
+                if sound then self:EmitSound(sound, 511, 100) end
             end
         end
     end
@@ -323,11 +330,11 @@ function ENT:ConfigureFlight()
     local Time = CurTime()
 	self.MotorLength = 10
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
-	self.DragCoef = 0.0018
-	self.Motor = 10000
+	self.DragCoef = 0.0025
+	self.Motor = 15000
 	self.MinimumSpeed = 10000
 	self.FlightTime = 0
-	self.FinMultiplier = 1
+	self.FinMultiplier = 0.005
 	self.CutoutTime = Time + self.MotorLength
 	self.CurPos = self:GetPos()
 	self.CurDir = self:GetForward()
