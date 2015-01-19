@@ -272,6 +272,9 @@ function ENT:Detonate()
 	
 	self:DoReplicatedPropHit(bdata)
 	
+    --self:SetColor(ColorAlpha(self:GetColor(), 0))
+    self:SetNoDraw(true)
+    
 	--ACF.RoundTypes[bdata.Type]["endflight"]( bdata.Index, bdata, pos, up )
 	--ACF_BulletClient( bdata.Index, bdata, "Update", 1, pos )
 	-- end)
