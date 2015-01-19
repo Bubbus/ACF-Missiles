@@ -527,3 +527,10 @@ end
 function ENT:PhysicsCollide()
 	if self.Launched then self:Detonate() end
 end
+
+
+
+
+hook.Add("CanDrive", "ent_cre_missile_CanDrive", function(ply, ent) 
+    if ent:GetClass() == "ent_cre_missile" then return false end
+end)
