@@ -325,7 +325,7 @@ function ENT:CalcFlight()
     
     if self.Fuse:GetDetonate(self, self.Guidance) then
 	
-		local DetonatePos = Guidance.EndPos
+		local DetonatePos = EndPos--Guidance.EndPos
 		if DetonatePos then
 			self:DoFlight(DetonatePos)
 		end
@@ -438,7 +438,7 @@ end
 function ENT:ConfigureFlight()
 
     local Time = CurTime()
-	self.MotorLength = 10
+	self.MotorLength = 0.5
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = 0.0018
 	self.Motor = 10000
@@ -446,8 +446,8 @@ function ENT:ConfigureFlight()
 	self.FlightTime = 0
 	self.FinMultiplier = 1
 	self.CutoutTime = Time + self.MotorLength
-	self.CurPos = self:GetPos()
-	self.CurDir = self:GetForward()
+	self.CurPos = self.BulletData.Pos --self:GetPos()
+	self.CurDir = self.BulletData.Flight:GetNormalized() --self:GetForward()
 	self.LastPos = self.CurPos
     self.Hit = false
 	self.FirstThink = true
@@ -469,8 +469,12 @@ function ENT:DoFlight(ToPos, ToDir)
 
 	local setPos = ToPos or self.CurPos
 	local setDir = ToDir or self.CurDir
+    
 	self:SetPos(setPos)
 	self:SetAngles(setDir:Angle())
+    
+    self.BulletData.Pos = setPos
+    --self.BulletData.Flight = self.LastVel
 end
 
 
@@ -479,6 +483,7 @@ end
 function ENT:Detonate()
 
 	self.BulletData.Flight = self.BulletData.MuzzleVel and (self.LastVel:GetNormalized() * self.BulletData.MuzzleVel) or self.LastVel
+    
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
 
 	self.BaseClass.Detonate(self)

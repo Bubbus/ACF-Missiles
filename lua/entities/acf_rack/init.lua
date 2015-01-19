@@ -715,7 +715,7 @@ function ENT:FireMissile()
         
             local attach, muzzle = self:GetMuzzle(curShot)
         
-            local MuzzlePos = self:LocalToWorld(muzzle.Pos)
+            local MuzzlePos = muzzle.Pos--self:LocalToWorld(muzzle.Pos)
             local MuzzleVec = muzzle.Ang:Forward()
             
             local coneAng = math.tan(math.rad(self:GetInaccuracy())) 
@@ -733,8 +733,13 @@ function ENT:FireMissile()
             missile.Filter = filter
             
             missile:SetParent(nil)
-            missile:SetPos(MuzzlePos)
-            missile:SetAngles(ShootVec:Angle())
+            --missile:SetPos(MuzzlePos)
+            --missile:SetAngles(ShootVec:Angle())
+            local bdata = missile.BulletData
+            
+            bdata.Pos = MuzzlePos
+            bdata.Flight = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
+            
             missile:Launch()
             
             self:MuzzleEffect( attach, missile.BulletData )
