@@ -486,7 +486,7 @@ function ENT:PopMissile()
     
     self.Missiles[curShot] = nil
     
-    return missile
+    return missile, curShot
     
 end
 
@@ -549,20 +549,19 @@ function ENT:AddMissile()
     
     local NextIdx = #self.Missiles
     
-    local attach, muzzle = self:GetMuzzle(NextIdx)
     
     local missile = ents.Create("ent_cre_missile")
-    missile:SetPos(muzzle.Pos)
-    missile:SetAngles(muzzle.Ang)
     missile.Owner = ply
     missile.DoNotDuplicate = true
+    missile.Launcher = self
     
     local BulletData = ACF_CompactBulletData(Crate)
     BulletData.IsShortForm = true    
-    
-    missile.Launcher = self
-    
     missile:SetBulletData(BulletData)
+    
+    local attach, muzzle = self:GetMuzzle(NextIdx, missile)
+    missile:SetPos(muzzle.Pos)
+    missile:SetAngles(muzzle.Ang)
     
     missile:Spawn()
     missile:SetParent(self)
@@ -718,10 +717,6 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	end
 	
     
-	local Attach, Muzzle = Rack:GetMuzzle(#Rack.Missiles)
-	Rack.Muzzle = Rack:WorldToLocal(Muzzle.Pos)
-	
-    
 	local phys = Rack:GetPhysicsObject()  	
 	if (phys:IsValid()) then 
 		phys:SetMass(Rack.Mass)
@@ -735,27 +730,6 @@ end
 
 list.Set( "ACFCvars", "acf_rack" , {"id"} )
 duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
-
-
-
-
-function ENT:GetMuzzle(shot)
-	shot = (shot or 0) + 1
-	
-	local trymissile = "missile" .. shot
-	local attach = self:LookupAttachment(trymissile)
-	if attach ~= 0 then return attach, self:GetMunitionAngPos(self, attach, trymissile) end
-	
-	trymissile = "missile1"
-	local attach = self:LookupAttachment(trymissile)
-	if attach ~= 0 then return attach, self:GetMunitionAngPos(self, attach, trymissile) end
-	
-	trymissile = "muzzle"
-	local attach = self:LookupAttachment(trymissile)
-	if attach ~= 0 then return attach, self:GetMunitionAngPos(self, attach, trymissile) end
-	
-	return 0, {Pos = self:GetPos(), Ang = self:GetAngles()}
-end
 
 
 
@@ -780,11 +754,12 @@ function ENT:FireMissile()
         local ReloadTime = 0.5
         local missile, curShot = self:PopMissile()
         
+        
         if missile then
         
             ReloadTime = self:GetReloadTime(missile)
         
-            local attach, muzzle = self:GetMuzzle(curShot)
+            local attach, muzzle = self:GetMuzzle(curShot - 1, missile)
         
             local MuzzlePos = muzzle.Pos--self:LocalToWorld(muzzle.Pos)
             local MuzzleVec = muzzle.Ang:Forward()

@@ -36,9 +36,29 @@ end
 
 
 
-function ENT:GetMunitionAngPos(rack, attach, attachname)
+function ENT:GetMuzzle(shot, missile)
+	shot = (shot or 0) + 1
+	
+	local trymissile = "missile" .. shot
+	local attach = self:LookupAttachment(trymissile)
+	if attach ~= 0 then return attach, self:GetMunitionAngPos(missile, attach, trymissile) end
+	
+	trymissile = "missile1"
+	local attach = self:LookupAttachment(trymissile)
+	if attach ~= 0 then return attach, self:GetMunitionAngPos(missile, attach, trymissile) end
+	
+	trymissile = "muzzle"
+	local attach = self:LookupAttachment(trymissile)
+	if attach ~= 0 then return attach, self:GetMunitionAngPos(missile, attach, trymissile) end
+	
+	return 0, {Pos = self:GetPos(), Ang = self:GetAngles()}
+end
+
+
+
+
+function ENT:GetMunitionAngPos(missile, attach, attachname)
 	local angpos
-	--print(rack, attach, attachname)
 	
 	if attach ~= 0 then
 		angpos = self:GetAttachment(attach)
@@ -46,15 +66,17 @@ function ENT:GetMunitionAngPos(rack, attach, attachname)
 		angpos = {Pos = self:GetPos(), Ang = self:GetAngles()}
 	end
 	
-	local gun = ACF.Weapons.Guns[rack.Id]
-	if not gun then return angpos end
+    local guns = list.Get("ACFEnts").Guns
+    local gun = guns[missile.BulletData.Id]
+    if not gun then return angpos end
 	
-    --pbn(gun)
-	if not gun then return angpos end
-	
-    local offset = (rack.Caliber or gun.caliber) / 2.54
+    print(gun.modeldiameter,  gun.caliber, gun.modeldiameter or gun.caliber)
+    local offset = (gun.modeldiameter or gun.caliber) / (2.54 * 2)
     
-	mountpoint = gun.mountpoints[attachname] or {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0, 0, -1)}
+    local rack = ACF.Weapons.Rack[self.Id]
+    if not rack then return angpos end
+    
+	mountpoint = rack.mountpoints[attachname] or {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0, 0, -1)}
 	angpos.Pos = angpos.Pos + (self:LocalToWorld(mountpoint.offset) - self:GetPos()) + (self:LocalToWorld(mountpoint.scaledir) - self:GetPos()) * offset
 	
 	return angpos

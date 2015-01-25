@@ -113,6 +113,7 @@ ACF_defineGun("120mmAAM", { --id
 	caliber = 12.0,
 	weight = 200,
 	year = 1974,
+    modeldiameter = 7.1 * 2.54, -- in cm
 	round = {
 		model		= "models/missiles/aim120.mdl",
 		rackmdl		= "models/missiles/aim120.mdl",
