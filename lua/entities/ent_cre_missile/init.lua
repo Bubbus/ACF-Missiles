@@ -489,8 +489,15 @@ end
 
 function ENT:Detonate()
 
-	self.BulletData.Flight = self.BulletData.MuzzleVel and (self.LastVel:GetNormalized() * self.BulletData.MuzzleVel) or self.LastVel
-    
+    if self.BulletData.MuzzleVel and self.LastVel then
+        self.BulletData.Flight = self.LastVel:GetNormalized() * self.BulletData.MuzzleVel
+    elseif self.LastVel then 
+        self.BulletData.Flight = self.LastVel
+    else
+        self.BulletData.Flight = self:GetForward()
+    end
+
+     
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
 
 	self.BaseClass.Detonate(self)
