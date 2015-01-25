@@ -15,17 +15,13 @@ function ENT:Initialize()
 	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
 	self.ShouldTrace = false
 	
-	-- self.Model = "models/missiles/aim54.mdl"
-	-- self:SetModelEasy(self.Model)
-	
 	self.Inputs = Wire_CreateInputs( self, { "Detonate" } )
 	self.Outputs = Wire_CreateOutputs( self, {} )
 	
 	self.ThinkDelay = 0.1
 	
 	self.TraceFilter = {self}
-	--self.ACF_HEIgnore = true
-	
+
 end
 
 
@@ -162,9 +158,6 @@ function ENT:SetBulletData(bdata)
 		bdata.Data10, 
 		nil,
 		bdata)
-
-	//print("done")
-	//pbn(bdata)
 	
 	self:ConfigBulletDataShortForm(bdata)
 end
@@ -233,9 +226,6 @@ function ENT:Detonate()
 	local phys = self:GetPhysicsObject()
 	local pos = self:GetPos()
 	
-	
-	local up = self:GetUp()
-	
 	local phyvel = 	phys and phys:GetVelocity() or Vector(0, 0, 1000)
 	bdata.Flight = 	bdata.Flight or phyvel
 	bdata.Owner = 	bdata.Owner or self.Owner
@@ -246,44 +236,22 @@ function ENT:Detonate()
     if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
     else bdata.Filter = {self} end
 	
-	//pbn(bdata)
-	
-	--print(tostring(bdata.RoundMass), tostring(bdata.ProjMass))
-	
 	bdata.RoundMass = bdata.RoundMass or bdata.ProjMass
 	bdata.ProjMass = bdata.ProjMass or bdata.RoundMass 
 	
 	bdata.HandlesOwnIteration = nil
-	
-	--print(tostring(bdata.RoundMass), tostring(bdata.ProjMass))
-	--print(bdata.Crate, Entity(bdata.Crate))
-	
+
 	
 	ACF_BulletLaunch(bdata)
-	--pbn(bdata)
-	
 	timer.Simple(1, function() if IsValid(self) then self:Remove() end end)
 	
-	--self:SetCollisionGroup( COLLISION_GROUP_IN_VEHICLE )
-	--print("solid")
+
 	self:SetSolid(SOLID_NONE)
-	//self:SetPos(Vector(0,0,0))
 	phys:EnableMotion(false)
 	
 	self:DoReplicatedPropHit(bdata)
 	
-    --self:SetColor(ColorAlpha(self:GetColor(), 0))
     self:SetNoDraw(true)
-    
-	--ACF.RoundTypes[bdata.Type]["endflight"]( bdata.Index, bdata, pos, up )
-	--ACF_BulletClient( bdata.Index, bdata, "Update", 1, pos )
-	-- end)
-	--ACFGrenades[#ACFGrenades+1] = bdata
-	
-	--bdata.SimPos = pos
-	--bdata.SimFlight = phyvel
-	
-	//ACF.RoundTypes[bdata.Type]["endeffect"]( nil, bdata)
 
 end
 
@@ -321,22 +289,15 @@ end
 
 
 
---local undonked = true
 function ENT:OnTraceContact(trace)
-	/*
-	if undonked then
-		print("donk!")
-		printByName(trace)
-		undonked = false
-	end
-	//*/
+
 end
 
 
 
 function ENT:SetShouldTrace(bool)
 	self.ShouldTrace = bool and true
-	--print(self.ShouldTrace)
+
 	self:NextThink(CurTime())
 end
 
@@ -355,13 +316,7 @@ end
 
 
 function ENT:RefreshClientInfo()
-	-- self:SetNetworkedString("RoundId", self.RoundId)
-	-- self:SetNetworkedString("RoundType", self.RoundType)
-	-- self:SetNetworkedFloat("FillerVol", self.RoundData5)
-	
-	-- local col = self.BulletData.Colour or Color(255, 255, 255)
-	-- self:SetNetworkedVector( "TracerColour",  Vector(col.r, col.g, col.b))
-	
+
 	ACF_MakeCrateForBullet(self, self.BulletData)
 	
 end

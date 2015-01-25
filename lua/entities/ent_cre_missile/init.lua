@@ -134,8 +134,6 @@ function ENT:CreateConfigurable(str, configurables)
     -- split parts delimited by ':'
     for part in string.gmatch(str, "[^:]+") do parts[#parts+1] = part end
     
-    pbn(parts)
-    
     if #parts <= 0 then return end
     
     
@@ -187,8 +185,6 @@ function ENT:CreateConfigurable(str, configurables)
             end
         
         end
-        
-        pbn(instance)
         
         return instance
         
