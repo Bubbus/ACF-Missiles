@@ -37,6 +37,8 @@ function printByName(tbl)
 		Msg(tostring(k), "\t", "\t", tostring(v), "\n")
 	end
 	plst = tbl -- reference!
+    
+    if pbnTrace then debug.Trace() end
 end
 
 pbn = printByName
