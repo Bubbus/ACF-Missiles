@@ -7,6 +7,9 @@ include('shared.lua')
 
 
 
+DEFINE_BASECLASS("acf_grenade")
+
+
 
 if SERVER then
     concommand.Add("loadRack", function(ply, args)
@@ -32,6 +35,8 @@ end
 
 
 function ENT:Initialize()
+
+    self.BaseClass.Initialize(self)
 
 	self.SpecialHealth = true	--If true needs a special ACF_Activate function
 	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
@@ -136,8 +141,7 @@ function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This
 			self.Inflictor = Inflictor
 		end
 		if curammo > 0 then
-			self.Ammo = curammo
-			ACF_AmmoExplosion( self , self:GetPos() )
+			self:DetonateAmmo(Inflictor)
 		else
 			ACF_HEKill( self , VectorRand() )
 		end
@@ -146,6 +150,60 @@ function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This
 	return HitRes --This function needs to return HitRes
 end
 //*/
+
+
+
+function ENT:DetonateAmmo(inflictor)
+    
+    self:TrimNullMissiles()
+    
+    local fillerMass = 0
+    local fragMass = 0
+    
+    while IsValid(self:PeekMissile()) do
+    
+        local missile = self:PopMissile()
+        
+        local bdata = missile.BulletData
+        
+        if bdata.FillerMass then 
+            fillerMass = fillerMass + bdata.FillerMass
+        end
+        
+        if bdata.CasingMass then
+            fragMass = fragMass + bdata.CasingMass
+        elseif bdata.FillerMass and bdata.ProjMass then
+            fragMass = fragMass + (bdata.ProjMass - bdata.FillerMass)
+        end
+        
+        missile:Remove()
+        
+    end
+    
+    print(fillerMass, fragMass)
+    
+    if fillerMass > 0 then
+    
+        if not IsValid(inflictor) then inflictor = nil end
+    
+        self.BulletData = {}
+        
+        self.BulletData["Id"]		= "203mmHW"
+        self.BulletData["ProjLength"]		= "162.39"
+        self.BulletData["PropLength"]		= "0.01"
+        self.BulletData["Type"]		= "HE"
+        self.BulletData["FillerMass"]		= fillerMass
+        
+        local bdata = ACF_CompactBulletData(self.BulletData)
+        
+        self:SetBulletData(bdata)
+        
+        self:Detonate()
+        
+    end
+    
+end
+
 
 
 
@@ -324,6 +382,16 @@ end
 
 
 
+local function RetDist( enta, entb )    -- wat
+	if not ((enta and enta:IsValid()) or (entb and entb:IsValid())) then return 0 end
+	disp = enta:GetPos() - entb:GetPos()
+	dist = math.sqrt( disp.x * disp.x + disp.y * disp.y + disp.z * disp.z )
+	return dist
+end
+
+
+
+
 function ENT:Think()
 
     local Ammo = table.Count(self.Missiles)
@@ -331,6 +399,16 @@ function ENT:Think()
 	local Time = CurTime()
 	if self.LastSend+1 <= Time then
 		
+        for Key, Crate in pairs(self.AmmoLink) do
+			if IsValid( Crate ) and Crate.Load then
+				if RetDist( self, Crate ) >= 512 then
+					self:Unlink( Crate )
+					soundstr =  "physics/metal/metal_box_impact_bullet" .. tostring(math.random(1, 3)) .. ".wav"
+					self:EmitSound(soundstr,500,100)
+				end
+			end
+		end
+        
 		Wire_TriggerOutput(self, "Shots Left", Ammo)
 		
         self:TrimNullMissiles()
@@ -657,13 +735,6 @@ end
 
 list.Set( "ACFCvars", "acf_rack" , {"id"} )
 duplicator.RegisterEntityClass("acf_rack", MakeACF_Rack, "Pos", "Angle", "Id")
-
-
-
-
-function ENT:UpdateMissiles(bdata)
-    print("TODO: update missiles")
-end
 
 
 
