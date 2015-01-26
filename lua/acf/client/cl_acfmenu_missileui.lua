@@ -52,25 +52,6 @@ end
 
 
 
--- function ACFMissiles_RemoveMenuSlider(Name)
-    -- if acfmenupanel["CData"][Name] then
-        -- acfmenupanel["CData"][Name]:Remove()
-        -- acfmenupanel["CData"][Name] = nil
-    -- end
-    
-    -- if acfmenupanel["CData"][Name.."_label"] then
-        -- acfmenupanel["CData"][Name.."_label"]:Remove()
-        -- acfmenupanel["CData"][Name.."_label"] = nil
-    -- end
-    
-    -- if acfmenupanel["CData"][Name.."_text"] then
-        -- acfmenupanel["CData"][Name.."_text"]:Remove()
-        -- acfmenupanel["CData"][Name.."_text"] = nil
-    -- end
--- end
-
-
-
 
 ACFMissiles_ConfigurationFactory = 
 {
@@ -78,6 +59,7 @@ ACFMissiles_ConfigurationFactory =
                     return ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd)
                 end
 }
+
 
 
 

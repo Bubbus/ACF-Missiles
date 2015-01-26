@@ -21,27 +21,27 @@ function SetMissileGUIEnabled(panel, enabled)
     
         if not acfmenupanel.CData.GuidanceSelect then
             acfmenupanel.CData.GuidanceSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
-                acfmenupanel.CData.GuidanceSelect:SetSize(100, 30)
+            acfmenupanel.CData.GuidanceSelect:SetSize(100, 30)
+            
+            for Key, Value in pairs( ACF.Guidance ) do
+                acfmenupanel.CData.GuidanceSelect:AddChoice( Key, Key, Key == "Dumb" )  -- Dumb is the only acceptable default
+            end
+            
+            
+            
+            acfmenupanel.CData.GuidanceSelect.OnSelect = function( index , value , data )
+                RunConsoleCommand( "acfmenu_data7", data )
                 
-                for Key, Value in pairs( ACF.Guidance ) do
-                    acfmenupanel.CData.GuidanceSelect:AddChoice( Key, Key )
-                end
-                
-                acfmenupanel.CData.GuidanceSelect.OnSelect = function( index , value , data )
-                    RunConsoleCommand( "acfmenu_data7", data )
+                local guidance = ACF.Guidance[data]
+                if guidance and guidance.desc then
+                    acfmenupanel:CPanelText("GuidanceDesc", guidance.desc .. "\n")
                     
-                    local guidance = ACF.Guidance[data]
-                    if guidance and guidance.desc then
-                        acfmenupanel:CPanelText("GuidanceDesc", guidance.desc .. "\n")
-                        
-                        local configPanel = ACFMissiles_CreateMenuConfiguration(guidance, acfmenupanel.CData.GuidanceSelect, "acfmenu_data7", acfmenupanel.CData.GuidanceSelect.ConfigPanel)
-                        acfmenupanel.CData.GuidanceSelect.ConfigPanel = configPanel
-                    else
-                        acfmenupanel:CPanelText("GuidanceDesc", "Missiles and bombs can be given a guidance package to steer them during flight.\n")
-                    end
+                    local configPanel = ACFMissiles_CreateMenuConfiguration(guidance, acfmenupanel.CData.GuidanceSelect, "acfmenu_data7", acfmenupanel.CData.GuidanceSelect.ConfigPanel)
+                    acfmenupanel.CData.GuidanceSelect.ConfigPanel = configPanel
+                else
+                    acfmenupanel:CPanelText("GuidanceDesc", "Missiles and bombs can be given a guidance package to steer them during flight.\n")
                 end
-                
-                acfmenupanel.CData.GuidanceSelect:SetText("Munition Guidance")
+            end
                 
             acfmenupanel.CustomDisplay:AddItem( acfmenupanel.CData.GuidanceSelect )
             
@@ -61,28 +61,26 @@ function SetMissileGUIEnabled(panel, enabled)
         
         if not acfmenupanel.CData.FuseSelect then
             acfmenupanel.CData.FuseSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
-                acfmenupanel.CData.FuseSelect:SetSize(100, 30)
+            acfmenupanel.CData.FuseSelect:SetSize(100, 30)
+            
+            for Key, Value in pairs( ACF.Fuse ) do
+                acfmenupanel.CData.FuseSelect:AddChoice( Key, Key, Key == "Contact" ) -- Contact is the only acceptable default
+            end
+            
+            acfmenupanel.CData.FuseSelect.OnSelect = function( index , value , data )
+                ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
                 
-                for Key, Value in pairs( ACF.Fuse ) do
-                    acfmenupanel.CData.FuseSelect:AddChoice( Key, Key )
-                end
+                local fuse = ACF.Fuse[data]
                 
-                acfmenupanel.CData.FuseSelect.OnSelect = function( index , value , data )
-                    ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
+                if fuse and fuse.desc then
+                    acfmenupanel:CPanelText("FuseDesc", fuse.desc .. "\n")
                     
-                    local fuse = ACF.Fuse[data]
-                    
-                    if fuse and fuse.desc then
-                        acfmenupanel:CPanelText("FuseDesc", fuse.desc .. "\n")
-                        
-                        local configPanel = ACFMissiles_CreateMenuConfiguration(fuse, acfmenupanel.CData.FuseSelect, "acfmenu_data8", acfmenupanel.CData.FuseSelect.ConfigPanel)
-                        acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
-                    else
-                        acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")
-                    end
+                    local configPanel = ACFMissiles_CreateMenuConfiguration(fuse, acfmenupanel.CData.FuseSelect, "acfmenu_data8", acfmenupanel.CData.FuseSelect.ConfigPanel)
+                    acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
+                else
+                    acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")
                 end
-                
-                acfmenupanel.CData.FuseSelect:SetText("Munition Fuse")
+            end
                 
             acfmenupanel.CustomDisplay:AddItem( acfmenupanel.CData.FuseSelect )
             
@@ -92,8 +90,6 @@ function SetMissileGUIEnabled(panel, enabled)
             configPanel:SetTall(0)
             acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
             acfmenupanel.CustomDisplay:AddItem( configPanel )
-            
-            --ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
         else
             acfmenupanel.CData.FuseSelect:SetSize(100, 30)
             acfmenupanel.CData.FuseSelect:SetVisible(true)
@@ -172,6 +168,17 @@ function ModifyACFMenu(panel)
             local Classes = list.Get("ACFClasses")
             SetMissileGUIEnabled( acfmenupanel, (Classes.GunClass[class].type == "missile") )
 		end
+        
+        local data = acfmenupanel.CData.CaliberSelect:GetValue()
+        print("helo", data)
+        if data then
+            local gunTbl = acfmenupanel.WeaponData["Guns"][data]
+            local class = gunTbl.gunclass
+            
+            local Classes = list.Get("ACFClasses")
+            SetMissileGUIEnabled( acfmenupanel, (Classes.GunClass[class].type == "missile") )
+        end
+        
     end
     
 end
