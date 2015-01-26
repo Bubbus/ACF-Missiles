@@ -18,7 +18,10 @@ this.Name = ClassName
 this.InputSource = nil
 
 -- Length of the guidance wire
-this.WireLength = 20000
+this.WireLength = 10000
+
+-- Disables guidance when true
+this.WireSnapped = false
 
 
 this.desc = "This guidance package reads a target-position from the launcher and guides the munition towards it."
@@ -82,6 +85,8 @@ function this:Configure(missile)
         end
         
     end
+    
+    self.WireSnapped = false
 
 end
 
@@ -90,9 +95,16 @@ end
 
 function this:GetGuidance(missile)
 	
-	if not IsValid(self.InputSource) then 
+    if not IsValid(self.InputSource) then 
 		return {} 
 	end
+    
+    local dist = missile:GetPos():Distance(self.InputSource:GetPos())
+    
+    if dist > self.WireLength then 
+        self.WireSnapped = true
+        return {}
+    end
 	
     local outputs = self.InputSource.Outputs
     

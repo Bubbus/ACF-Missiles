@@ -178,8 +178,6 @@ function ENT:CreateConfigurable(str, configurables)
             
             local type = config.Type
             
-            print(cmdName, arg, type)
-            
             if Cast[type] then 
                 instance[config.Name] = Cast[type](arg)
             end
@@ -262,7 +260,7 @@ function ENT:CalcFlight()
 			--FOV check
 			local TotalDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
 			local TotalAng = math.deg(math.acos(TotalDotSimple))
-			if TotalAng <= Guidance.ViewCone then
+			if not Guidance.ViewCone or TotalAng <= Guidance.ViewCone then  -- ViewCone is active-seeker specific
 				Dir = NewDir
 			end
 		end

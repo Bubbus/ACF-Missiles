@@ -180,8 +180,6 @@ function ENT:DetonateAmmo(inflictor)
         
     end
     
-    print(fillerMass, fragMass)
-    
     if fillerMass > 0 then
     
         if not IsValid(inflictor) then inflictor = nil end

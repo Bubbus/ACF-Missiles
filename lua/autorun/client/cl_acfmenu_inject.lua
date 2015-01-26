@@ -170,7 +170,6 @@ function ModifyACFMenu(panel)
 		end
         
         local data = acfmenupanel.CData.CaliberSelect:GetValue()
-        print("helo", data)
         if data then
             local gunTbl = acfmenupanel.WeaponData["Guns"][data]
             local class = gunTbl.gunclass

@@ -141,7 +141,7 @@ end
 
 function ENT:SetBulletData(bdata)
 
-	if not (bdata.IsShortForm or bdata.Data5) then error("acf_grenade requires short-form bullet-data but was given expanded bullet-data.") print(bdata) end
+	if not (bdata.IsShortForm or bdata.Data5) then error("acf_grenade requires short-form bullet-data but was given expanded bullet-data.") end
 	
     bdata = ACF_CompactBulletData(bdata)
     
