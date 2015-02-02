@@ -555,6 +555,7 @@ function ENT:AddMissile()
     
     local BulletData = ACF_CompactBulletData(Crate)
     BulletData.IsShortForm = true    
+    BulletData.Owner = ply
     missile:SetBulletData(BulletData)
     
     local attach, muzzle = self:GetMuzzle(NextIdx, missile)

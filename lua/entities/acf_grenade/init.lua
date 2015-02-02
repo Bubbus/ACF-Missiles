@@ -171,7 +171,7 @@ function ENT:ConfigBulletDataShortForm(bdata)
 	self.BulletData = bdata
 	self.BulletData.Entity = self
 	self.BulletData.Crate = self:EntIndex()
-	self.BulletData.Owner = self.Owner
+	self.BulletData.Owner = self.BulletData.Owner or self.Owner
 	
 	local phys = self.Entity:GetPhysicsObject()  	
 	if (IsValid(phys)) then  		
