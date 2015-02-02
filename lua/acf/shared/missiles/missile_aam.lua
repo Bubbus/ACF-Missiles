@@ -40,6 +40,7 @@ ACF_defineGun("40mmAAM", { --id
 	model = "models/missiles/70mmffar.mdl",
 	gunclass = "AAM",
     rack = "4xRK",  -- Which rack to spawn this missile on?
+	length = 45,
 	caliber = 4.0,
 	weight = 35,    -- Don't scale down the weight though!
 	year = 1953,
@@ -49,11 +50,14 @@ ACF_defineGun("40mmAAM", { --id
 		maxlength	= 32,
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		propweight	= 1,	        -- motor mass - motor casing
-		thrust		= 12000,	    -- average thrust - kg*in/s^2
+		thrust		= 8000,	    -- average thrust - kg*in/s^2
 		burnrate	= 450,	        -- cm^3/s at average chamber pressure
-		starterpct	= 0.15          -- percentage of the propellant consumed in the starter motor.
+		starterpct	= 0.15,          -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 8000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.002,		-- drag coefficient of the missile
+		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
 	},
-    
+   
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = ACF_GetAllGuidanceNames(),
     fuses       = ACF_GetAllFuseNames(),
@@ -75,7 +79,8 @@ ACF_defineGun("70mmAAM", { --id
 	model = "models/missiles/aim9.mdl",
 	gunclass = "AAM",
     rack = "2xRK",  -- Which rack to spawn this missile on?
-	caliber = 7.0,
+	length = 85,	-- Total length of the missile
+	caliber = 7.0,	-- Diameter of the missile
 	weight = 85,    -- Don't scale down the weight though!
 	year = 1953,
 	round = {
@@ -84,9 +89,12 @@ ACF_defineGun("70mmAAM", { --id
 		maxlength	= 26*1.75,
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		propweight	= 1.75,	        -- motor mass - motor casing
-		thrust		= 16000,	    -- average thrust - kg*in/s^2
-		burnrate	= 450,	        -- cm^3/s at average chamber pressure
-		starterpct	= 0.15          -- percentage of the propellant consumed in the starter motor.
+		thrust		= 12000,	    -- average thrust - kg*in/s^2
+		burnrate	= 630,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.2,          -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 10000,		-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.0025,		-- drag coefficient of the missile
+		finmul		= 0.005			-- fin multiplier (mostly used for unpropelled guidance)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -110,6 +118,7 @@ ACF_defineGun("120mmAAM", { --id
 	model = "models/missiles/aim120.mdl",
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
+	length = 150,
 	caliber = 12.0,
 	weight = 200,
 	year = 1974,
@@ -120,9 +129,12 @@ ACF_defineGun("120mmAAM", { --id
 		maxlength	= 32*1.75,
 		casing		= 0.4,	        -- thickness of missile casing, cm
 		propweight	= 3.5,	        -- motor mass - motor casing
-		thrust		= 16000,	    -- average thrust - kg*in/s^2
+		thrust		= 15000,	    -- average thrust - kg*in/s^2
 		burnrate	= 450,	        -- cm^3/s at average chamber pressure
-		starterpct	= 0.15          -- percentage of the propellant consumed in the starter motor.
+		starterpct	= 0.15,          -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 10000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.004,		-- drag coefficient of the missile
+		finmul		= 0.005			-- fin multiplier (mostly used for unpropelled guidance)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
