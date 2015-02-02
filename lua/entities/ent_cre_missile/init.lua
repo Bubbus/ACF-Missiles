@@ -56,12 +56,9 @@ function ENT:Initialize()
 	-- self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
 	-- self.Entity:SetSolid( SOLID_VPHYSICS )
 
-	local Mass = 74.48
 	self.PhysObj = self.Entity:GetPhysicsObject()
-	self.PhysObj:SetMass( Mass )
 	self.PhysObj:EnableGravity( false )
 	self.PhysObj:EnableMotion( false )
-	--util.SpriteTrail(self.Entity, 0, Color(255,255,255,255), false, 8, 128, 3, 1/16, "trails/smoke.vmt")
 
 	self:ConfigureFlight()
 	
@@ -245,16 +242,18 @@ function ENT:CalcFlight()
 		local AngDiff = math.deg(math.asin(VelAxis:Length() / (Dist * Speed)))
 
 		if AngDiff > 0 then
+			local Agility = self.Agility
+
 			--Target facing
 			local Ang = Dir:Angle()
-			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff * SpeedMul,-1,1) )
+			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff * SpeedMul,-Agility,Agility) )
 			local NewDir = Ang:Forward()
 
 			--Velocity stabilisation
 			local DirAxis = NewDir:Cross(DirRawNorm)
 			local RawDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
 			local RawAng = math.deg(math.acos(RawDotSimple))		--Since both vectors are normalised, calculating the dot product should be faster this way
-			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-1,1) * (self.MinimumSpeed / 2000 + self.FinMultiplier * 100))
+			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-Agility,Agility) * (self.MinimumSpeed / 2000 + self.FinMultiplier * 100))
 			NewDir = Ang:Forward()
 
 			--FOV check
@@ -438,24 +437,37 @@ end
 
 function ENT:ConfigureFlight()
 
+
+	local BulletData = self.BulletData
+	local GunData = list.Get("ACFEnts").Guns[self.BulletData.Id]
+	local Round = GunData.round
+	local BurnRate = Round.burnrate
+
+	--pbn(BulletData)
+	--print("")
+	--pbn(GunData)
+	--print("")
+	--pbn(Round)
+
     local Time = CurTime()
-	self.MotorLength = 0.5
+	self.MotorLength = BulletData.PropMass / (Round.burnrate / 1000) * (1 - Round.starterpct)
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
-	self.DragCoef = 0.0025
-	self.Motor = 15000
-	self.MinimumSpeed = 10000
+	self.DragCoef = Round.dragcoef
+	self.Motor = Round.thrust
+	self.MinimumSpeed = Round.minspeed
 	self.FlightTime = 0
-	self.FinMultiplier = 0.005
+	self.FinMultiplier = Round.finmul
+	self.Agility = GunData.agility or 1
 	self.CutoutTime = Time + self.MotorLength
-	self.CurPos = self.BulletData.Pos --self:GetPos()
-	self.CurDir = self.BulletData.Flight:GetNormalized() --self:GetForward()
+	self.CurPos = BulletData.Pos --self:GetPos()
+	self.CurDir = BulletData.Flight:GetNormalized() --self:GetForward()
 	self.LastPos = self.CurPos
     self.Hit = false
 	self.FirstThink = true
     
-    local Mass = 74.48
-    local Length = 118
-	local Width = 5
+    local Mass = GunData.weight
+    local Length = GunData.length
+	local Width = GunData.caliber
 	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length) -- cylinder, non-roll axes
 	self.TorqueMul = Length * 25	--Kinda cheated here because it was unrealistic
 	self.RotAxis = Vector(0,0,0)

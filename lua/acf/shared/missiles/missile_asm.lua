@@ -11,6 +11,44 @@ ACF_defineGunClass("ASM", {
 	soundDistance   = " ",
 	soundNormal     = " ",
     
-    ammoBlacklist   = {"AP", "APHE", "FL"} -- Including FL would mean changing the way round classes work.
+    ammoBlacklist   = {"AP", "APHE", "FL", "SM"} -- Including FL would mean changing the way round classes work.
 } )
 
+
+
+
+
+-- The BGM-71E, a wire guided missile with medium anti-tank effectiveness.
+ACF_defineGun("BGM-71E ASM", { --id
+	name = "BGM-71E Missile",
+	desc = "A light-weight anti-tank missile capable of air-to-surface aswell as surface-to-surface use.\n\nThis round can only fire one missile before having to reload.",
+	model = "models/missiles/bgm_71e.mdl",
+	gunclass = "ASM",
+    rack = "1x BGM-71E",  -- Which rack to spawn this missile on?
+	length = 46,
+	caliber = 5.9,
+	weight = 22.9,    -- Don't scale down the weight though!
+	year = 1970,
+	round = {
+		model		= "models/missiles/bgm_71e.mdl",
+		rackmdl		= "models/missiles/bgm_71e.mdl",
+		maxlength	= 150,
+		casing		= 0.3,	        -- thickness of missile casing, cm
+		propweight	= 1,	        -- motor mass - motor casing
+		thrust		= 5000,	    	-- average thrust - kg*in/s^2
+		burnrate	= 450,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.25,         -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 3000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.004,		-- drag coefficient of the missile
+		finmul		= 0.01			-- fin multiplier (mostly used for unpropelled guidance)
+	},
+    
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = ACF_GetAllGuidanceNames(),
+    fuses       = ACF_GetAllFuseNames(),
+    
+    --seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    --viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1     -- multiplier for missile turn-rate.
+} )

@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+
+	$basetexture 			"models/missiles/bgm_71e_round.vtf"
+	$halflambert 			1
+	$blendtintbybasealpha		1
+
+}
