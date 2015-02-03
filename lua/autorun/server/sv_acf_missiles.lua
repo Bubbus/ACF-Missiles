@@ -268,6 +268,30 @@ end
 
 
 
+
+function ACF_GetRackValue(rdata, val)
+
+    local guns = ACF.Weapons.Rack
+    local class = guns[rdata.Id]
+
+    if class then        
+        if class[val] then
+            return class[val]
+        else
+            local classes = ACF.Classes.Rack
+            class = classes[class.gunclass]
+
+            if class then
+                return class[val]
+            end
+        end
+    end
+    
+end
+
+
+
+
 include("autorun/server/duplicatorDeny.lua")
 
 hook.Add( "InitPostEntity", "ACFMissiles_DupeDeny", function()

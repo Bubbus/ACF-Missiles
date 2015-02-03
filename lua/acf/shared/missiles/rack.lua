@@ -75,21 +75,3 @@ ACF_DefineRack("4xRK", {
 	}
 } )
 
-
-
-
-ACF_DefineRack("1x BGM-71E", {
-	name = "BGM-71E Round",
-	desc = "A single BGM-71E round.",
-	model = "models/missiles/bgm_71e_round.mdl",
-	gunclass = "RK",
-	caliber = 3,
-	weight = 30,
-	year = 1970,
-    magsize = 1,
-
-    mountpoints = 
-	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)}
-	}
-} )

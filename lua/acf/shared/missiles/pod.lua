@@ -7,7 +7,11 @@ ACF_DefineRackClass("POD", {
 	rofmod          = 2,
 	sound           = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance   = " ",
-	soundNormal     = " "
+	soundNormal     = " ",
+    
+    hidemissile     = true,
+    protectmissile  = true,
+    armour          = 5
 } )
 
 
@@ -60,5 +64,24 @@ ACF_DefineRack("70mm7xPOD", {
 		["missile5"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile6"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile7"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+
+
+
+ACF_DefineRack("1x BGM-71E", {
+	name = "BGM-71E Round",
+	desc = "A single BGM-71E round.",
+	model = "models/missiles/bgm_71e_round.mdl",
+	gunclass = "POD",
+	caliber = 3,
+	weight = 30,
+	year = 1970,
+    magsize = 1,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)}
 	}
 } )

@@ -93,7 +93,7 @@ function ENT:ACF_Activate( Recalc )
 		self.ACF.Volume = PhysObj:GetVolume() * 16.38
 	end
 	
-	local Armour = EmptyMass*1000 / self.ACF.Aera / 0.78 --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
+	local Armour = self.CustomArmour or ( EmptyMass*1000 / self.ACF.Aera / 0.78 ) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
 	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone 
 	local Percent = 1 
 	
@@ -562,6 +562,9 @@ function ENT:AddMissile()
     missile:SetPos(muzzle.Pos)
     missile:SetAngles(muzzle.Ang)
     
+    if self.HideMissile then missile:SetNoDraw(true) end
+    if self.ProtectMissile then missile.DisableDamage = true end
+    
     missile:Spawn()
     missile:SetParent(self)
     
@@ -698,14 +701,19 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
     
 	local gunclass = Classes[Rack.Class] or error("Couldn't find the " .. tostring(Rack.Class) .. " gun-class!")
     
+	Rack.Muzzleflash =      gundef.muzzleflash or gunclass.muzzleflash or ""
+	Rack.RoFmod =           gunclass["rofmod"]
+	Rack.Sound =            gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
+	Rack.Inaccuracy =       gunclass["spread"]
+    
+    Rack.HideMissile =      gundef.hidemissile or gunclass.hidemissile
+	Rack.ProtectMissile =   gundef.protectmissile or gunclass.protectmissile
+    Rack.CustomArmour =     gundef.armour or gunclass.armour
+    
 	Rack:SetNWString( "Class" , Rack.Class )
 	Rack:SetNWString( "ID" , Rack.Id )
-	Rack.Muzzleflash = gundef.muzzleflash or gunclass.muzzleflash or ""
-	Rack.RoFmod = gunclass["rofmod"]
-	Rack.Sound = gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
 	Rack:SetNWString( "Sound", Rack.Sound )
-	Rack.Inaccuracy = gunclass["spread"]
-	
+    
     
 	if not UpdateRack or Rack.Model ~= Rack:GetModel() then
 		Rack:SetModel( Rack.Model )	
@@ -776,8 +784,10 @@ function ENT:FireMissile()
             filter[#filter+1] = missile
             
             missile.Filter = filter
+            missile.DisableDamage = false
             
             missile:SetParent(nil)
+            missile:SetNoDraw(false)
             --missile:SetPos(MuzzlePos)
             --missile:SetAngles(ShootVec:Angle())
             local bdata = missile.BulletData

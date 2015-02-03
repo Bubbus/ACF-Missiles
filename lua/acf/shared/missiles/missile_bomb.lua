@@ -21,9 +21,9 @@ ACF_defineGunClass("BOMB", {
 
 
 -- Balance the round in line with the 40mm pod rocket.
-ACF_defineGun("50mmB", { --id
+ACF_defineGun("50mmBOMB", { --id
 	name = "50kg Free Falling Bomb",
-	desc = "Old WW2 100lb bomb - its more like a sock with exlosive material inside",
+	desc = "Old WW2 100lb bomb - it's more like a sock with explosive material inside.",
 	model = "models/bombs/fab50.mdl",
 	gunclass = "BOMB",
     rack = "2xRK",  -- Which rack to spawn this missile on?
@@ -58,9 +58,9 @@ ACF_defineGun("50mmB", { --id
 
 
 -- Balance the round in line with the 40mm pod rocket.
-ACF_defineGun("100mmB", { --id
+ACF_defineGun("100mmBOMB", { --id
 	name = "100kg Free Falling Bomb",
-	desc = "Old WW2 250lb bomb using by Soviet bombers to destroy enemies of the Motherland",
+	desc = "Old WW2 250lb bomb used by Soviet bombers to destroy enemies of the Motherland.",
 	model = "models/bombs/fab100.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
@@ -93,9 +93,9 @@ ACF_defineGun("100mmB", { --id
     agility     = 1     -- multiplier for missile turn-rate.
 } )
 
-ACF_defineGun("250mmB", { --id
+ACF_defineGun("250mmBOMB", { --id
 	name = "250kg Free Falling Bomb",
-	desc = "Heavy WW2 500lb bomb widely used as tank buster",
+	desc = "Heavy WW2 500lb bomb widely used as a tank buster.",
 	model = "models/bombs/fab250.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
