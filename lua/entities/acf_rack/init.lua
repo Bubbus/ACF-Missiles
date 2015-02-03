@@ -205,6 +205,29 @@ end
 
 
 
+function ENT:CanLoadCaliber(cal)
+
+    if self.Caliber then 
+        local ret = (self.Caliber == cal)
+        if ret then return true, ""
+        else return false, "Only " .. math.Round(self.Caliber * 10, 2) .. "mm rounds can fit in this gun." end
+    end
+    
+    if self.MinCaliber and cal < self.MinCaliber then 
+        return false, "Rounds must be at least " .. math.Round(self.MinCaliber * 10, 2) .. "mm to fit in this gun."
+    end
+    
+    if self.MaxCaliber and cal > self.MaxCaliber then 
+        return false, "Rounds cannot be more than " .. math.Round(self.MaxCaliber * 10, 2) .. "mm to fit in this gun."
+    end
+    
+    return true
+    
+end
+
+
+
+
 function ENT:CanLinkCrate(crate)
     
     local bdata = crate.BulletData
@@ -224,6 +247,26 @@ function ENT:CanLinkCrate(crate)
     -- Don't link if it's not a missile.
     local gun = list.Get("ACFEnts").Guns[bdata.Id]
     local Classes = list.Get("ACFClasses").GunClass
+    
+    local canCaliber, calMsg = self:CanLoadCaliber(gun.caliber)
+    if not canCaliber then
+        return false, calMsg
+    end
+    
+    local rackAllow = ACF_GetGunValue(bdata, "racks")
+    local rackAllowed = false
+    local allowType = type(rackAllow)
+    
+    if allowType == "table" then 
+        rackAllowed = rackAllow[self.Id]
+    elseif allowType == "function" then
+        rackAllowed = rackAllow(bdata, self)
+    end
+    
+    if not rackAllowed then
+        return false, self.Id .. " racks cannot be loaded with " .. bdata.Id .. " ammo!"
+    end
+    
     
     if "missile" ~= Classes[gun.gunclass].type then 
         return false, "Racks cannot be linked to ammo crates of type '" .. bdata.gunclass .. "'!" 
@@ -375,16 +418,6 @@ end
 function RetDist( enta, entb )
 	if not ((enta and enta:IsValid()) or (entb and entb:IsValid())) then return 0 end
 	return enta:GetPos():Distance(entb:GetPos())
-end
-
-
-
-
-local function RetDist( enta, entb )    -- wat
-	if not ((enta and enta:IsValid()) or (entb and entb:IsValid())) then return 0 end
-	disp = enta:GetPos() - entb:GetPos()
-	dist = math.sqrt( disp.x * disp.x + disp.y * disp.y + disp.z * disp.z )
-	return dist
 end
 
 
@@ -677,6 +710,8 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	
 	local gundef = List[Id] or error("Couldn't find the " .. tostring(Id) .. " gun-definition!")
 	
+    Rack.MinCaliber = gundef.mincaliber
+    Rack.MaxCaliber = gundef.maxcaliber
 	Rack.Caliber	= gundef["caliber"]
 	Rack.Model = gundef["model"]
 	Rack.Mass = gundef["weight"]
