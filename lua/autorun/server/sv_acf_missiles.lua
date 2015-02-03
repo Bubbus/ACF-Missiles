@@ -240,6 +240,34 @@ ACF.FillerDensity =
 --end
 
 
+
+
+function ACF_GetGunValue(bdata, val)
+
+    local guns = list.Get("ACFEnts").Guns
+    local class = guns[bdata.Id]
+
+    if class then
+        local ret = (class.round and class.round[val])
+        ret = (ret or class[val])
+        
+        if ret then
+            return ret
+        else
+            local classes = list.Get("ACFClasses").GunClass
+            class = classes[class.gunclass]
+
+            if class then
+                return class[val]
+            end
+        end
+    end
+    
+end
+
+
+
+
 include("autorun/server/duplicatorDeny.lua")
 
 hook.Add( "InitPostEntity", "ACFMissiles_DupeDeny", function()

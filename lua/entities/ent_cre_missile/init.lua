@@ -416,18 +416,10 @@ function ENT:LaunchEffect()
     local guns = list.Get("ACFEnts").Guns
     local class = guns[self.BulletData.Id]
     
-    if class then
-        if class.sound then
-            self:EmitSound(class.sound, 511, 100)
-        else
-            local classes = list.Get("ACFClasses").GunClass
-            class = classes[class.gunclass]
-            
-            if class then
-                local sound = class.round and class.round.sound or class.sound
-                if sound then self:EmitSound(sound, 511, 100) end
-            end
-        end
+    local sound = ACF_GetGunValue(self.BulletData, "sound")
+    
+    if sound then
+        self:EmitSound(sound, 511, 100)
     end
     
 end
@@ -442,12 +434,6 @@ function ENT:ConfigureFlight()
 	local GunData = list.Get("ACFEnts").Guns[self.BulletData.Id]
 	local Round = GunData.round
 	local BurnRate = Round.burnrate
-
-	--pbn(BulletData)
-	--print("")
-	--pbn(GunData)
-	--print("")
-	--pbn(Round)
 
     local Time = CurTime()
 	self.MotorLength = BulletData.PropMass / (Round.burnrate / 1000) * (1 - Round.starterpct)
@@ -532,7 +518,12 @@ function ENT:Think()
 		self:CalcFlight()
 		
         if self.CacheParticleEffect and self.CacheParticleEffect <= CurTime() then
-            ParticleEffectAttach( "Rocket Motor", PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0 )
+            local effect = ACF_GetGunValue(self.BulletData, "effect")
+            
+            if effect then
+                ParticleEffectAttach( effect, PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0 )
+            end
+            
             self.CacheParticleEffect = nil
         end
         

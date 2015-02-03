@@ -10,6 +10,7 @@ ACF_defineGunClass("ASM", {
 	sound           = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance   = " ",
 	soundNormal     = " ",
+    effect          = "Rocket Motor",
     
     ammoBlacklist   = {"AP", "APHE", "FL", "SM"} -- Including FL would mean changing the way round classes work.
 } )
