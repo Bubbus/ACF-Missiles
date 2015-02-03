@@ -7,7 +7,139 @@ ACF_defineGunClass("BOMB", {
 	desc            = "Free-falling bombs.  These are slower than missiles, but are more powerful and more manouverable when guided.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 1,
-	--sound           = "acf_extra/airfx/rocket_fire2.wav",
+	sound           = "acf_extra/tankfx/clunk.wav",
+	soundDistance   = " ",
+	soundNormal     = " ",
+    
+    ammoBlacklist   = {"AP", "APHE", "FL"} -- Including FL would mean changing the way round classes work.
+} )
+
+
+
+-- The original XCF bombs are copy-pasted below, but need to be put into the format seen in missile_aam.lua
+
+
+
+-- Balance the round in line with the 40mm pod rocket.
+ACF_defineGun("50mmB", { --id
+	name = "50kg Free Falling Bomb",
+	desc = "Old WW2 100lb bomb - its more like a sock with exlosive material inside",
+	model = "models/bombs/fab50.mdl",
+	gunclass = "BOMB",
+    rack = "2xRK",  -- Which rack to spawn this missile on?
+	length = 50,
+	caliber = 5.0,
+	weight = 50,    -- Don't scale down the weight though!
+	year = 1936,
+    modeldiameter = 2.4 * 2.7, -- in cm
+	round = {
+		model		= "models/bombs/fab50.mdl",
+		rackmdl		= "models/bombs/fab50.mdl",
+		maxlength	= 25,
+		casing		= 0.5,	        -- thickness of missile casing, cm
+		propweight	= 0,	        -- motor mass - motor casing
+		thrust		= 1,	    -- average thrust - kg*in/s^2
+		burnrate	= 1,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.01,          -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.002,		-- drag coefficient of the missile
+		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
+	},
+   
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = ACF_GetAllGuidanceNames(),
+    fuses       = ACF_GetAllFuseNames(),
+    
+    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1     -- multiplier for missile turn-rate.
+} )
+
+
+-- Balance the round in line with the 40mm pod rocket.
+ACF_defineGun("100mmB", { --id
+	name = "100kg Free Falling Bomb",
+	desc = "Old WW2 250lb bomb using by Soviet bombers to destroy enemies of the Motherland",
+	model = "models/bombs/fab100.mdl",
+	gunclass = "BOMB",
+    rack = "1xRK",  -- Which rack to spawn this missile on?
+	length = 100,
+	caliber = 10.0,
+	weight = 100,    -- Don't scale down the weight though!
+	year = 1939,
+    modeldiameter = 21.2 * 1.4, -- in cm
+	round = {
+		model		= "models/bombs/fab100.mdl",
+		rackmdl		= "models/bombs/fab100.mdl",
+		maxlength	= 50,
+		casing		= 0.5,	        -- thickness of missile casing, cm
+		propweight	= 0,	        -- motor mass - motor casing
+		thrust		= 1,	    -- average thrust - kg*in/s^2
+		burnrate	= 1,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.005,          -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.002,		-- drag coefficient of the missile
+		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
+	},
+   
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = ACF_GetAllGuidanceNames(),
+    fuses       = ACF_GetAllFuseNames(),
+    
+    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1     -- multiplier for missile turn-rate.
+} )
+
+ACF_defineGun("250mmB", { --id
+	name = "250kg Free Falling Bomb",
+	desc = "Heavy WW2 500lb bomb widely used as tank buster",
+	model = "models/bombs/fab250.mdl",
+	gunclass = "BOMB",
+    rack = "1xRK",  -- Which rack to spawn this missile on?
+	length = 250,
+	caliber = 25.0,
+	weight = 250,    -- Don't scale down the weight though!
+	year = 1941,
+    modeldiameter = 21.3 * 1.9, -- in cm
+	round = {
+		model		= "models/bombs/fab250.mdl",
+		rackmdl		= "models/bombs/fab250.mdl",
+		maxlength	= 115,
+		casing		= 0.5,	        -- thickness of missile casing, cm
+		propweight	= 0,	        -- motor mass - motor casing
+		thrust		= 1,	    -- average thrust - kg*in/s^2
+		burnrate	= 1,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.005,          -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.002,		-- drag coefficient of the missile
+		finmul		= 0.002			-- fin multiplier (mostly used for unpropelled guidance)
+	},
+   
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = ACF_GetAllGuidanceNames(),
+    fuses       = ACF_GetAllFuseNames(),
+    
+    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1     -- multiplier for missile turn-rate.
+} )
+
+/*
+-- old missile_bomb file
+
+--define the class
+ACF_defineGunClass("BOMB", {
+    type            = "missile",  -- i know i know
+	spread          = 1,
+	name            = "Bomb",
+	desc            = "Free-falling bombs.  These are slower than missiles, but are more powerful and more manouverable when guided.",
+	muzzleflash     = "40mm_muzzleflash_noscale",
+	rofmod          = 1,
+	sound           = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance   = " ",
 	soundNormal     = " ",
     
