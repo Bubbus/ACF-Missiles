@@ -23,11 +23,11 @@ ACF_DefineRack("40mm7xPOD", {
 	desc        = "A lightweight pod for small rockets which is vulnerable to shots and explosions.",
 	model		= "models/missiles/launcher7_40mm.mdl",
 	gunclass    = "POD",
-	caliber     = 4,
 	weight      = 200,
 	year        = 1940,
     magsize     = 7,
     armour      = 10,
+    caliber     = 4
 
     mountpoints = 
 	{
@@ -49,11 +49,11 @@ ACF_DefineRack("70mm7xPOD", {
 	desc        = "A lightweight pod for rockets which is vulnerable to shots and explosions.",
 	model		= "models/missiles/launcher7_70mm.mdl",
 	gunclass    = "POD",
-	caliber     = 7,
 	weight      = 400,
 	year        = 1940,
     magsize     = 7,
     armour      = 10,
+    caliber     = 7,
 
     mountpoints = 
 	{
@@ -75,11 +75,11 @@ ACF_DefineRack("1x BGM-71E", {
 	desc = "A single BGM-71E round.",
 	model = "models/missiles/bgm_71e_round.mdl",
 	gunclass = "POD",
-	caliber = 3,
 	weight = 30,
 	year = 1970,
     magsize = 1,
-
+    caliber = 5.9,
+    
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)}

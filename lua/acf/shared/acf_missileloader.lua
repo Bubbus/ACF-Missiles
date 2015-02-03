@@ -136,7 +136,7 @@ function ACF_GetAllFuseNames()
 
     local ret = {}
 
-    for name, _ in pairs(ACF.Guidance) do
+    for name, _ in pairs(ACF.Fuse) do
         ret[#ret+1] = name
     end
     

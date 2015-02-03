@@ -45,11 +45,13 @@ ACF_defineGun("BGM-71E ASM", { --id
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = ACF_GetAllGuidanceNames(),
+    guidance    = ACF_GetAllGuidanceNamesExcept({"Radar"}),
     fuses       = ACF_GetAllFuseNames(),
     
-    --seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    --viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+    racks       = {["1x BGM-71E"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1     -- multiplier for missile turn-rate.
 } )
