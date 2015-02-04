@@ -27,7 +27,7 @@ ACF_DefineRack("40mm7xPOD", {
 	year        = 1940,
     magsize     = 7,
     armour      = 10,
-    caliber     = 4
+    caliber     = 4,
 
     mountpoints = 
 	{
