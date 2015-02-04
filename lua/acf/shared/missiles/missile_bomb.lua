@@ -21,7 +21,7 @@ ACF_defineGunClass("BOMB", {
 
 
 -- Balance the round in line with the 40mm pod rocket.
-ACF_defineGun("50mmBOMB", { --id
+ACF_defineGun("50kgBOMB", { --id
 	name = "50kg Free Falling Bomb",
 	desc = "Old WW2 100lb bomb - it's more like a sock with explosive material inside.",
 	model = "models/bombs/fab50.mdl",
@@ -47,8 +47,8 @@ ACF_defineGun("50mmBOMB", { --id
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = ACF_GetAllGuidanceNames(),
-    fuses       = ACF_GetAllFuseNames(),
+    guidance    = {"Dumb"},
+    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
@@ -58,7 +58,7 @@ ACF_defineGun("50mmBOMB", { --id
 
 
 -- Balance the round in line with the 40mm pod rocket.
-ACF_defineGun("100mmBOMB", { --id
+ACF_defineGun("100kgBOMB", { --id
 	name = "100kg Free Falling Bomb",
 	desc = "Old WW2 250lb bomb used by Soviet bombers to destroy enemies of the Motherland.",
 	model = "models/bombs/fab100.mdl",
@@ -84,8 +84,8 @@ ACF_defineGun("100mmBOMB", { --id
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = ACF_GetAllGuidanceNames(),
-    fuses       = ACF_GetAllFuseNames(),
+    guidance    = {"Dumb"},
+    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
@@ -93,7 +93,7 @@ ACF_defineGun("100mmBOMB", { --id
     agility     = 1     -- multiplier for missile turn-rate.
 } )
 
-ACF_defineGun("250mmBOMB", { --id
+ACF_defineGun("250kgBOMB", { --id
 	name = "250kg Free Falling Bomb",
 	desc = "Heavy WW2 500lb bomb widely used as a tank buster.",
 	model = "models/bombs/fab250.mdl",
@@ -119,8 +119,8 @@ ACF_defineGun("250mmBOMB", { --id
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = ACF_GetAllGuidanceNames(),
-    fuses       = ACF_GetAllFuseNames(),
+    guidance    = {"Dumb"},
+    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
@@ -128,7 +128,7 @@ ACF_defineGun("250mmBOMB", { --id
     agility     = 1     -- multiplier for missile turn-rate.
 } )
 
-ACF_defineGun("500mmBOMB", { --id
+ACF_defineGun("500kgBOMB", { --id
 	name = "500kg Free Falling Bomb",
 	desc = "1000lb bomb, found in the late heavy bombers of WW2.",
 	model = "models/bombs/fab500.mdl",
@@ -154,8 +154,8 @@ ACF_defineGun("500mmBOMB", { --id
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = ACF_GetAllGuidanceNames(),
-    fuses       = ACF_GetAllFuseNames(),
+    guidance    = {"Dumb"},
+    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
