@@ -254,7 +254,7 @@ function ENT:CanLinkCrate(crate)
     end
     
     local rackAllow = ACF_GetGunValue(bdata, "racks")
-    local rackAllowed = false
+    local rackAllowed = true
     local allowType = type(rackAllow)
     
     if allowType == "table" then 
