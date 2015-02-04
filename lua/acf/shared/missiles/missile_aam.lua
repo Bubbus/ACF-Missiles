@@ -12,7 +12,7 @@ ACF_defineGunClass("AAM", {
 	soundNormal     = " ",
     effect          = "Rocket Motor",
     
-    ammoBlacklist   = {"AP", "APHE", "FL"} -- Including FL would mean changing the way round classes work.
+    ammoBlacklist   = {"AP", "APHE", "FL", "HEAT"} -- Including FL would mean changing the way round classes work.
 } )
 
 
