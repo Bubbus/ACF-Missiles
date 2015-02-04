@@ -15,7 +15,7 @@ function duplicator.Deny( class )
     
     val[ class ] = false
     
-    if AdvDupe2 then
+    if AdvDupe2 and AdvDupe2.duplicator.WhiteList then
         AdvDupe2.duplicator.WhiteList[class] = nil
     end
     
