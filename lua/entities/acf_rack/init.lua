@@ -248,12 +248,8 @@ function ENT:CanLinkCrate(crate)
     local gun = list.Get("ACFEnts").Guns[bdata.Id]
     local Classes = list.Get("ACFClasses").GunClass
     
-    local canCaliber, calMsg = self:CanLoadCaliber(gun.caliber)
-    if not canCaliber then
-        return false, calMsg
-    end
-    
     local rackAllow = ACF_GetGunValue(bdata, "racks")
+    print(rackAllow)
     local rackAllowed = true
     local allowType = type(rackAllow)
     
@@ -264,7 +260,13 @@ function ENT:CanLinkCrate(crate)
     end
     
     if not rackAllowed then
-        return false, self.Id .. " racks cannot be loaded with " .. bdata.Id .. " ammo!"
+        return false, bdata.Id .. " rounds are not compatible with a " .. self.Id .. "!"
+    end
+    
+    
+    local canCaliber, calMsg = self:CanLoadCaliber(gun.caliber)
+    if not canCaliber then
+        return false, calMsg
     end
     
     
