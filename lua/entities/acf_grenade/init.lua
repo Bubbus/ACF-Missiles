@@ -229,7 +229,7 @@ function ENT:Detonate()
 	local phyvel = 	phys and phys:GetVelocity() or Vector(0, 0, 1000)
 	bdata.Flight = 	bdata.Flight or phyvel
 	bdata.Owner = 	bdata.Owner or self.Owner
-	bdata.Pos = 	pos + bdata.Flight:GetNormalized() * 3
+	bdata.Pos = 	pos + bdata.Flight:GetNormalized() * (self.VelocityOffset or 0)
 	bdata.NoOcc = 	self
     bdata.Gun =     self
     
@@ -258,6 +258,11 @@ end
 
 
 
+
+
+
+
+
 function ENT:DoReplicatedPropHit(Bullet)
 
 	local FlightRes = { Entity = self, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = HITGROUP_GENERIC }
@@ -268,11 +273,15 @@ function ENT:DoReplicatedPropHit(Bullet)
 	
 	if Retry == "Penetrated" then		--If we should do the same trace again, then do so
 		--print("a")
+        ACF_ResetVelocity(Bullet)
+        
 		if Bullet.OnPenetrated then Bullet.OnPenetrated(Index, Bullet, FlightRes) end
 		ACF_BulletClient( Index, Bullet, "Update" , 2 , FlightRes.HitPos  )
 		ACF_CalcBulletFlight( Index, Bullet, true )
 	elseif Retry == "Ricochet"  then
 		--print("b")
+        ACF_ResetVelocity(Bullet)
+        
 		if Bullet.OnRicocheted then Bullet.OnRicocheted(Index, Bullet, FlightRes) end
 		ACF_BulletClient( Index, Bullet, "Update" , 3 , FlightRes.HitPos  )
 		ACF_CalcBulletFlight( Index, Bullet, true )

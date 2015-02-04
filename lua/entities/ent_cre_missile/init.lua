@@ -56,6 +56,8 @@ function ENT:Initialize()
 	-- self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
 	-- self.Entity:SetSolid( SOLID_VPHYSICS )
 
+    self.VelocityOffset = -1
+    
 	self.PhysObj = self.Entity:GetPhysicsObject()
 	self.PhysObj:EnableGravity( false )
 	self.PhysObj:EnableMotion( false )
@@ -336,6 +338,7 @@ function ENT:CalcFlight()
 		end
 		--print("FUSE DET")
         self.LastVel = Vel
+        self.CurPos = EndPos
 		self:Detonate()
 		return
 		

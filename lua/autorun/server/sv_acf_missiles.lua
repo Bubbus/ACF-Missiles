@@ -292,6 +292,56 @@ end
 
 
 
+
+local ResetVelocity = {}
+
+function ResetVelocity.AP(bdata)    
+    
+    if not bdata.MuzzleVel then return end
+
+    bdata.Flight:Normalize()
+    
+    bdata.Flight = bdata.Flight * (bdata.MuzzleVel * 39.37)
+    
+end
+            
+ResetVelocity.HE = ResetVelocity.AP
+ResetVelocity.HP = ResetVelocity.AP
+ResetVelocity.FL = ResetVelocity.AP
+ResetVelocity.SM = ResetVelocity.AP
+ResetVelocity.APHE = ResetVelocity.AP
+            
+function ResetVelocity.HEAT(bdata)    
+    
+    if not bdata.Detonated then return ResetVelocity.AP(bdata) end
+    
+    if not (bdata.MuzzleVel and bdata.SlugMV) then return end
+    
+    bdata.Flight:Normalize()
+    
+    bdata.Flight = bdata.Flight * (bdata.SlugMV + bdata.MuzzleVel) * 39.37
+    bdata.NotFirstPen = false
+    
+end   
+
+
+
+-- Resets the velocity of the bullet based on its current state on the serverside only.
+-- This will de-sync the clientside effect!
+function ACF_ResetVelocity(bdata)
+
+    local resetFunc = ResetVelocity[bdata.Type]
+
+    if not resetFunc then return end
+    
+    return resetFunc(bdata)
+
+end
+
+
+
+
+
 include("autorun/server/duplicatorDeny.lua")
 
 hook.Add( "InitPostEntity", "ACFMissiles_DupeDeny", function()
