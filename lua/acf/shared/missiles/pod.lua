@@ -11,7 +11,9 @@ ACF_DefineRackClass("POD", {
     
     hidemissile     = true,
     protectmissile  = true,
-    armour          = 5
+    armour          = 5,
+    
+    reloadmul       = 8,
 } )
 
 
@@ -28,6 +30,8 @@ ACF_DefineRack("40mm7xPOD", {
     magsize     = 7,
     armour      = 10,
     caliber     = 4,
+    
+    hidemissile     = false,
 
     mountpoints = 
 	{
@@ -55,6 +59,8 @@ ACF_DefineRack("70mm7xPOD", {
     armour      = 10,
     caliber     = 7,
 
+    hidemissile     = false,
+    
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
