@@ -25,8 +25,30 @@ end
 
 
 function ENT:GetReloadTime(nextMsl)
-    local interval = IsValid(nextMsl) and ( ( ( nextMsl.BulletData.RoundVolume / 500 ) ^ 0.60 ) * self.RoFmod * self.PGRoFmod ) or 0 
-    self:SetNetworkedBeamInt(	"Interval",		interval)
+    local ret = self:GetFireDelay(nextMsl) * (self.ReloadMultiplier or 1)
+    self:SetNetworkedBeamFloat(	"Reload",		ret)
+    
+    return ret
+end
+
+
+
+
+function ENT:GetFireDelay(nextMsl)
+
+    if not IsValid(nextMsl) then 
+        self:SetNetworkedBeamFloat(	"Interval",		1)
+        return 1 
+    end
+
+    local bdata = nextMsl.BulletData
+
+    local gun = list.Get("ACFEnts").Guns[bdata.Id]
+    local class = list.Get("ACFClasses").GunClass[gun.gunclass]
+
+    
+    local interval =  ( (bdata.RoundVolume / 500) ^ 0.60 ) * (gun.rofmod or 1) * (class.rofmod or 1)
+    self:SetNetworkedBeamFloat(	"Interval",		interval)
     
     return interval
 end
@@ -448,8 +470,8 @@ function ENT:Think()
 		self:SetNetworkedBeamString("GunType",		self.Id)
 		self:SetNetworkedBeamInt(	"Ammo",			Ammo)
         
-        local interval = self:GetReloadTime(self:PeekMissile())
-		self:SetNetworkedBeamInt(	"Interval",		interval)
+        self:GetReloadTime(self:PeekMissile())
+		//self:SetNetworkedBeamFloat(	"Interval",		interval)
 		
 		self.LastSend = Time
 	
@@ -592,6 +614,12 @@ function ENT:AddMissile()
     BulletData.IsShortForm = true    
     BulletData.Owner = ply
     missile:SetBulletData(BulletData)
+    
+    local rackmodel = ACF_GetGunValue(BulletData.Id, "rackmdl")
+    if rackmodel then 
+        missile:SetModelEasy( rackmodel ) 
+        missile.RackModelApplied = true
+    end
     
     local attach, muzzle = self:GetMuzzle(NextIdx, missile)
     missile:SetPos(muzzle.Pos)
@@ -743,9 +771,12 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	Rack.Sound =            gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
 	Rack.Inaccuracy =       gunclass["spread"]
     
-    Rack.HideMissile =      gundef.hidemissile or gunclass.hidemissile
+    Rack.HideMissile =      ACF_GetGunValue(Id, "hidemissile")
 	Rack.ProtectMissile =   gundef.protectmissile or gunclass.protectmissile
     Rack.CustomArmour =     gundef.armour or gunclass.armour
+    
+    Rack.ReloadMultiplier = ACF_GetRackValue(Id, "reloadmul")
+    print("Rack.ReloadMultiplier", Rack.ReloadMultiplier)
     
 	Rack:SetNWString( "Class" , Rack.Class )
 	Rack:SetNWString( "ID" , Rack.Id )
@@ -801,7 +832,7 @@ function ENT:FireMissile()
         
         if missile then
         
-            ReloadTime = self:GetReloadTime(missile)
+            ReloadTime = self:GetFireDelay(missile)
         
             local attach, muzzle = self:GetMuzzle(curShot - 1, missile)
         
@@ -831,6 +862,12 @@ function ENT:FireMissile()
             
             bdata.Pos = MuzzlePos
             bdata.Flight = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
+            
+            if missile.RackModelApplied then 
+                local model = ACF_GetGunValue(bdata.Id, "model")
+                missile:SetModelEasy( model ) 
+                missile.RackModelApplied = nil
+            end
             
             missile:Launch()
             

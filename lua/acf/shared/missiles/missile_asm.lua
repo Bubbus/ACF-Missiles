@@ -12,6 +12,8 @@ ACF_defineGunClass("ASM", {
 	soundNormal     = " ",
     effect          = "Rocket Motor",
     
+    reloadmul       = 8,
+    
     ammoBlacklist   = {"AP", "APHE", "FL", "SM"} -- Including FL would mean changing the way round classes work.
 } )
 
@@ -55,3 +57,5 @@ ACF_defineGun("BGM-71E ASM", { --id
     
     agility     = 1     -- multiplier for missile turn-rate.
 } )
+
+

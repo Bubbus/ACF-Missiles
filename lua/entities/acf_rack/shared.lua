@@ -18,8 +18,9 @@ function ENT:GetOverlayText()
 	local name = self:GetNetworkedString("WireName")
 	local GunType = self:GetNetworkedBeamString("GunType")
 	local Ammo = self:GetNetworkedBeamInt("Ammo")
-	local FireRate = self:GetNetworkedBeamInt("Interval")
-	local txt = GunType.." ("..Ammo.." left) \nFire interval: "..FireRate or ""
+	local FireRate = self:GetNetworkedBeamFloat("Interval")
+    local Reload = self:GetNetworkedBeamFloat("Reload")
+	local txt = GunType.." ("..Ammo.." left) \nFire interval: "..(math.Round(FireRate, 2)).." sec\nReload interval: "..(math.Round(Reload, 2)).." sec"
 	if (not game.SinglePlayer()) then
 		local PlayerName = self:GetPlayerName()
 		txt = txt .. "\n(" .. PlayerName .. ")"
