@@ -148,7 +148,7 @@ end
 
 function ACF_GetAllFuseNamesExcept(list)
 
-    return GetAllInTableExcept(ACF.Guidance, list)
+    return GetAllInTableExcept(ACF.Fuse, list)
     
 end
 
