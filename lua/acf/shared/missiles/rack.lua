@@ -84,10 +84,10 @@ ACF_DefineRack("4xAGM-114", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)},
-		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)},
-		["missile4"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)}
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
+		["missile4"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)}
 	}
 } )
 
