@@ -72,3 +72,22 @@ ACF_DefineRack("4xRK", {
 	}
 } )
 
+
+ACF_DefineRack("4xAGM-114", {
+	name = "Quad Munitions AGM-114 Rack",
+	desc = "A rack designed for AGM-114 Hellfire Missiles.",
+	model		= "models/missiles/agm114_rack_x4.mdl",
+	gunclass = "RK",
+	weight = 200,
+	year = 1936,
+    magsize = 4,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)},
+		["missile4"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-2)}
+	}
+} )
+
