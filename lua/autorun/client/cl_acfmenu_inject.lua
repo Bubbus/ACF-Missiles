@@ -18,16 +18,10 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
             acfmenupanel.CustomDisplay:AddItem(spacer)
         end
     
-    
+        local default = "Dumb"   -- Dumb is the only acceptable default
         if not acfmenupanel.CData.GuidanceSelect then
             acfmenupanel.CData.GuidanceSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
-            acfmenupanel.CData.GuidanceSelect:SetSize(100, 30)
-            
-            for Key, Value in pairs( gundata.guidance or {} ) do
-                acfmenupanel.CData.GuidanceSelect:AddChoice( Value, Value, Value == "Dumb" )  -- Dumb is the only acceptable default
-            end
-            
-            
+            acfmenupanel.CData.GuidanceSelect:SetSize(100, 30)        
             
             acfmenupanel.CData.GuidanceSelect.OnSelect = function( index , value , data )
                 RunConsoleCommand( "acfmenu_data7", data )
@@ -51,21 +45,25 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
             acfmenupanel.CData.GuidanceSelect.ConfigPanel = configPanel
             acfmenupanel.CustomDisplay:AddItem( configPanel )
             
-        else
-            acfmenupanel.CData.GuidanceSelect:SetSize(100, 30)
+        else        
+            --acfmenupanel.CData.GuidanceSelect:SetSize(100, 30)
+            default = acfmenupanel.CData.GuidanceSelect:GetValue()
             acfmenupanel.CData.GuidanceSelect:SetVisible(true)
         end
+        
+        acfmenupanel.CData.GuidanceSelect:Clear()
+        for Key, Value in pairs( gundata.guidance or {} ) do
+            acfmenupanel.CData.GuidanceSelect:AddChoice( Value, Value, Value == default )
+        end
+        
         
         
         -- Create fuse selection combobox + description label
         
+        default = "Contact"  -- Contact is the only acceptable default
         if not acfmenupanel.CData.FuseSelect then
             acfmenupanel.CData.FuseSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
             acfmenupanel.CData.FuseSelect:SetSize(100, 30)
-            
-            for Key, Value in pairs( gundata.fuses or {} ) do
-                acfmenupanel.CData.FuseSelect:AddChoice( Value, Value, Value == "Contact" ) -- Contact is the only acceptable default
-            end
             
             acfmenupanel.CData.FuseSelect.OnSelect = function( index , value , data )
                 ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
@@ -91,10 +89,15 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
             acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
             acfmenupanel.CustomDisplay:AddItem( configPanel )
         else
-            acfmenupanel.CData.FuseSelect:SetSize(100, 30)
+            --acfmenupanel.CData.FuseSelect:SetSize(100, 30)
+            default = acfmenupanel.CData.FuseSelect:GetValue()
             acfmenupanel.CData.FuseSelect:SetVisible(true)
         end
-    
+        
+        acfmenupanel.CData.FuseSelect:Clear()
+        for Key, Value in pairs( gundata.fuses or {} ) do
+            acfmenupanel.CData.FuseSelect:AddChoice( Value, Value, Value == default ) -- Contact is the only acceptable default
+        end
     
     else
     
@@ -157,7 +160,7 @@ function ModifyACFMenu(panel)
     
         oldAmmoSelect(panel, blacklist)
     
-        acfmenupanel.CData.CaliberSelect.OnSelect = function( index , value , data )
+        acfmenupanel.CData.CaliberSelect.OnSelect = function( index , value , data )            
 			acfmenupanel.AmmoData["Data"] = acfmenupanel.WeaponData["Guns"][data]["round"]
 			acfmenupanel:UpdateAttribs()
 			acfmenupanel:UpdateAttribs()	--Note : this is intentional
@@ -166,7 +169,7 @@ function ModifyACFMenu(panel)
             local class = gunTbl.gunclass
             
             local Classes = list.Get("ACFClasses")
-            SetMissileGUIEnabled( acfmenupanel, (Classes.GunClass[class].type == "missile"), gunTbl )
+            timer.Simple(0.01, function() SetMissileGUIEnabled( acfmenupanel, (Classes.GunClass[class].type == "missile"), gunTbl ) end)
 		end
         
         local data = acfmenupanel.CData.CaliberSelect:GetValue()
@@ -175,7 +178,7 @@ function ModifyACFMenu(panel)
             local class = gunTbl.gunclass
             
             local Classes = list.Get("ACFClasses")
-            SetMissileGUIEnabled( acfmenupanel, (Classes.GunClass[class].type == "missile"), gunTbl)
+            timer.Simple(0.01, function() SetMissileGUIEnabled( acfmenupanel, (Classes.GunClass[class].type == "missile"), gunTbl) end)
         end
         
     end
