@@ -498,6 +498,10 @@ function ENT:Detonate()
         self.BulletData.Flight = self:GetForward()
     end
 
+    if self.Motor ~= 0 then
+        self.Entity:StopParticles()
+        self.Motor = 0
+    end    
      
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
 
