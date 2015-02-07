@@ -32,6 +32,7 @@ ACF_DefineRack("40mm7xPOD", {
     caliber     = 4,
     
     hidemissile     = false,
+    whitelistonly   = true,
 
     mountpoints = 
 	{
@@ -60,6 +61,7 @@ ACF_DefineRack("70mm7xPOD", {
     caliber     = 7,
 
     hidemissile     = false,
+    whitelistonly   = true,
     
     mountpoints = 
 	{
@@ -85,6 +87,8 @@ ACF_DefineRack("1x BGM-71E", {
 	year = 1970,
     magsize = 1,
     caliber = 5.9,
+    
+    whitelistonly   = true,
     
     mountpoints = 
 	{

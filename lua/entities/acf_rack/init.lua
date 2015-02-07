@@ -271,11 +271,12 @@ function ENT:CanLinkCrate(crate)
     local Classes = list.Get("ACFClasses").GunClass
     
     local rackAllow = ACF_GetGunValue(bdata, "racks")
-    print(rackAllow)
     local rackAllowed = true
     local allowType = type(rackAllow)
     
-    if allowType == "table" then 
+    if rackAllow == nil and self.WhitelistOnly then
+        rackAllowed = false
+    elseif allowType == "table" then 
         rackAllowed = rackAllow[self.Id]
     elseif allowType == "function" then
         rackAllowed = rackAllow(bdata, self)
@@ -743,9 +744,9 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
     Rack.MinCaliber = gundef.mincaliber
     Rack.MaxCaliber = gundef.maxcaliber
 	Rack.Caliber	= gundef["caliber"]
-	Rack.Model = gundef["model"]
-	Rack.Mass = gundef["weight"]
-	Rack.Class = gundef["gunclass"]
+	Rack.Model      = gundef["model"]
+	Rack.Mass       = gundef["weight"]
+	Rack.Class      = gundef["gunclass"]
     
 	-- Custom BS for karbine. Per Rack ROF.
 	Rack.PGRoFmod = 1
@@ -766,21 +767,21 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
     
 	local gunclass = Classes[Rack.Class] or error("Couldn't find the " .. tostring(Rack.Class) .. " gun-class!")
     
-	Rack.Muzzleflash =      gundef.muzzleflash or gunclass.muzzleflash or ""
-	Rack.RoFmod =           gunclass["rofmod"]
-	Rack.Sound =            gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
-	Rack.Inaccuracy =       gunclass["spread"]
+	Rack.Muzzleflash        = gundef.muzzleflash or gunclass.muzzleflash or ""
+	Rack.RoFmod             = gunclass["rofmod"]
+	Rack.Sound              = gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
+	Rack.Inaccuracy         = gunclass["spread"]
     
-    Rack.HideMissile =      ACF_GetGunValue(Id, "hidemissile")
-	Rack.ProtectMissile =   gundef.protectmissile or gunclass.protectmissile
-    Rack.CustomArmour =     gundef.armour or gunclass.armour
+    Rack.HideMissile        = ACF_GetGunValue(Id, "hidemissile")
+	Rack.ProtectMissile     = gundef.protectmissile or gunclass.protectmissile
+    Rack.CustomArmour       = gundef.armour or gunclass.armour
     
-    Rack.ReloadMultiplier = ACF_GetRackValue(Id, "reloadmul")
-    print("Rack.ReloadMultiplier", Rack.ReloadMultiplier)
+    Rack.ReloadMultiplier   = ACF_GetRackValue(Id, "reloadmul")
+    Rack.WhitelistOnly      = ACF_GetRackValue(Id, "whitelistonly")
     
-	Rack:SetNWString( "Class" , Rack.Class )
-	Rack:SetNWString( "ID" , Rack.Id )
-	Rack:SetNWString( "Sound", Rack.Sound )
+	Rack:SetNWString( "Class",  Rack.Class )
+	Rack:SetNWString( "ID",     Rack.Id )
+	Rack:SetNWString( "Sound",  Rack.Sound )
     
     
 	if not UpdateRack or Rack.Model ~= Rack:GetModel() then
