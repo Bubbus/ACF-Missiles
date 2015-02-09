@@ -12,3 +12,7 @@ AddCSLuaFile("acf/client/cl_acfmenu_missileui.lua")
 
 AddCSLuaFile("gitrc.lua")
 include("gitrc.lua")
+
+AddCSLuaFile("includes/modules/markdown.lua")
+
+AddCSLuaFile("acf/client/cl_missilewiki.lua")
