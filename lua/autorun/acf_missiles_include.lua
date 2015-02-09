@@ -10,5 +10,5 @@ AddCSLuaFile("autorun/client/cl_acfmenu_inject.lua")
 AddCSLuaFile("autorun/printbyname.lua")
 AddCSLuaFile("acf/client/cl_acfmenu_missileui.lua")
 
-AddCSLuaFile("girtc.lua")
-include("girtc.lua")
+AddCSLuaFile("gitrc.lua")
+include("gitrc.lua")
