@@ -59,3 +59,43 @@ ACF_defineGun("BGM-71E ASM", { --id
 } )
 
 
+-- The AGM-114B, a IR guided missile with high anti-tank effectiveness.
+ACF_defineGun("AGM-114B", { --id
+	name = "AGM-114B Missile",
+	desc = "The AGM-114 Hellfire is an air-to-surface missile (ASM) first developed for anti-armor use, but later models were developed for precision strikes against other target types.\n\nThis round can only fire one missile before having to reload.",
+	model = "models/missiles/agm_114.mdl",
+	gunclass = "ASM",
+    rack = "4xAGM-114",  -- Which rack to spawn this missile on?
+	length = 66,
+	caliber = 5.9,
+	weight = 22.9,    -- Don't scale down the weight though!
+    modeldiameter = 17.2 * 1.27, -- in cm
+	year = 1970,
+	round = {
+		model		= "models/missiles/agm_114.mdl",
+		rackmdl		= "models/missiles/agm_114.mdl",
+		maxlength	= 163,
+		casing		= 0.3,	        -- thickness of missile casing, cm
+		propweight	= 1,	        -- motor mass - motor casing
+		thrust		= 5000,	    	-- average thrust - kg*in/s^2
+		burnrate	= 450,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.25,         -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 3000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.004,		-- drag coefficient of the missile
+		finmul		= 0.01			-- fin multiplier (mostly used for unpropelled guidance)
+	},
+    
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = ACF_GetAllGuidanceNamesExcept({"Wire"}),
+    fuses       = ACF_GetAllFuseNames(),
+    
+    racks       = {["4xAGM-114"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1     -- multiplier for missile turn-rate.
+} )
+
+
+
