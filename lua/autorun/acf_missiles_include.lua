@@ -14,5 +14,5 @@ AddCSLuaFile("gitrc.lua")
 include("gitrc.lua")
 
 AddCSLuaFile("includes/modules/markdown.lua")
-
 AddCSLuaFile("acf/client/cl_missilewiki.lua")
+AddCSLuaFile("autorun/client/acfm_wiki.lua")
