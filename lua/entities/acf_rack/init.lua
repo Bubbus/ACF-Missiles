@@ -623,14 +623,15 @@ function ENT:AddMissile()
     end
     
     local attach, muzzle = self:GetMuzzle(NextIdx, missile)
-    missile:SetPos(muzzle.Pos)
+    missile:SetParent(self)
+    missile:SetPos(self:WorldToLocal(muzzle.Pos))
     missile:SetAngles(muzzle.Ang)
     
     if self.HideMissile then missile:SetNoDraw(true) end
     if self.ProtectMissile then missile.DisableDamage = true end
     
     missile:Spawn()
-    missile:SetParent(self)
+    
     
     self:EmitSound( "acf_extra/tankfx/resupply_single.wav", 500, 100 )
     
