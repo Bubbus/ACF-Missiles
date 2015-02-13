@@ -48,8 +48,6 @@ function ACFM_ModifyRoundDisplayFuncs()
                 local MuzzleVel = data.MuzzleVel
                 local slugMV = data.SlugMV
                 
-                print("aeiou", MuzzleVel, slugMV)
-                
                 data.MuzzleVel = 0
                 data.SlugMV = (slugMV or 0) * (ACF_GetGunValue(data.Id, "penmul") or 1)
                 
