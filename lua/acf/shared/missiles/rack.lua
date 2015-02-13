@@ -53,8 +53,8 @@ ACF_DefineRack("2xRK", {
 
 
 ACF_DefineRack("3xRK", {
-	name = "Quad Munitions Rack",
-	desc = "A lightweight rack for rockets and bombs which is vulnerable to shots and explosions.",
+	name = "BRU-42 Rack",
+	desc = "A lightweight rack for bombs which is vulnerable to shots and explosions.",
 	model		= "models/missiles/bomb_3xrk.mdl",
 	gunclass = "RK",
 	weight = 200,
