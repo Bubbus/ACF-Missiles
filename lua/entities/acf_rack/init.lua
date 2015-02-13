@@ -773,7 +773,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	Rack.Sound              = gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
 	Rack.Inaccuracy         = gunclass["spread"]
     
-    Rack.HideMissile        = ACF_GetGunValue(Id, "hidemissile")
+    Rack.HideMissile        = ACF_GetRackValue(Id, "hidemissile")
 	Rack.ProtectMissile     = gundef.protectmissile or gunclass.protectmissile
     Rack.CustomArmour       = gundef.armour or gunclass.armour
     
