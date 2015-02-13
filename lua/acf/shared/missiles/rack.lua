@@ -52,6 +52,22 @@ ACF_DefineRack("2xRK", {
 } )
 
 
+ACF_DefineRack("3xRK", {
+	name = "BRU-42 Rack",
+	desc = "A lightweight rack for bombs which is vulnerable to shots and explosions.",
+	model		= "models/missiles/bomb_3xrk.mdl",
+	gunclass = "RK",
+	weight = 200,
+	year = 1936,
+    magsize = 3,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,-1,0)},
+	}
+} )
 
 
 ACF_DefineRack("4xRK", {
