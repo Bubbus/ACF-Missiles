@@ -28,7 +28,7 @@ ACF_defineGun("50kgBOMB", { --id
 	desc = "Old WW2 100lb bomb - it's more like a sock with explosive material inside.",
 	model = "models/bombs/fab50.mdl",
 	gunclass = "BOMB",
-    rack = "2xRK",  -- Which rack to spawn this missile on?
+    rack = "3xRK",  -- Which rack to spawn this missile on?
 	length = 50,
 	caliber = 5.0,
 	weight = 50,    -- Don't scale down the weight though!
