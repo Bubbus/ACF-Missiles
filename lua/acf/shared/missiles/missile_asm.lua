@@ -43,7 +43,8 @@ ACF_defineGun("BGM-71E ASM", { --id
 		starterpct	= 0.25,         -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 3000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.004,		-- drag coefficient of the missile
-		finmul		= 0.01			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.01, 		-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(2)  -- HEAT velocity multiplier.  Squared relation to penetration (math.sqrt(2) means double pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
