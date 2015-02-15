@@ -29,7 +29,7 @@ ACF_defineGun("50kgBOMB", { --id
 	model = "models/bombs/fab50.mdl",
 	gunclass = "BOMB",
     rack = "3xRK",  -- Which rack to spawn this missile on?
-	length = 50,
+	length = 5,
 	caliber = 5.0,
 	weight = 50,    -- Don't scale down the weight though!
 	year = 1936,
@@ -37,7 +37,7 @@ ACF_defineGun("50kgBOMB", { --id
 	round = {
 		model		= "models/bombs/fab50.mdl",
 		rackmdl		= "models/bombs/fab50.mdl",
-		maxlength	= 40,
+		maxlength	= 60,
 		casing		= 0.5,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
@@ -52,6 +52,9 @@ ACF_defineGun("50kgBOMB", { --id
     guidance    = {"Dumb"},
     fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
+	racks       = {["1xRK"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+  
+	
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
@@ -66,7 +69,7 @@ ACF_defineGun("100kgBOMB", { --id
 	model = "models/bombs/fab100.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 100,
+	length = 10,
 	caliber = 10.0,
 	weight = 100,    -- Don't scale down the weight though!
 	year = 1939,
@@ -74,7 +77,7 @@ ACF_defineGun("100kgBOMB", { --id
 	round = {
 		model		= "models/bombs/fab100.mdl",
 		rackmdl		= "models/bombs/fab100.mdl",
-		maxlength	= 50,
+		maxlength	= 70,
 		casing		= 0.5,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
@@ -89,6 +92,8 @@ ACF_defineGun("100kgBOMB", { --id
     guidance    = {"Dumb"},
     fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
+	racks       = {["1xRK"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+ 
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
@@ -101,7 +106,7 @@ ACF_defineGun("250kgBOMB", { --id
 	model = "models/bombs/fab250.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 250,
+	length = 25,
 	caliber = 25.0,
 	weight = 250,    -- Don't scale down the weight though!
 	year = 1941,
@@ -109,7 +114,7 @@ ACF_defineGun("250kgBOMB", { --id
 	round = {
 		model		= "models/bombs/fab250.mdl",
 		rackmdl		= "models/bombs/fab250.mdl",
-		maxlength	= 75,
+		maxlength	= 110,
 		casing		= 0.5,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
@@ -123,7 +128,10 @@ ACF_defineGun("250kgBOMB", { --id
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb"},
     fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
-    
+ 
+	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+
+ 
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
@@ -136,7 +144,7 @@ ACF_defineGun("500kgBOMB", { --id
 	model = "models/bombs/fab500.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 500,
+	length = 50,
 	caliber = 50.0,
 	weight = 500,    -- Don't scale down the weight though!
 	year = 1943,
@@ -144,7 +152,7 @@ ACF_defineGun("500kgBOMB", { --id
 	round = {
 		model		= "models/bombs/fab500.mdl",
 		rackmdl		= "models/bombs/fab500.mdl",
-		maxlength	= 100,
+		maxlength	= 175,
 		casing		= 0.5,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
@@ -158,7 +166,9 @@ ACF_defineGun("500kgBOMB", { --id
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb"},
     fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
-    
+ 
+	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+ 
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
