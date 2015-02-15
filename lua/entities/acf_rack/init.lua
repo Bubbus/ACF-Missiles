@@ -228,22 +228,8 @@ end
 
 
 function ENT:CanLoadCaliber(cal)
-
-    if self.Caliber then 
-        local ret = (self.Caliber == cal)
-        if ret then return true, ""
-        else return false, "Only " .. math.Round(self.Caliber * 10, 2) .. "mm rounds can fit in this gun." end
-    end
     
-    if self.MinCaliber and cal < self.MinCaliber then 
-        return false, "Rounds must be at least " .. math.Round(self.MinCaliber * 10, 2) .. "mm to fit in this gun."
-    end
-    
-    if self.MaxCaliber and cal > self.MaxCaliber then 
-        return false, "Rounds cannot be more than " .. math.Round(self.MaxCaliber * 10, 2) .. "mm to fit in this gun."
-    end
-    
-    return true
+    return ACF_RackCanLoadCaliber(self.Id, cal)
     
 end
 
@@ -267,35 +253,11 @@ function ENT:CanLinkCrate(crate)
 	end
     
     -- Don't link if it's not a missile.
-    local gun = list.Get("ACFEnts").Guns[bdata.Id]
-    local Classes = list.Get("ACFClasses").GunClass
-    
-    local rackAllow = ACF_GetGunValue(bdata, "racks")
-    local rackAllowed = true
-    local allowType = type(rackAllow)
-    
-    if rackAllow == nil and self.WhitelistOnly then
-        rackAllowed = false
-    elseif allowType == "table" then 
-        rackAllowed = rackAllow[self.Id]
-    elseif allowType == "function" then
-        rackAllowed = rackAllow(bdata, self)
-    end
-    
-    if not rackAllowed then
-        return false, bdata.Id .. " rounds are not compatible with a " .. self.Id .. "!"
-    end
     
     
-    local canCaliber, calMsg = self:CanLoadCaliber(gun.caliber)
-    if not canCaliber then
-        return false, calMsg
-    end
+    local ret, msg = ACF_CanLinkRack(self.Id, bdata.Id, bdata, self)
+    if not ret then return ret, msg end
     
-    
-    if "missile" ~= Classes[gun.gunclass].type then 
-        return false, "Racks cannot be linked to ammo crates of type '" .. bdata.gunclass .. "'!" 
-    end
     
 	-- Don't link if it's already linked
 	for k, v in pairs( self.AmmoLink ) do

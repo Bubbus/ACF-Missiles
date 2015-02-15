@@ -26,17 +26,32 @@ function ENT:Think()
     
         self:Remove()
         
-        local GunClass = ACF.Weapons.Guns[self.Id]
         
-        if not GunClass then 
-            error("Couldn't spawn the missile rack: can't find the gun-class '" + tostring(self.Id) + "'.")
+        local rackId = self.RackID
+        
+        if not (rackId and ACF.Weapons.Rack[rackId]) then
+            local GunClass = ACF.Weapons.Guns[self.Id]
+            
+            if not GunClass then 
+                error("Couldn't spawn the missile rack: can't find the gun-class '" + tostring(self.Id) + "'.")
+            end
+            
+            if not GunClass.rack then
+                error("Couldn't spawn the missile rack: '" + tostring(self.Id) + "' doesn't have a preferred missile rack.")
+            end
+            
+            rackId = GunClass.rack
         end
         
-        if not GunClass.rack then
-            error("Couldn't spawn the missile rack: '" + tostring(self.Id) + "' doesn't have a preferred missile rack.")
-        end
+        local rack = MakeACF_Rack(self.Owner, pos, ang, rackId)
         
-        MakeACF_Rack(self.Owner, pos, ang, GunClass.rack)
+        
+        if IsValid(rack) then
+            undo.Create( "acf_rack" )
+                undo.AddEntity( rack )
+                undo.SetPlayer( ply )
+            undo.Finish()
+        end
         
     end
     
@@ -54,7 +69,9 @@ end
 
 
 
-function MakeACF_MissileToRack(owner, pos, ang, id)
+function MakeACF_MissileToRack(owner, pos, ang, id, rackid)
+    
+    print("id, rackid", id, rackid)
     
     if not owner:CheckLimit("_acf_gun") then return false end
 	
@@ -66,6 +83,7 @@ function MakeACF_MissileToRack(owner, pos, ang, id)
     
     converter.Id = id
     converter.Owner = owner
+    converter.RackID = rackid
     
 	converter:Spawn()
     
@@ -82,5 +100,5 @@ end
 
 
 
-list.Set( "ACFCvars", "acf_missile_to_rack", {"id"} )
+list.Set( "ACFCvars", "acf_missile_to_rack", {"id", "data1"} )
 duplicator.RegisterEntityClass("acf_missile_to_rack", MakeACF_MissileToRack, "Pos", "Angle", "Id" )

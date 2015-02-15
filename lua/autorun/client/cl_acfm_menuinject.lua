@@ -141,11 +141,67 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
             acfmenupanel.CData.FuseDesc_text:Remove()
             acfmenupanel.CData.FuseDesc_text = nil
         end
-        
-    
-        --ACFMissiles_RemoveMenuConfiguration("Fuse")
     
     end
+    
+end
+
+
+
+
+function CreateRackSelectGUI(node)
+    print("selected", node.mytable.id)
+    
+    
+    if not acfmenupanel.CData.MissileSpacer then
+        local spacer = vgui.Create("DPanel")
+        spacer:SetSize(24, 24)
+        spacer.Paint = function() end
+        acfmenupanel.CData.MissileSpacer = spacer
+        
+        acfmenupanel.CustomDisplay:AddItem(spacer)
+    end
+
+    
+    if not acfmenupanel.CData.RackSelect or IsValid(acfmenupanel.CData.RackSelect) then
+        acfmenupanel.CData.RackSelect = vgui.Create( "DComboBox", acfmenupanel.CustomDisplay )	--Every display and slider is placed in the Round table so it gets trashed when selecting a new round type
+        acfmenupanel.CData.RackSelect:SetSize(100, 30)        
+        
+        acfmenupanel.CData.RackSelect.OnSelect = function( index , value , data )
+            RunConsoleCommand( "acfmenu_data1", data )
+            
+            local rack = ACF.Weapons.Rack[data]
+            if rack and rack.desc then
+                acfmenupanel:CPanelText("RackDesc", rack.desc .. "\n")
+                
+                --local configPanel = ACFMissiles_CreateMenuConfiguration(rack, acfmenupanel.CData.RackSelect, "acfmenu_data1", acfmenupanel.CData.RackSelect.ConfigPanel)
+                --acfmenupanel.CData.RackSelect.ConfigPanel = configPanel
+            else
+                acfmenupanel:CPanelText("RackDesc", "Select a compatible rack from the list above.\n")
+            end
+        end
+            
+        acfmenupanel.CustomDisplay:AddItem( acfmenupanel.CData.RackSelect )
+        
+        acfmenupanel:CPanelText("RackDesc", "Select a compatible rack from the list above.\n")
+        
+        local configPanel = vgui.Create("DScrollPanel")
+        acfmenupanel.CData.RackSelect.ConfigPanel = configPanel
+        acfmenupanel.CustomDisplay:AddItem( configPanel )
+        
+    else        
+        --acfmenupanel.CData.RackSelect:SetSize(100, 30)
+        default = acfmenupanel.CData.RackSelect:GetValue()
+        acfmenupanel.CData.RackSelect:SetVisible(true)
+    end
+    
+    acfmenupanel.CData.RackSelect:Clear()
+    
+    local default = node.mytable.rack
+    for Key, Value in pairs( ACF_GetCompatibleRacks(node.mytable.id) ) do
+        acfmenupanel.CData.RackSelect:AddChoice( Value, Value, Value == default )
+    end
+    
     
 end
 
@@ -181,6 +237,54 @@ function ModifyACFMenu(panel)
             timer.Simple(0.01, function() SetMissileGUIEnabled( acfmenupanel, (Classes.GunClass[class].type == "missile"), gunTbl) end)
         end
         
+    end
+    
+    
+    
+    
+    local rootNodes = acfmenupanel.WeaponSelect:Root().ChildNodes:GetChildren()
+    
+    local gunsNode
+    
+    for k, node in pairs(rootNodes) do
+        if node:GetText() == "Guns" then
+            gunsNode = node
+            break
+        end
+    end
+    
+    if gunsNode then
+        local classNodes = gunsNode.ChildNodes:GetChildren()
+        local gunClasses = list.Get("ACFClasses").GunClass
+        
+        for k, node in pairs(classNodes) do
+            print(node:GetText())
+            local gunNodeElement = node.ChildNodes
+            
+            if gunNodeElement then
+                local gunNodes = gunNodeElement:GetChildren()
+                
+                for k, gun in pairs(gunNodes) do
+                    local class = gunClasses[gun.mytable.gunclass]
+                    
+                    if (class and class.type == "missile") and not gun.ACFMOverridden then
+                        print("overriding", gun:GetText())  
+                        local oldclick = gun.DoClick
+                        
+                        gun.DoClick = function(self)
+                            local ret = oldclick(self)
+                            CreateRackSelectGUI(self)
+                        end
+                        
+                        gun.ACFMOverridden = true
+                    end
+                end
+            else
+                ErrorNoHalt("ACFM: Unable to find guns for class " .. node:GetText() .. ".\n")
+            end
+        end        
+    else
+        ErrorNoHalt("ACFM: Unable to find the ACF Guns node.")
     end
     
 end

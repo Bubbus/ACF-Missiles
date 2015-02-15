@@ -54,3 +54,90 @@ function ACF_GetRackValue(rdata, val)
     end
     
 end
+
+
+
+
+function ACF_RackCanLoadCaliber(rackId, cal)
+
+    local rack = ACF.Weapons.Rack[rackId]
+    if not rack then return false, "Rack '" .. tostring(rackId) .. "' does not exist." end
+
+    if rack.caliber then 
+        local ret = (rack.caliber == cal)
+        if ret then return true, ""
+        else return false, "Only " .. math.Round(rack.caliber * 10, 2) .. "mm rounds can fit in this gun." end
+    end
+    
+    if rack.mincaliber and cal < rack.mincaliber then 
+        return false, "Rounds must be at least " .. math.Round(rack.mincaliber * 10, 2) .. "mm to fit in this gun."
+    end
+    
+    if rack.maxcaliber and cal > rack.maxcaliber then 
+        return false, "Rounds cannot be more than " .. math.Round(rack.maxcaliber * 10, 2) .. "mm to fit in this gun."
+    end
+    
+    return true
+    
+end
+
+
+
+
+function ACF_CanLinkRack(rackId, ammoId, bdata, rack)
+
+    local rack = ACF.Weapons.Rack[rackId]
+    if not rack then return false, "Rack '" .. tostring(rackId) .. "' does not exist." end
+
+    local gun = list.Get("ACFEnts").Guns[ammoId]
+    if not rack then return false, "Ammo '" .. tostring(ammoId) .. "' does not exist." end
+    
+    
+    local rackAllow = ACF_GetGunValue(ammoId, "racks")
+    
+    local rackAllowed = true
+    local allowType = type(rackAllow)
+    
+    if rackAllow == nil and rack.whitelistonly then
+        rackAllowed = false
+    elseif allowType == "table" then 
+        rackAllowed = rackAllow[rackId]
+    elseif allowType == "function" then
+        rackAllowed = rackAllow(bdata or ammoId, rack or rackId)
+    end
+    
+    if not rackAllowed then
+        return false, ammoId .. " rounds are not compatible with a " .. tostring(rackId) .. "!"
+    end
+    
+    
+    local canCaliber, calMsg = ACF_RackCanLoadCaliber(rackId, gun.caliber)
+    if not canCaliber then
+        return false, calMsg
+    end
+    
+    local Classes = list.Get("ACFClasses").GunClass
+    if "missile" ~= Classes[gun.gunclass].type then 
+        return false, "Racks cannot be linked to ammo crates of type '" .. tostring(ammoId) .. "'!" 
+    end
+    
+    return true
+    
+end
+
+
+
+
+function ACF_GetCompatibleRacks(ammoId)
+
+    local ret = {}
+
+    for rackId, data in pairs(ACF.Weapons.Rack) do
+        if ACF_CanLinkRack(rackId, ammoId) then
+            ret[#ret+1] = rackId
+        end
+    end
+    
+    return ret
+    
+end
