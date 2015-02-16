@@ -530,7 +530,7 @@ function ENT:Think()
 		end
 		self:CalcFlight()
 		
-        if self.CacheParticleEffect and self.CacheParticleEffect <= CurTime() then
+        if self.CacheParticleEffect and (self.CacheParticleEffect <= CurTime()) and (CurTime() < self.CutoutTime) then
             local effect = ACF_GetGunValue(self.BulletData, "effect")
             
             if effect then
