@@ -410,6 +410,26 @@ end
 
 
 
+function ENT:SetStatusString()
+
+    if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then
+        self:SetNetworkedBeamString("Status", "Underweight! (should be " .. tostring(self.LegalWeight or self.Mass) .. " kg)")
+        return
+    end
+    
+    local Crate = self:FindNextCrate()
+    if not IsValid(Crate) then
+        self:SetNetworkedBeamString("Status", "Can't find ammo!")
+        return
+    end
+    
+    self:SetNetworkedBeamString("Status", "")
+    
+end
+
+
+
+
 function ENT:Think()
 
     local Ammo = table.Count(self.Missiles)
@@ -434,7 +454,8 @@ function ENT:Think()
 		self:SetNetworkedBeamInt(	"Ammo",			Ammo)
         
         self:GetReloadTime(self:PeekMissile())
-		//self:SetNetworkedBeamFloat(	"Interval",		interval)
+		
+        self:SetStatusString()
 		
 		self.LastSend = Time
 	
@@ -511,18 +532,20 @@ end
 
 
 
-function ENT:FindNextCrate()
+function ENT:FindNextCrate( doSideEffect )
 
 	local MaxAmmo = table.getn(self.AmmoLink)
 	local AmmoEnt = nil
 	local i = 0
 	
+    local curAmmo = self.CurAmmo
+    
 	while i <= MaxAmmo and not (AmmoEnt and AmmoEnt:IsValid() and AmmoEnt.Ammo > 0) do
 		
-		self.CurAmmo = self.CurAmmo + 1
-		if self.CurAmmo > MaxAmmo then self.CurAmmo = 1 end
+		curAmmo = curAmmo + 1
+		if curAmmo > MaxAmmo then curAmmo = 1 end
 		
-		AmmoEnt = self.AmmoLink[self.CurAmmo]
+		AmmoEnt = self.AmmoLink[curAmmo]
 		if AmmoEnt and AmmoEnt:IsValid() and AmmoEnt.Ammo > 0 and AmmoEnt.Load then
 			return AmmoEnt
 		end
@@ -530,6 +553,10 @@ function ENT:FindNextCrate()
 		
 		i = i + 1
 	end
+    
+    if doSideEffect then
+         self.CurAmmo = curAmmo
+    end
 	
 	return false
 end
@@ -555,6 +582,35 @@ end
 
 
 
+function ENT:SetLoadedWeight()
+    
+    local baseWeight = self.Mass
+    
+    self:TrimNullMissiles()
+    
+    local addWeight = 0
+    
+    for k, missile in pairs(self.Missiles) do
+        addWeight = addWeight + missile.RoundWeight
+        
+        local phys = missile:GetPhysicsObject()  	
+        if (IsValid(phys)) then  		
+            phys:SetMass( 5 ) -- Will result in slightly heavier rack but is probably a good idea to have some mass for any damage calcs.
+        end 
+    end
+    
+    self.LegalWeight = baseWeight + addWeight 
+    
+    local phys = self:GetPhysicsObject()  	
+    if (IsValid(phys)) then  		
+        phys:SetMass( self.LegalWeight )
+    end 
+    
+end
+
+
+
+
 function ENT:AddMissile()
 
     self:TrimNullMissiles()
@@ -562,7 +618,7 @@ function ENT:AddMissile()
     local Ammo = table.Count(self.Missiles)
 	if Ammo >= self.MagSize then return false end
     
-    local Crate = self:FindNextCrate()
+    local Crate = self:FindNextCrate(true)
     if not IsValid(Crate) then return false end
     
     local NextIdx = #self.Missiles
@@ -594,12 +650,13 @@ function ENT:AddMissile()
     
     missile:Spawn()
     
-    
     self:EmitSound( "acf_extra/tankfx/resupply_single.wav", 500, 100 )
     
     self.Missiles[NextIdx+1] = missile
     
     Crate.Ammo = Crate.Ammo - 1
+    
+    self:SetLoadedWeight()
     
     return missile
     
@@ -709,6 +766,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	Rack.Caliber	= gundef["caliber"]
 	Rack.Model      = gundef["model"]
 	Rack.Mass       = gundef["weight"]
+    Rack.LegalWeight = Rack.Mass
 	Rack.Class      = gundef["gunclass"]
     
 	-- Custom BS for karbine. Per Rack ROF.
@@ -782,7 +840,7 @@ end
 
 function ENT:FireMissile()
     
-	if self.Ready and self:GetPhysicsObject():GetMass() >= self.Mass and not self:GetParent():IsValid() then
+	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and not self:GetParent():IsValid() then
         
         local nextMsl = self:PeekMissile()
     
@@ -833,11 +891,17 @@ function ENT:FireMissile()
                 missile.RackModelApplied = nil
             end
             
+            local phys = missile:GetPhysicsObject()  	
+            if (IsValid(phys)) then  		
+                phys:SetMass( missile.RoundWeight )
+            end 
+            
             missile:Launch()
+            
+            self:SetLoadedWeight()
             
             self:MuzzleEffect( attach, missile.BulletData )
             
-            self:TrimNullMissiles()
             Ammo = table.Count(self.Missiles)
             self:SetNetworkedBeamInt("Ammo",	Ammo)
             

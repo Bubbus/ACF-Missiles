@@ -80,6 +80,15 @@ function ENT:SetBulletData(bdata)
     
     self:ParseBulletData(bdata)
 	
+    local roundWeight = ACF_GetGunValue(bdata, "weight") or 10
+    
+    local phys = self.Entity:GetPhysicsObject()  	
+	if (IsValid(phys)) then  		
+		phys:SetMass( roundWeight ) 
+	end 
+    
+    self.RoundWeight = roundWeight
+    
 end
 
 
