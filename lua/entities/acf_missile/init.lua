@@ -9,7 +9,7 @@ DEFINE_BASECLASS("acf_grenade")
 
 if SERVER then
 	concommand.Add("makeMissile", function(ply, args)
-		local missile = ents.Create("ent_cre_missile")
+		local missile = ents.Create("acf_missile")
 		missile:SetPos(ply:GetShootPos() + ply:GetAimVector() * 50)
 		missile:SetAngles(ply:GetAimVector():Angle())
 		missile.Owner = ply
@@ -564,6 +564,6 @@ end
 
 
 
-hook.Add("CanDrive", "ent_cre_missile_CanDrive", function(ply, ent) 
-    if ent:GetClass() == "ent_cre_missile" then return false end
+hook.Add("CanDrive", "acf_missile_CanDrive", function(ply, ent) 
+    if ent:GetClass() == "acf_missile" then return false end
 end)

@@ -624,7 +624,7 @@ function ENT:AddMissile()
     local NextIdx = #self.Missiles
     
     
-    local missile = ents.Create("ent_cre_missile")
+    local missile = ents.Create("acf_missile")
     missile.Owner = ply
     missile.DoNotDuplicate = true
     missile.Launcher = self
