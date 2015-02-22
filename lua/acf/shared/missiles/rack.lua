@@ -7,7 +7,9 @@ ACF_DefineRackClass("RK", {
 	rofmod = 1,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance = " ",
-	soundNormal = " "
+	soundNormal = " ",
+    
+    reloadmul       = 8,
 } )
 
 
