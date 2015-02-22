@@ -465,7 +465,7 @@ function ENT:UpdateRefillBonus()
     local maxDist               = ACF.RefillDistance
     
     
-    for k, crate in pairs(ACF.AmmoCrates) do
+    for k, crate in pairs(ACF.AmmoCrates or {}) do
         
         if crate.RoundType ~= "Refill" then 
             continue 
