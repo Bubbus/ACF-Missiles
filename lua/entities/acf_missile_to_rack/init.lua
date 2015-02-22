@@ -71,8 +71,6 @@ end
 
 function MakeACF_MissileToRack(owner, pos, ang, id, rackid)
     
-    print("id, rackid", id, rackid)
-    
     if not owner:CheckLimit("_acf_gun") then return false end
 	
 	local converter = ents.Create("acf_missile_to_rack")

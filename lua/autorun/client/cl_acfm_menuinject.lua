@@ -149,9 +149,7 @@ end
 
 
 
-function CreateRackSelectGUI(node)
-    print("selected", node.mytable.id)
-    
+function CreateRackSelectGUI(node)    
     
     if not acfmenupanel.CData.MissileSpacer then
         local spacer = vgui.Create("DPanel")
