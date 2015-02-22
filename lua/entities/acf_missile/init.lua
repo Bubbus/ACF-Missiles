@@ -512,8 +512,14 @@ function ENT:Detonate()
         self.Motor = 0
     end    
      
+    -- Safeguard against teleporting explosions.
+    if IsValid(self.Launcher) and not self.Launched then
+        return
+    end
+     
+    self:DoFlight(self.BulletData.Pos, self.BulletData.Flight:GetNormalized())
+     
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
-
 	self.BaseClass.Detonate(self)
 
 end

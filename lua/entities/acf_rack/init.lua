@@ -885,6 +885,7 @@ function ENT:FireMissile()
             bdata.Pos = MuzzlePos
             bdata.Flight = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
             
+            
             if missile.RackModelApplied then 
                 local model = ACF_GetGunValue(bdata.Id, "model")
                 missile:SetModelEasy( model ) 
@@ -896,6 +897,8 @@ function ENT:FireMissile()
                 phys:SetMass( missile.RoundWeight )
             end 
             
+            
+            missile:DoFlight(bdata.Pos, ShootVec)
             missile:Launch()
             
             self:SetLoadedWeight()
