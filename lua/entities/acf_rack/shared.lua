@@ -16,16 +16,17 @@ ENT.AdminSpawnable = false
 
 function ENT:GetOverlayText()
 
-	local name = self:GetNetworkedString("WireName")
-	local GunType = self:GetNetworkedBeamString("GunType")
-	local Ammo = self:GetNetworkedBeamInt("Ammo")
-	local FireRate = self:GetNetworkedBeamFloat("Interval")
-    local Reload = self:GetNetworkedBeamFloat("Reload")
-    local Status = self:GetNetworkedBeamString("Status")
+	local name          = self:GetNetworkedString("WireName")
+	local GunType       = self:GetNetworkedBeamString("GunType")
+	local Ammo          = self:GetNetworkedBeamInt("Ammo")
+	local FireRate      = self:GetNetworkedBeamFloat("Interval")
+    local Reload        = self:GetNetworkedBeamFloat("Reload")
+    local ReloadBonus   = self:GetNetworkedBeamFloat("ReloadBonus")
+    local Status        = self:GetNetworkedBeamString("Status")
     
 	local txt = GunType .. " (" .. Ammo .. " left) \n" .. 
                 "Fire interval: " .. (math.Round(FireRate, 2)) .. " sec\n" .. 
-                "Reload interval: " .. (math.Round(Reload, 2)) .. " sec" ..
+                "Reload interval: " .. (math.Round(Reload, 2)) .. " sec" .. (ReloadBonus > 0 and (" (-" .. math.floor(ReloadBonus * 100) .. "%)") or "") ..
                 ((Status and Status ~= "") and ("\n - " .. Status .. " - ") or "")
     
 	if (not game.SinglePlayer()) then
