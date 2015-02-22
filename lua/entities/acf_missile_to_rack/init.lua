@@ -100,5 +100,5 @@ end
 
 
 
-list.Set( "ACFCvars", "acf_missile_to_rack", {"id", "data1"} )
+list.Set( "ACFCvars", "acf_missile_to_rack", {"id", "data9"} )
 duplicator.RegisterEntityClass("acf_missile_to_rack", MakeACF_MissileToRack, "Pos", "Angle", "Id" )
