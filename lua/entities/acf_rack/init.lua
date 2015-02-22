@@ -470,7 +470,7 @@ function ENT:UpdateRefillBonus()
         if crate.RoundType ~= "Refill" then 
             continue 
             
-        elseif crate.Ammo > 0 then
+        elseif crate.Ammo > 0 and crate.Load then
             local dist = selfPos:Distance(crate:GetPos())
             
             if dist < ACF.RefillDistance then
