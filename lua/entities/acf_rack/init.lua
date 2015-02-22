@@ -457,12 +457,12 @@ end
 
 function ENT:UpdateRefillBonus()
     
-    local totalBonus = 0
-    local selfPos = self:GetPos()
+    local totalBonus    = 0
+    local selfPos       = self:GetPos()
     
-    local Efficiency = 0.11 * ACF.AmmoMod           -- Copied from acf_ammo, beware of changes!
-    local minFullEfficiency = 50000 * Efficiency    -- The minimum crate volume to provide full efficiency bonus all by itself.
-    local logDist = math.log(ACF.RefillDistance)    -- log distance seems to give more practical bonuses.
+    local Efficiency            = 0.11 * ACF.AmmoMod           -- Copied from acf_ammo, beware of changes!
+    local minFullEfficiency     = 50000 * Efficiency    -- The minimum crate volume to provide full efficiency bonus all by itself.
+    local maxDist               = ACF.RefillDistance
     
     
     for k, crate in pairs(ACF.AmmoCrates) do
@@ -473,9 +473,11 @@ function ENT:UpdateRefillBonus()
         elseif crate.Ammo > 0 and crate.Load then
             local dist = selfPos:Distance(crate:GetPos())
             
-            if dist < ACF.RefillDistance then
-            
-                local bonus = ( crate.Volume / minFullEfficiency ) * ( logDist - math.log(dist) ) / logDist
+            if dist < maxDist then
+                
+                dist = math.max(0, dist * 2 - maxDist)
+
+                local bonus = ( crate.Volume / minFullEfficiency ) * ( maxDist - dist ) / maxDist
                 
                 totalBonus = totalBonus + bonus
                 
@@ -1066,6 +1068,17 @@ function ENT:PostEntityPaste( Player, Ent, CreatedEntities )
 	self.BaseClass.PostEntityPaste( self, Player, Ent, CreatedEntities )
     
 end
+
+
+
+
+function ACF_Rack_OnPhysgunDrop(ply, ent)
+    if ent:GetClass() == "acf_rack" then
+        timer.Simple(0.01, function() if IsValid(ent) then ent:SetLoadedWeight() end end)
+    end
+end
+
+hook.Add("PhysgunDrop", "ACF_Rack_OnPhysgunDrop", ACF_Rack_OnPhysgunDrop)
 
 
 
