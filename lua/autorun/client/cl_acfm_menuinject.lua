@@ -149,9 +149,7 @@ end
 
 
 
-function CreateRackSelectGUI(node)
-    print("selected", node.mytable.id)
-    
+function CreateRackSelectGUI(node)    
     
     if not acfmenupanel.CData.MissileSpacer then
         local spacer = vgui.Create("DPanel")
@@ -168,7 +166,7 @@ function CreateRackSelectGUI(node)
         acfmenupanel.CData.RackSelect:SetSize(100, 30)        
         
         acfmenupanel.CData.RackSelect.OnSelect = function( index , value , data )
-            RunConsoleCommand( "acfmenu_data1", data )
+            RunConsoleCommand( "acfmenu_data9", data )
             
             local rack = ACF.Weapons.Rack[data]
             if rack and rack.desc then

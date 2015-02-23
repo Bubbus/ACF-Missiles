@@ -68,9 +68,7 @@ end
 
 function ACFM_ModifyRoundBaseGunpowder()
     
-    if ACFM_ModifiedRoundBaseGunpowder then return end
-    
-    local oldGunpowder = ACF_RoundBaseGunpowder
+    local oldGunpowder = ACFM_ModifiedRoundBaseGunpowder and oldGunpowder or ACF_RoundBaseGunpowder
     
     
     ACF_RoundBaseGunpowder = function(PlayerData, Data, ServerData, GUIData)

@@ -71,8 +71,6 @@ end
 
 function MakeACF_MissileToRack(owner, pos, ang, id, rackid)
     
-    print("id, rackid", id, rackid)
-    
     if not owner:CheckLimit("_acf_gun") then return false end
 	
 	local converter = ents.Create("acf_missile_to_rack")
@@ -100,5 +98,5 @@ end
 
 
 
-list.Set( "ACFCvars", "acf_missile_to_rack", {"id", "data1"} )
+list.Set( "ACFCvars", "acf_missile_to_rack", {"id", "data9"} )
 duplicator.RegisterEntityClass("acf_missile_to_rack", MakeACF_MissileToRack, "Pos", "Angle", "Id" )

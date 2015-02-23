@@ -25,10 +25,17 @@ end
 
 
 function ENT:GetReloadTime(nextMsl)
-    local ret = self:GetFireDelay(nextMsl) * (self.ReloadMultiplier or 1)
+
+    local reloadMul = (self.ReloadMultiplier or 1)
+    local reloadBonus = (self.ReloadMultiplierBonus or 0)
+    
+    reloadMul = reloadMul - (reloadMul - 1) * reloadBonus
+    
+    local ret = self:GetFireDelay(nextMsl) * reloadMul
     self:SetNetworkedBeamFloat(	"Reload",		ret)
     
     return ret
+    
 end
 
 
@@ -51,6 +58,7 @@ function ENT:GetFireDelay(nextMsl)
     self:SetNetworkedBeamFloat(	"Interval",		interval)
     
     return interval
+    
 end
 
 
@@ -430,6 +438,65 @@ end
 
 
 
+function ENT:TrimDistantCrates()
+
+    for Key, Crate in pairs(self.AmmoLink) do
+        if IsValid( Crate ) and Crate.Load then
+            if RetDist( self, Crate ) >= 512 then
+                self:Unlink( Crate )
+                soundstr =  "physics/metal/metal_box_impact_bullet" .. tostring(math.random(1, 3)) .. ".wav"
+                self:EmitSound(soundstr, 500, 100)
+            end
+        end
+    end
+    
+end
+
+
+
+
+function ENT:UpdateRefillBonus()
+    
+    local totalBonus    = 0
+    local selfPos       = self:GetPos()
+    
+    local Efficiency            = 0.11 * ACF.AmmoMod           -- Copied from acf_ammo, beware of changes!
+    local minFullEfficiency     = 50000 * Efficiency    -- The minimum crate volume to provide full efficiency bonus all by itself.
+    local maxDist               = ACF.RefillDistance
+    
+    
+    for k, crate in pairs(ACF.AmmoCrates or {}) do
+        
+        if crate.RoundType ~= "Refill" then 
+            continue 
+            
+        elseif crate.Ammo > 0 and crate.Load then
+            local dist = selfPos:Distance(crate:GetPos())
+            
+            if dist < maxDist then
+                
+                dist = math.max(0, dist * 2 - maxDist)
+
+                local bonus = ( crate.Volume / minFullEfficiency ) * ( maxDist - dist ) / maxDist
+                
+                totalBonus = totalBonus + bonus
+                
+            end
+        end
+        
+    end
+    
+    
+    self.ReloadMultiplierBonus = math.min(totalBonus, 1)
+    self:SetNetworkedBeamFloat(	"ReloadBonus", self.ReloadMultiplierBonus)
+    
+    return self.ReloadMultiplierBonus
+    
+end
+
+
+
+
 function ENT:Think()
 
     local Ammo = table.Count(self.Missiles)
@@ -437,19 +504,12 @@ function ENT:Think()
 	local Time = CurTime()
 	if self.LastSend+1 <= Time then
 		
-        for Key, Crate in pairs(self.AmmoLink) do
-			if IsValid( Crate ) and Crate.Load then
-				if RetDist( self, Crate ) >= 512 then
-					self:Unlink( Crate )
-					soundstr =  "physics/metal/metal_box_impact_bullet" .. tostring(math.random(1, 3)) .. ".wav"
-					self:EmitSound(soundstr,500,100)
-				end
-			end
-		end
+        self:TrimDistantCrates()
+        self:UpdateRefillBonus()
         
+        self:TrimNullMissiles()
 		Wire_TriggerOutput(self, "Shots Left", Ammo)
 		
-        self:TrimNullMissiles()
 		self:SetNetworkedBeamString("GunType",		self.Id)
 		self:SetNetworkedBeamInt(	"Ammo",			Ammo)
         
@@ -624,7 +684,7 @@ function ENT:AddMissile()
     local NextIdx = #self.Missiles
     
     
-    local missile = ents.Create("ent_cre_missile")
+    local missile = ents.Create("acf_missile")
     missile.Owner = ply
     missile.DoNotDuplicate = true
     missile.Launcher = self
@@ -885,6 +945,7 @@ function ENT:FireMissile()
             bdata.Pos = MuzzlePos
             bdata.Flight = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
             
+            
             if missile.RackModelApplied then 
                 local model = ACF_GetGunValue(bdata.Id, "model")
                 missile:SetModelEasy( model ) 
@@ -896,6 +957,8 @@ function ENT:FireMissile()
                 phys:SetMass( missile.RoundWeight )
             end 
             
+            
+            missile:DoFlight(bdata.Pos, ShootVec)
             missile:Launch()
             
             self:SetLoadedWeight()
@@ -1005,6 +1068,17 @@ function ENT:PostEntityPaste( Player, Ent, CreatedEntities )
 	self.BaseClass.PostEntityPaste( self, Player, Ent, CreatedEntities )
     
 end
+
+
+
+
+function ACF_Rack_OnPhysgunDrop(ply, ent)
+    if ent:GetClass() == "acf_rack" then
+        timer.Simple(0.01, function() if IsValid(ent) then ent:SetLoadedWeight() end end)
+    end
+end
+
+hook.Add("PhysgunDrop", "ACF_Rack_OnPhysgunDrop", ACF_Rack_OnPhysgunDrop)
 
 
 
