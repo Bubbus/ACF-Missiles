@@ -449,7 +449,7 @@ function ENT:ConfigureFlight()
 
 
 	local BulletData = self.BulletData
-	local GunData = list.Get("ACFEnts").Guns[self.BulletData.Id]
+	local GunData = list.Get("ACFEnts").Guns[BulletData.Id]
 	local Round = GunData.round
 	local BurnRate = Round.burnrate
 

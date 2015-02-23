@@ -19,6 +19,7 @@ ACF_DefineRackClass("POD", {
 
 
 
+
 --add a gun to the class
 ACF_DefineRack("40mm7xPOD", {
 	name        = "7x FFAR Pod (40mm)",
@@ -45,7 +46,6 @@ ACF_DefineRack("40mm7xPOD", {
 		["missile7"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
 } )
-
 
 
 
@@ -77,7 +77,6 @@ ACF_DefineRack("70mm7xPOD", {
 
 
 
-
 ACF_DefineRack("1x BGM-71E", {
 	name = "BGM-71E Round",
 	desc = "A single BGM-71E round.",
@@ -86,12 +85,57 @@ ACF_DefineRack("1x BGM-71E", {
 	weight = 30,
 	year = 1970,
     magsize = 1,
-    caliber = 5.9,
-    
+    caliber = 13,
+    reloadmul = 0.01,
+
     whitelistonly   = true,
     
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)}
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+
+
+ACF_DefineRack("2x BGM-71E", {
+	name = "BGM-71E 2x Rack",
+	desc = "A BGM-71E rack designed to carry 2 rounds.",
+	model = "models/missiles/bgm_71e_2xrk.mdl",
+	gunclass = "POD",
+	weight = 120,
+	year = 1970,
+    magsize = 2,
+    caliber = 13,
+
+    whitelistonly   = true,
+    
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+
+
+ACF_DefineRack("4x BGM-71E", {
+	name = "BGM-71E 4x Rack",
+	desc = "A BGM-71E rack designed to carry 4 rounds.",
+	model = "models/missiles/bgm_71e_4xrk.mdl",
+	gunclass = "POD",
+	weight = 180,
+	year = 1970,
+    magsize = 4,
+    caliber = 13,
+
+    whitelistonly   = true,
+    
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile4"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
 } )

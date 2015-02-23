@@ -88,14 +88,15 @@ ACF_DefineRack("4xRK", {
 	}
 } )
 
-ACF_DefineRack("2xAGM-114", {
+ACF_DefineRack("2x AGM-114", {
 	name = "Dual Munitions AGM-114 Rack",
-	desc = "A rack designed for AGM-114 Hellfire Missiles.",
+	desc = "An AGM-114 rack designed to carry 2 missiles.",
 	model		= "models/missiles/agm_114_2xrk.mdl",
 	gunclass = "RK",
-	weight = 150,
-	year = 1936,
+	weight = 152,
+	year = 1984,
     magsize = 2,
+	caliber = 16,
 
     mountpoints = 
 	{
@@ -104,14 +105,15 @@ ACF_DefineRack("2xAGM-114", {
 	}
 } )
 
-ACF_DefineRack("4xAGM-114", {
+ACF_DefineRack("4x AGM-114", {
 	name = "Quad Munitions AGM-114 Rack",
-	desc = "A rack designed for AGM-114 Hellfire Missiles.",
+	desc = "An AGM-114 rack designed to carry 4 missiles.",
 	model		= "models/missiles/agm_114_4xrk.mdl",
 	gunclass = "RK",
-	weight = 200,
-	year = 1936,
+	weight = 220,
+	year = 1984,
     magsize = 4,
+	caliber = 16,
 
     mountpoints = 
 	{
