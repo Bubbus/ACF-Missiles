@@ -5,7 +5,7 @@ local ClassName = "Radar"
 ACF = ACF or {}
 ACF.Guidance = ACF.Guidance or {}
 
-local this = ACF.Guidance[ClassName] or inherit.NewSubOf(ACF.Guidance.Dumb)
+local this = ACF.Guidance[ClassName] or inherit.NewSubOf(ACF.Guidance.Wire)
 ACF.Guidance[ClassName] = this
 
 ---
@@ -28,10 +28,13 @@ this.SeekTolerance = math.cos( math.rad( 5 ) )
 -- This instance must wait this long between target seeks.
 this.SeekDelay = 100000 -- The re-seek cycle is expensive, let's disable it until we figure out some optimization.
 
--- Entities to5 ignore by default
+-- Delay between re-seeks if an entity is provided via wiremod.
+this.WireSeekDelay = 0.1
+
+-- Entities to ignore by default
 this.DefaultFilter = 
 {
-    ent_cre_missile 	= true;
+    acf_missile 	    = true;
 	debris				= true;
 	player				= true
 }
@@ -64,7 +67,33 @@ end
 
 
 
-function this:Configure(missile)
+
+function this:GetNamedWireInputs(missile)
+
+    local launcher = missile.Launcher
+    local outputs = launcher.Outputs
+
+    local names = {}
+    
+    
+    if outputs.Target and outputs.Target.Type == "ENTITY" then
+    
+        names[#names+1] = "Target"
+    
+    end
+    
+    
+    return names
+
+end
+
+
+
+
+function this:GetFallbackWireInputs()
+
+    -- Can't scan for entity outputs: a lot of ents have self-outputs.
+    return {}
 
 end
 
@@ -138,12 +167,67 @@ end
 
 
 
+function this:GetWireTarget(missile)
+	
+    local launcher = missile.Launcher
+    local outputs = launcher.Outputs
+    
+    if not IsValid(self.InputSource) then 
+        print("invalid source")
+		return {} 
+	end
+    
+    local outputs = self.InputSource.Outputs
+    
+    if not outputs then
+        print("no outputs")
+        return {} 
+	end
+    
+    
+    for k, name in pairs(self.InputNames) do
+        
+        local outTbl = outputs[name]
+        
+        if not (outTbl and outTbl.Value) then continue end
+        
+        local val = outTbl.Value
+        
+        if type(val) == "Entity" and IsValid(val) then 
+            print("wire target", val)
+            return val
+        end
+        
+    end
+    
+    print("got nothing")
+    
+end
+
+
+
+
 -- Return the first entity found within the seek-tolerance, or the entity within the seek-cone closest to the seek-tolerance.
 function this:AcquireLock(missile)
 
 	local curTime = CurTime()
+    
+    if self.LastSeek + self.WireSeekDelay <= curTime then 
+    
+        print("check wire")
+    
+        local wireEnt = self:GetWireTarget(missile)
+        
+        if wireEnt then
+            return wireEnt
+        end
+        
+    end
+    
 	if self.LastSeek + self.SeekDelay > curTime then return nil end
 	self.LastSeek = curTime
+    
+    print("check cone")
 
 	-- Part 1: get all entities in seek-cone of type "anim"
 	
@@ -169,7 +253,7 @@ function this:AcquireLock(missile)
 	-- Part 2: get a good seek target
 	
 	local foundCt = #found
-	if foundCt < 2 then return found[1] end
+	if foundCt < 2 then print("short circuit") return found[1] end
 	
 	local mostCentralEnt = found[1]
 	local mostCentralPos = mostCentralEnt:GetPos()
@@ -185,9 +269,10 @@ function this:AcquireLock(missile)
 			mostCentralEnt = currentEnt
 			highestDot = currentDot
 			
-			if currentDot >= self.SeekTolerance then return currentEnt end
+			if currentDot >= self.SeekTolerance then print("good enough") return currentEnt end
 		end
 	end
 
+    print("got best")
 	return mostCentralEnt
 end
