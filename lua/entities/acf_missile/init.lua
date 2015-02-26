@@ -249,11 +249,6 @@ function ENT:CalcFlight()
 		local DirProj = TargetPos + ProjOffset - Pos
 		local DirProjNorm = DirProj:GetNormalized()
 
-		--TODO:		[x] Add a second rotation that smoothes the oscillations out
-		--			[x] Prevent the missile from correcting so far that the target falls out of the FOV
-		--			[ ] Add fins to allow steering without a motor
-		--			[x] Make rotations depend on velocity
-
 		local VelAxis = LastVel:Cross(DirProj)
 		local VelAxisNorm = VelAxis:GetNormalized()
 		local AngDiff = math.deg(math.asin(VelAxis:Length() / (Dist * Speed)))
@@ -263,14 +258,14 @@ function ENT:CalcFlight()
 
 			--Target facing
 			local Ang = Dir:Angle()
-			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff * SpeedMul,-Agility,Agility) )
+			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff * SpeedMul,-1,1) * Agility )
 			local NewDir = Ang:Forward()
 
 			--Velocity stabilisation
 			local DirAxis = NewDir:Cross(DirRawNorm)
 			local RawDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
 			local RawAng = math.deg(math.acos(RawDotSimple))		--Since both vectors are normalised, calculating the dot product should be faster this way
-			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-Agility,Agility) * (self.MinimumSpeed / 2000 + self.FinMultiplier * 100))
+			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-1,1) * (self.MinimumSpeed / 2000 + self.FinMultiplier * 100) * Agility)
 			NewDir = Ang:Forward()
 
 			--FOV check

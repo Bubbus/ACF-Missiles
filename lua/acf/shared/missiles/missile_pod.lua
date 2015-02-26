@@ -27,27 +27,28 @@ ACF_defineGun("40mmFFAR", { --id
 	gunclass	= "FFAR",
     rack        = "40mm7xPOD",  -- Which rack to spawn this missile on?
 	weight		= 6,
-    length	    = 32,
-    rofmod		= 1.25,
+    length	    = 32 / 20, -- Length affects inertia calculations
+    rofmod		= 1,
 	year		= 1960,
 	round		= 
 	{
 		model		= "models/missiles/ffar_40mm.mdl",
 		rackmdl		= "models/missiles/ffar_40mm_closed.mdl",
-		maxlength	= 32,
+		maxlength	= 20,
 		casing		= 0.2,	// thickness of missile casing, cm
-		propweight	= 1,	// motor mass - motor casing
-		thrust		= 300*39.37,	// average thrust - kg*in/s^2
-		burnrate	= 450,	// cm^3/s at average chamber pressure
+		propweight	= 0.2,	// motor mass - motor casing
+		thrust		= 12000,	// average thrust - kg*in/s^2
+		burnrate	= 100,	// cm^3/s at average chamber pressure
         starterpct	= 0.15,         -- percentage of the propellant consumed in the starter motor.
-        minspeed	= 3000,			-- minimum speed beyond which the fins work at 100% efficiency
-        dragcoef	= 0.004,		-- drag coefficient of the missile
-		finmul		= 0.01			-- fin multiplier (mostly used for unpropelled guidance)
+        minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
+        dragcoef	= 0.003,		-- drag coefficient of the missile
+		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(1.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+    fuses       = {"Contact", "Timed"},
     
     racks       = {["40mm7xPOD"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     
@@ -69,28 +70,29 @@ ACF_defineGun("70mmFFAR", { --id
 	gunclass	= "FFAR",
     rack        = "70mm7xPOD",  -- Which rack to spawn this missile on? 
     weight		= 12,
-    length	    = 26*1.75,
+    length	    = 45 / 3,
 	year		= 1960,
-	rofmod		= 0.75,
+	rofmod		= 0.6,
 	roundclass	= "Rocket",
 	round		= 
 	{
 		model		= "models/missiles/ffar_70mm.mdl",
 		rackmdl		= "models/missiles/ffar_70mm_closed.mdl",
-		maxlength	= 26*1.75,
+		maxlength	= 25,
 		casing		= 0.2,	// thickness of missile casing, cm
-		propweight	= 1.75,	// motor mass - motor casing
-		thrust		= 400*39.37,	// average thrust - kg*in/s^2
-		burnrate	= 450,	// cm^3/s at average chamber pressure
+		propweight	= 0.7,	// motor mass - motor casing
+		thrust		= 15000,	// average thrust - kg*in/s^2
+		burnrate	= 400,	// cm^3/s at average chamber pressure
 		starterpct	= 0.15,
-        minspeed	= 3000,			-- minimum speed beyond which the fins work at 100% efficiency
+        minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
-		finmul		= 0.01			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(3)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 	
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+    fuses       = {"Contact", "Timed"},
     
     racks       = {["70mm7xPOD"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     
