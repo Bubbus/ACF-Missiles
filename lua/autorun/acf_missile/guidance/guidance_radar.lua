@@ -56,6 +56,18 @@ end
 
 
 
+
+function this:Configure(missile)
+    
+    self:super():Configure(missile)
+    
+    self.ViewCone = ACF_GetGunValue(missile.BulletData, "viewcone") or this.ViewCone
+    self.SeekCone = ACF_GetGunValue(missile.BulletData, "seekcone") or this.ViewCone
+    
+end
+
+
+
 -- Use this to make sure you don't alter the shared default filter unintentionally
 function this:GetSeekFilter(class)
     if self.Filter == self.DefaultFilter then
@@ -115,13 +127,11 @@ function this:GetGuidance(missile)
 	local targetPos = self.Target:GetPos()
 	if IsValid(targetPhysObj) then
 		targetPos = util.LocalToWorld( self.Target, targetPhysObj:GetMassCenter(), nil )
-		--print(tostring(targetPos))
 	end
 
 	local angleFrom = math.deg(math.acos((targetPos - missilePos):GetNormalized():Dot(missileForward)))
 	
 	if angleFrom > this.ViewCone then
-		--if IsValid(self.Target) then print(missile, "lost lock", self.Target) end
 		self.Target = nil
 		self.TargetVel = Vector()
 		self.LastTargetPos = Vector()
@@ -153,12 +163,9 @@ function this:CheckTarget(missile)
 				else break end
 			end
 			self.Target = target
-			--print(missile, "acquired lock", self.Target)
 			
 			self.TargetVel = Vector()
 			self.LastTargetPos = Vector()
-		else
-			--print(missile, "could not lock")
 		end
 	end
 	
@@ -173,14 +180,12 @@ function this:GetWireTarget(missile)
     local outputs = launcher.Outputs
     
     if not IsValid(self.InputSource) then 
-        print("invalid source")
 		return {} 
 	end
     
     local outputs = self.InputSource.Outputs
     
     if not outputs then
-        print("no outputs")
         return {} 
 	end
     
@@ -194,13 +199,10 @@ function this:GetWireTarget(missile)
         local val = outTbl.Value
         
         if type(val) == "Entity" and IsValid(val) then 
-            print("wire target", val)
             return val
         end
         
     end
-    
-    print("got nothing")
     
 end
 
@@ -214,8 +216,6 @@ function this:AcquireLock(missile)
     
     if self.LastSeek + self.WireSeekDelay <= curTime then 
     
-        print("check wire")
-    
         local wireEnt = self:GetWireTarget(missile)
         
         if wireEnt then
@@ -226,8 +226,6 @@ function this:AcquireLock(missile)
     
 	if self.LastSeek + self.SeekDelay > curTime then return nil end
 	self.LastSeek = curTime
-    
-    print("check cone")
 
 	-- Part 1: get all entities in seek-cone of type "anim"
 	
@@ -253,7 +251,7 @@ function this:AcquireLock(missile)
 	-- Part 2: get a good seek target
 	
 	local foundCt = #found
-	if foundCt < 2 then print("short circuit") return found[1] end
+	if foundCt < 2 then return found[1] end
 	
 	local mostCentralEnt = found[1]
 	local mostCentralPos = mostCentralEnt:GetPos()
@@ -269,10 +267,9 @@ function this:AcquireLock(missile)
 			mostCentralEnt = currentEnt
 			highestDot = currentDot
 			
-			if currentDot >= self.SeekTolerance then print("good enough") return currentEnt end
+			if currentDot >= self.SeekTolerance then return currentEnt end
 		end
 	end
-
-    print("got best")
+    
 	return mostCentralEnt
 end

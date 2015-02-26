@@ -5,7 +5,7 @@ local ClassName = "Laser"
 ACF = ACF or {}
 ACF.Guidance = ACF.Guidance or {}
 
-local this = ACF.Guidance[ClassName] or inherit.NewSubOf(ACF.Guidance.Dumb)
+local this = ACF.Guidance[ClassName] or inherit.NewSubOf(ACF.Guidance.Wire)
 ACF.Guidance[ClassName] = this
 
 ---
@@ -14,15 +14,15 @@ ACF.Guidance[ClassName] = this
 
 this.Name = ClassName
 
+-- Cone to retain targets within.
+this.ViewCone = 30
+
 -- An entity with a Position wire-output
 this.InputSource = nil
 
 this.desc = "This guidance package reads a target-position from the launcher and guides the munition towards it."
 
--- function this:Draw(ent, duration)
-	-- local Guidance = self:GetGuidance(ent)
-	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)
--- end
+
 
 
 function this:Init()
@@ -31,54 +31,13 @@ end
 
 
 
--- Use this to make sure you don't alter the shared default filter unintentionally
-function this:GetSeekFilter(class)
-    if self.Filter == self.DefaultFilter then
-        self.Filter = table.Copy(self.DefaultFilter)
-    end
-    
-    return self.Filter
-end
-
-
 
 function this:Configure(missile)
-
-    local launcher = missile.Launcher
-    local outputs = launcher.Outputs
     
-    if outputs then
-        
-        -- If we have a Position output, we're in business.
-        if outputs.Position and outputs.Position.Type == "VECTOR" then
-        
-            self.InputSource = launcher
-            self.InputName = "Position"
-            
-        else
-            -- To avoid ambiguity, only link if there's a single vector output.
-            local foundOutput = nil
-            
-            for k, v in pairs(outputs) do
-                if v.Type == "VECTOR" then
-                    if foundOutput then
-                        foundOutput = nil
-                        break
-                    else
-                        foundOutput = k
-                    end
-                end
-            end
-            
-            if foundOutput then
-                self.InputSource = launcher
-                self.InputName = foundOutput
-            end
-            
-        end
-        
-    end
-
+    self:super():Configure(missile)
+    
+    self.ViewCone = ACF_GetGunValue(missile.BulletData, "seekcone") or this.ViewCone
+    
 end
 
 
@@ -86,30 +45,21 @@ end
 
 function this:GetGuidance(missile)
 
-    if not IsValid(self.InputSource) then 
-		return {} 
-	end
-
-    local outputs = self.InputSource.Outputs
- 
-    if not outputs then
-        return {} 
-	end
+    local posVec = self:GetWireTarget()
     
-    local posOutput = outputs[self.InputName]
-    local posVec = posOutput.Value
-
     if not posVec or posVec == Vector() then
         return {} 
     end
-    	local launcher = missile.Launcher
+    
+    
+    local launcher = missile.Launcher
 
 	if IsValid(launcher) then
 
-		local mfo = missile:GetForward()
-		local mdir = (posVec - missile:GetPos()):GetNormalized()
-		local dot = mfo.x * mdir.x + mfo.y * mdir.y + mfo.z * mdir.z
-		local maxAng = math.cos(list.Get("ACFEnts").Guns[missile.BulletData.Id].viewcone)
+		local mfo       = missile:GetForward()
+		local mdir      = (posVec - missile:GetPos()):GetNormalized()
+		local dot       = mfo.x * mdir.x + mfo.y * mdir.y + mfo.z * mdir.z
+		local maxAng    = math.cos(math.rad(self.ViewCone))
 
 		if dot < maxAng then return {} end
 	end
