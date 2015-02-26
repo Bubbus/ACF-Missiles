@@ -235,8 +235,10 @@ function ENT:CalcFlight()
 	local Guidance = self.Guidance:GetGuidance(self)
 	local TargetPos = Guidance.TargetPos
 
-	if TargetPos then
+	if TargetPos and self.First then
+        
 		local Dist = Pos:Distance(TargetPos)
+        
 		local TargetVel = (Guidance.TargetVel or Vector(0,0,0)) / DeltaTime * 0.03
 		local DirRaw = TargetPos - Pos
 		local DirRawNorm = DirRaw:GetNormalized()
@@ -251,7 +253,8 @@ function ENT:CalcFlight()
 
 		local VelAxis = LastVel:Cross(DirProj)
 		local VelAxisNorm = VelAxis:GetNormalized()
-		local AngDiff = math.deg(math.asin(VelAxis:Length() / (Dist * Speed)))
+        
+		local AngDiff = math.deg( math.asin( math.min(VelAxis:Length() / (Dist * Speed), 0.999999) ) )
 
 		if AngDiff > 0 then
 			local Agility = self.Agility
@@ -271,12 +274,14 @@ function ENT:CalcFlight()
 			--FOV check
 			local TotalDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
 			local TotalAng = math.deg(math.acos(TotalDotSimple))
+
 			if not Guidance.ViewCone or TotalAng <= Guidance.ViewCone then  -- ViewCone is active-seeker specific
 				Dir = NewDir
 			end
 		end
 
 	else
+    
 		local DirAng = Dir:Angle()
 		local VelNorm = LastVel:GetNormalized()
 		local AimDiff = Dir - VelNorm
@@ -293,7 +298,7 @@ function ENT:CalcFlight()
 		Dir = DirAng:Forward()
 	end
 	
-
+    self.First = true
 
 	--Motor cutout
 	if Time > self.CutoutTime then
