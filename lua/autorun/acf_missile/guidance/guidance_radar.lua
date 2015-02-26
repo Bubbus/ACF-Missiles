@@ -62,7 +62,7 @@ function this:Configure(missile)
     self:super():Configure(missile)
     
     self.ViewCone = ACF_GetGunValue(missile.BulletData, "viewcone") or this.ViewCone
-    self.SeekCone = ACF_GetGunValue(missile.BulletData, "seekcone") or this.ViewCone
+    self.SeekCone = ACF_GetGunValue(missile.BulletData, "seekcone") or this.SeekCone
     
 end
 
