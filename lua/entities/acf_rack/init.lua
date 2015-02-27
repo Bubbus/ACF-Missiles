@@ -16,7 +16,7 @@ if SERVER then
 		local lookAt = ply:GetEyeTrace()
         local lookEnt = lookAt.Entity
         if IsValid(lookEnt) and lookEnt:GetClass() == "acf_rack" then
-            lookEnt:LoadAmmo(0, false)
+            lookEnt:LoadAmmo(false)
         end
 	end)
 end
@@ -379,7 +379,7 @@ end
 function ENT:TriggerInput( iname , value )
 	
 	if ( iname == "Fire" and value ~= 0 and ACF.GunfireEnabled ) then
-		if self.NextFire < CurTime() then
+		if self.NextFire >= 1 then
 			self.User = self:GetUser(self.Inputs["Fire"].Src)
 			if not IsValid(self.User) then self.User = self.Owner end
 			self:FireMissile()
@@ -404,7 +404,7 @@ function ENT:Reload()
 
 
     if self.Ready or not IsValid(self:PeekMissile()) then
-        self:LoadAmmo(0, true)
+        self:LoadAmmo(true)
     end
     
 end
@@ -502,7 +502,7 @@ end
 function ENT:Think()
 
     local Ammo = table.Count(self.Missiles)
-
+    
 	local Time = CurTime()
 	if self.LastSend+1 <= Time then
 		
@@ -523,7 +523,9 @@ function ENT:Think()
 	
 	end
 	
-	if self.NextFire <= Time and Ammo > 0 and Ammo <= self.MagSize then
+    self.NextFire = math.min(self.NextFire + (Time - self.LastThink) / self:GetReloadTime(self:PeekMissile()), 1)
+    
+	if self.NextFire >= 1 and Ammo > 0 and Ammo <= self.MagSize then
         self.Ready = true
         Wire_TriggerOutput(self, "Ready", 1)
         --print(self.Firing , Ammo > 0)
@@ -537,7 +539,7 @@ function ENT:Think()
             self:EmitSound( "acf_extra/airfx/weapon_select.wav", 500, 100 )
             self.ReloadTime = nil
 		end
-    elseif self.NextFire <= Time and Ammo == 0 then
+    elseif self.NextFire >= 1 and Ammo == 0 then
         if (self.Inputs.Reload and self.Inputs.Reload.Value ~= 0) and self:CanReload() then
             self.ReloadTime = nil
             self:Reload()
@@ -545,6 +547,9 @@ function ENT:Think()
     end
     
 	self:NextThink(Time)
+    
+    self.LastThink = Time
+    
 	return true
 	
 end
@@ -635,7 +640,7 @@ function ENT:CanReload()
     if not IsValid(Crate) then return false end
     
     local curtime = CurTime()
-	if curtime < self.NextFire then return false end
+	if self.NextFire < 1 then return false end
     
     return true
     
@@ -727,7 +732,7 @@ end
 
 
 
-function ENT:LoadAmmo( AddTime, Reload )
+function ENT:LoadAmmo( Reload )
     
     if not self:CanReload() then return false end
     
@@ -743,10 +748,8 @@ function ENT:LoadAmmo( AddTime, Reload )
         ReloadTime = self:GetReloadTime(missile)
     end
     
-	self.NextFire = CurTime() + ReloadTime
-	if AddTime then
-		self.NextFire = CurTime() + ReloadTime + AddTime
-	end
+	self.NextFire = 0
+
 	self.Ready = false
     self.ReloadTime = ReloadTime
     
@@ -976,7 +979,7 @@ function ENT:FireMissile()
         
         self.Ready = false
         Wire_TriggerOutput(self, "Ready", 0)
-        self.NextFire = CurTime() + ReloadTime
+        self.NextFire = 0
         self.ReloadTime = ReloadTime
         
 	else
