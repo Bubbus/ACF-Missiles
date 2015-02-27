@@ -66,6 +66,77 @@ end
 
 
 
+function ACFM_ModifyRoundGUIFuncs()
+    
+    local roundTypes = list.GetForEdit("ACFRoundTypes")
+    
+    if not ACFM_RoundGUIFuncs then
+        
+        ACFM_RoundGUIFuncs = {}
+    
+        for k, v in pairs(roundTypes) do
+            ACFM_RoundGUIFuncs[k] = v.guiupdate
+        end
+
+    end
+    
+    
+    for k, v in pairs(roundTypes) do
+        
+        local oldGuiUpdate = ACFM_RoundGUIFuncs[k]
+    
+        if oldGuiUpdate then
+            v.guiupdate = function(Panel, Table)
+            
+                local ret = oldGuiUpdate(Panel, Table)
+            
+                local round = ACF_GetRoundFromCVars()
+            
+                local guns = list.Get("ACFEnts").Guns
+                local class = guns[round.Id]
+                
+                if not (class and class.gunclass) then
+                    --print("no 1")
+                    return ret
+                end
+                
+                local classes = list.Get("ACFClasses").GunClass
+                class = classes[class.gunclass]
+                
+                if not class.type or class.type ~= "missile" then
+                    --print("no 2")
+                    return ret
+                end
+            
+                
+                
+                local conv = v.convert( Panel, round )
+                
+                
+                --print("aeiou2", acfmenupanel["CData"]["PenetrationDisplay_text"])
+                if acfmenupanel["CData"]["PenetrationDisplay_text"] then
+                    local R100V, R100P = ACF_PenRanging( 100, conv.DragCoef, conv.ProjMass, conv.PenAera, conv.LimitVel, 0 )
+                    acfmenupanel:CPanelText("PenetrationDisplay", "Penetration at 100m/s: "..math.floor(R100P).." mm RHA")	--Proj muzzle penetration (Name, Desc)
+                end
+                
+                --print("aeiou3", acfmenupanel["CData"]["PenetrationRanging_text"])
+                if acfmenupanel["CData"]["PenetrationRanging_text"] then
+                    local R50V, R50P    = ACF_PenRanging( 50, conv.DragCoef, conv.ProjMass, conv.PenAera, conv.LimitVel, 0 )
+                    local R200V, R200P  = ACF_PenRanging( 200, conv.DragCoef, conv.ProjMass, conv.PenAera, conv.LimitVel, 0 )
+                    acfmenupanel:CPanelText("PenetrationRanging", "\n50m/s pen: "..math.Round(R50P,0).."mm \n200m/s pen: "..math.Round(R200P,0).."mm \n\nThe range data is an approximation and may not be entirely accurate.")	--Proj muzzle penetration (Name, Desc)
+                end
+                
+                
+                return ret
+            end
+        end
+    end
+    
+end
+
+
+
+
 function ACFM_ModifyRoundBaseGunpowder()
     
     local oldGunpowder = ACFM_ModifiedRoundBaseGunpowder and oldGunpowder or ACF_RoundBaseGunpowder
@@ -90,3 +161,8 @@ end
 
 timer.Simple(1, ACFM_ModifyRoundBaseGunpowder)
 timer.Simple(1, ACFM_ModifyRoundDisplayFuncs)
+
+if CLIENT then
+    timer.Simple(1, ACFM_ModifyRoundGUIFuncs)
+end
+

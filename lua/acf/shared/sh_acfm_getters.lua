@@ -141,3 +141,25 @@ function ACF_GetCompatibleRacks(ammoId)
     return ret
     
 end
+
+
+
+
+function ACF_GetRoundFromCVars()
+    
+    local round = {}
+    
+    round.Id            = GetConVarString( "acfmenu_data1" )
+	round.Type          = GetConVarString( "acfmenu_data2" )
+	round.PropLength    = GetConVarNumber( "acfmenu_data3" )
+	round.ProjLength    = GetConVarNumber( "acfmenu_data4" )
+	round.Data5         = GetConVarNumber( "acfmenu_data5" )
+    round.Data6         = GetConVarNumber( "acfmenu_data6" )
+    round.Data7         = GetConVarString( "acfmenu_data7" )
+    round.Data8         = GetConVarString( "acfmenu_data8" )
+    round.Data9         = GetConVarString( "acfmenu_data9" )
+	round.Data10        = GetConVarNumber( "acfmenu_data10" )
+    
+    return round
+    
+end

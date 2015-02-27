@@ -81,6 +81,7 @@ function ENT:Initialize()
 	self.IsMaster = true
 	self.CurAmmo = 1
 	self.Sequence = 1
+    self.LastThink = CurTime()
 	
     self.BulletData = {}
 		self.BulletData.Type = "Empty"

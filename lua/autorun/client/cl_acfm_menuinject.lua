@@ -256,7 +256,6 @@ function ModifyACFMenu(panel)
         local gunClasses = list.Get("ACFClasses").GunClass
         
         for k, node in pairs(classNodes) do
-            print(node:GetText())
             local gunNodeElement = node.ChildNodes
             
             if gunNodeElement then
@@ -266,7 +265,6 @@ function ModifyACFMenu(panel)
                     local class = gunClasses[gun.mytable.gunclass]
                     
                     if (class and class.type == "missile") and not gun.ACFMOverridden then
-                        print("overriding", gun:GetText())  
                         local oldclick = gun.DoClick
                         
                         gun.DoClick = function(self)
