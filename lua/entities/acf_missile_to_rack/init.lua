@@ -43,15 +43,8 @@ function ENT:Think()
             rackId = GunClass.rack
         end
         
-        local rack = MakeACF_Rack(self.Owner, pos, ang, rackId)
         
-        
-        if IsValid(rack) then
-            undo.Create( "acf_rack" )
-                undo.AddEntity( rack )
-                undo.SetPlayer( ply )
-            undo.Finish()
-        end
+        MakeACF_Rack(self.Owner, pos, ang, rackId)
         
     end
     

@@ -11,18 +11,6 @@ DEFINE_BASECLASS("acf_grenade")
 
 
 
-if SERVER then
-    concommand.Add("loadRack", function(ply, args)
-		local lookAt = ply:GetEyeTrace()
-        local lookEnt = lookAt.Entity
-        if IsValid(lookEnt) and lookEnt:GetClass() == "acf_rack" then
-            lookEnt:LoadAmmo(false)
-        end
-	end)
-end
-
-
-
 
 function ENT:GetReloadTime(nextMsl)
 
@@ -771,32 +759,6 @@ end
 
 
 
-if SERVER then
-	concommand.Add("makeRack", function(ply, args)
-		local rack = ents.Create("acf_rack")
-        
-		local pos = (ply:GetShootPos() + ply:GetAimVector() * 64)
-		local ang = (ply:GetAimVector():Angle())
-
-		local BulletData = {}
-		BulletData["Colour"]		= Color(255, 255, 255)
-		BulletData["Data10"]		= "0.00"
-		BulletData["Data5"]		= "301.94"
-		BulletData["Data6"]		= "30.000000"
-		BulletData["Data7"]		= "0"
-		BulletData["Data8"]		= "0"
-		BulletData["Data9"]		= "0"
-		BulletData["Id"]		= "80mmM"
-		BulletData["ProjLength"]		= "12.00"
-		BulletData["PropLength"]		= "0.01"
-		BulletData["Type"]		= "HE"
-		BulletData.IsShortForm = true
-		
-        local rack = MakeACF_Rack(ply, pos, ang, "4xRK", nil, BulletData)
-	end)
-end
-
-
 
 function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 
@@ -886,6 +848,11 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 
 	hook.Call("ACF_RackCreate", nil, Rack)
 	
+    undo.Create( "acf_rack" )
+        undo.AddEntity( Rack )
+        undo.SetPlayer( Owner )
+    undo.Finish()
+    
 	return Rack
 	
 end
