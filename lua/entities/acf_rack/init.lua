@@ -44,8 +44,8 @@ end
 function ENT:GetFireDelay(nextMsl)
 
     if not IsValid(nextMsl) then 
-        self:SetNetworkedBeamFloat(	"Interval",		1)
-        return 1 
+        self:SetNetworkedBeamFloat(	"Interval",		self.LastValidFireDelay or 1)
+        return self.LastValidFireDelay or 1 
     end
 
     local bdata = nextMsl.BulletData
@@ -55,6 +55,7 @@ function ENT:GetFireDelay(nextMsl)
 
     
     local interval =  ( (bdata.RoundVolume / 500) ^ 0.60 ) * (gun.rofmod or 1) * (class.rofmod or 1)
+    self.LastValidFireDelay = interval
     self:SetNetworkedBeamFloat(	"Interval",		interval)
     
     return interval
@@ -514,8 +515,6 @@ function ENT:Think()
 		
 		self:SetNetworkedBeamString("GunType",		self.Id)
 		self:SetNetworkedBeamInt(	"Ammo",			Ammo)
-        
-        self:GetReloadTime(self:PeekMissile())
 		
         self:SetStatusString()
 		
