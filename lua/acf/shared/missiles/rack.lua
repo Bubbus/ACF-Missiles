@@ -126,3 +126,36 @@ ACF_DefineRack("4x AGM-114", {
 	}
 } )
 
+
+ACF_DefineRack("1x FIM-92", {
+	name = "Single Munition FIM-92 Rack",
+	desc = "An FIM-92 rack designed to carry 1 missile.",
+	model		= "models/missiles/fim_92_1xrk.mdl",
+	gunclass = "RK",
+	weight = 220,
+	year = 1984,
+    magsize = 1,
+	caliber = 5.9,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+ACF_DefineRack("2x FIM-92", {
+	name = "Double Munition FIM-92 Rack",
+	desc = "An FIM-92 rack designed to carry 1 missile.",
+	model		= "models/missiles/fim_92_2xrk.mdl",
+	gunclass = "RK",
+	weight = 220,
+	year = 1984,
+    magsize = 2,
+	caliber = 5.9,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )

@@ -23,7 +23,7 @@ ACF_defineGun("FIM-92 SAM", { --id
 	desc = "The FIM-92 Stinger is a portable, infrared homing surface-to-air missile (SAM). Because of its weight, it can also be used from ground vehicles and helicopters.",
 	model = "models/missiles/fim_92.mdl",
 	gunclass = "SAM",
-    rack = "2xRK",  -- Which rack to spawn this missile on?
+    rack = "1x FIM-92",  -- Which rack to spawn this missile on?
 	length = 66,
 	caliber = 5.9,
 	weight = 101,--15.1,    -- Don't scale down the weight though!
@@ -31,7 +31,7 @@ ACF_defineGun("FIM-92 SAM", { --id
 	year = 1978,
 	round = {
 		model		= "models/missiles/fim_92.mdl",
-		rackmdl		= "models/missiles/fim_92.mdl",
+		rackmdl		= "models/missiles/fim_92_folded.mdl",
 		maxlength	= 70,
 		casing		= 0.3,	        -- thickness of missile casing, cm
 		propweight	= 1,	        -- motor mass - motor casing
@@ -47,7 +47,7 @@ ACF_defineGun("FIM-92 SAM", { --id
     guidance    = ACF_GetAllGuidanceNamesExcept({"Wire", "Laser"}),
     fuses       = ACF_GetAllFuseNames(),
     
-	racks       = {["1xRK"] = true,  ["2xRK"] = true,  ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1x FIM-92"] = true,  ["2x FIM-92"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
    
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
