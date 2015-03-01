@@ -370,8 +370,6 @@ end
 
 
 function ENT:SetGuidance(guidance)
-
-    print("set guidance to ", guidance.ClassName, guidance.Timer)
     
 	self.Guidance = guidance
 	guidance:Configure(self)
