@@ -102,7 +102,7 @@ function ENT:ParseBulletData(bdata)
     if guidance then        
         xpcall( -- we're eating arbitrary user input, so let's not fuck up if they fuck up
                 function()
-                    guidance = self:CreateConfigurable(guidance, ACF.Guidance, bdata)
+                    guidance = self:CreateConfigurable(guidance, ACF.Guidance, bdata, "guidance")
                     if guidance then self:SetGuidance(guidance) end
                 end,
                 
@@ -113,7 +113,7 @@ function ENT:ParseBulletData(bdata)
     if fuse then
         xpcall( -- we're eating arbitrary user input, so let's not fuck up if they fuck up
                 function()
-                    fuse = self:CreateConfigurable(fuse, ACF.Fuse, bdata)
+                    fuse = self:CreateConfigurable(fuse, ACF.Fuse, bdata, "fuses")
                     if fuse then self:SetFuse(fuse) end
                 end,
                 
@@ -134,10 +134,10 @@ local Cast =
 }
 
 --TODO: move to global file.
-function ENT:CreateConfigurable(str, configurables, bdata)
+function ENT:CreateConfigurable(str, configurables, bdata, wlistPath)
 
     -- we're parsing a string of the form "NAME:CMD=VAL:CMD=VAL"... potentially.
-
+    
     local parts = {}
     -- split parts delimited by ':'
     for part in string.gmatch(str, "[^:]+") do parts[#parts+1] = part end
@@ -154,7 +154,7 @@ function ENT:CreateConfigurable(str, configurables, bdata)
         
         
         if bdata then
-            local allowed = ACF_GetGunValue(bdata, "guidance")
+            local allowed = ACF_GetGunValue(bdata, wlistPath)
             if not table.HasValue(allowed, name) then return nil end
         end
         
@@ -371,6 +371,8 @@ end
 
 function ENT:SetGuidance(guidance)
 
+    print("set guidance to ", guidance.ClassName, guidance.Timer)
+    
 	self.Guidance = guidance
 	guidance:Configure(self)
 
