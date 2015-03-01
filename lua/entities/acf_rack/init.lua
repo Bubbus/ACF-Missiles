@@ -245,9 +245,10 @@ function ENT:CanLinkCrate(crate)
 	end
     
     -- Don't link if it's a blacklisted round type for this gun
+    local class = ACF_GetGunValue(bdata, "gunclass")
 	local Blacklist = ACF.AmmoBlacklist[ bdata.RoundType or bdata.Type ] or {}
 	
-	if table.HasValue( Blacklist, self.Class ) then
+	if not class or table.HasValue( Blacklist, class ) then
 		return false, "That round type cannot be used with this gun!"
 	end
     
