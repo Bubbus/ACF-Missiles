@@ -62,7 +62,8 @@ function ENT:Initialize()
 	self.ReloadTime = 1
 	self.Ready = true
 	self.Firing = nil
-	self.NextFire = 0
+	self.NextFire = 1
+    self.WaitFunction = self.GetFireDelay
 	self.LastSend = 0
 	self.Owner = self
 	
@@ -505,13 +506,14 @@ function ENT:Think()
 		self:SetNetworkedBeamString("GunType",		self.Id)
 		self:SetNetworkedBeamInt(	"Ammo",			Ammo)
 		
+        self:GetReloadTime(self:PeekMissile())
         self:SetStatusString()
 		
 		self.LastSend = Time
 	
 	end
 	
-    self.NextFire = math.min(self.NextFire + (Time - self.LastThink) / self:GetReloadTime(self:PeekMissile()), 1)
+    self.NextFire = math.min(self.NextFire + (Time - self.LastThink) / self:WaitFunction(self:PeekMissile()), 1)
     
 	if self.NextFire >= 1 and Ammo > 0 and Ammo <= self.MagSize then
         self.Ready = true
@@ -737,6 +739,7 @@ function ENT:LoadAmmo( Reload )
     end
     
 	self.NextFire = 0
+    self.WaitFunction = self.GetReloadTime
 
 	self.Ready = false
     self.ReloadTime = ReloadTime
@@ -947,6 +950,7 @@ function ENT:FireMissile()
         self.Ready = false
         Wire_TriggerOutput(self, "Ready", 0)
         self.NextFire = 0
+        self.WaitFunction = self.GetFireDelay
         self.ReloadTime = ReloadTime
         
 	else
