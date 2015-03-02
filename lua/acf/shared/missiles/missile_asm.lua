@@ -81,9 +81,9 @@ ACF_defineGun("AGM-114 ASM", { --id
 		thrust		= 10000,			-- average thrust - kg*in/s^2
 		burnrate	= 500,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
-		minspeed	= 10000,			-- minimum speed beyond which the fins work at 100% efficiency
+		minspeed	= 8000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.007,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(2)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     

@@ -60,7 +60,7 @@ function this:GetDetonate(missile, guidance)
     local target = guidance.TargetPos or guidance:GetGuidance(missile).TargetPos
     
 	if not target then return false end
-	if missile:GetPos():Distance(target) > self.Distance then return false end
+	if (missile.CurPos + missile.LastVel):DistToSqr(target) > (self.Distance ^ 2) then return false end
     
     return true
     

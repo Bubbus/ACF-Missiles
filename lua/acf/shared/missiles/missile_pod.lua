@@ -28,22 +28,21 @@ ACF_defineGun("40mmFFAR", { --id
     rack        = "40mm7xPOD",  -- Which rack to spawn this missile on?
 	weight		= 6,
     length	    = 32 / 20, -- Length affects inertia calculations
-    rofmod		= 1,
+    rofmod		= 0.9,
 	year		= 1960,
 	round		= 
 	{
 		model		= "models/missiles/ffar_40mm.mdl",
 		rackmdl		= "models/missiles/ffar_40mm_closed.mdl",
-		maxlength	= 20,
+		maxlength	= 25,
 		casing		= 0.2,	// thickness of missile casing, cm
 		propweight	= 0.2,	// motor mass - motor casing
-		thrust		= 12000,	// average thrust - kg*in/s^2
-		burnrate	= 100,	// cm^3/s at average chamber pressure
+		thrust		= 13000,	// average thrust - kg*in/s^2
+		burnrate	= 150,	// cm^3/s at average chamber pressure
         starterpct	= 0.15,         -- percentage of the propellant consumed in the starter motor.
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.003,		-- drag coefficient of the missile
-		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(1.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -87,7 +86,7 @@ ACF_defineGun("70mmFFAR", { --id
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
 		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(3)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(1.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 	
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.

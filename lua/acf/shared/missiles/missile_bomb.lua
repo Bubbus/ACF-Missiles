@@ -69,7 +69,7 @@ ACF_defineGun("100kgBOMB", { --id
 	model = "models/bombs/fab100.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 10,
+	length = 50,
 	caliber = 10.0,
 	weight = 100,    -- Don't scale down the weight though!
 	year = 1939,
@@ -106,7 +106,7 @@ ACF_defineGun("250kgBOMB", { --id
 	model = "models/bombs/fab250.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 25,
+	length = 5000,
 	caliber = 12.5,
 	weight = 250,    -- Don't scale down the weight though!
 	year = 1941,
@@ -144,7 +144,7 @@ ACF_defineGun("500kgBOMB", { --id
 	model = "models/bombs/fab500.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 50,
+	length = 15000,
 	caliber = 30.0,
 	weight = 500,    -- Don't scale down the weight though!
 	year = 1943,
