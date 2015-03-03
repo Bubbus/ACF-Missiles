@@ -34,7 +34,7 @@ ACF_defineGunClass("AAM", {
 
 
 
-
+/*
 -- Not based on any real missile - this is for smaller aircraft.
 -- Balance the round in line with the 40mm pod rocket.
 ACF_defineGun("40mmAAM", { --id
@@ -70,44 +70,46 @@ ACF_defineGun("40mmAAM", { --id
     
     agility     = 1     -- multiplier for missile turn-rate.
 } )
-
+*/
 
 
 
 -- The sidewinder analogue. we have to scale it down because acf is scaled down.
 -- Balance the round in line with the 70mm pod rocket.
-ACF_defineGun("70mmAAM", { --id
-	name = "70mm Air-to-air Missile",
+ACF_defineGun("AIM-9 AAM", { --id
+	name = "AIM-9 Missile",
 	desc = "The gold standard in airborne jousting sticks: decent agility, decent boom.  Lock on and rock on.",
 	model = "models/missiles/aim9.mdl",
 	gunclass = "AAM",
-    rack = "2xRK",  -- Which rack to spawn this missile on?
-	length = 85,	-- Total length of the missile
-	caliber = 7.0,	-- Diameter of the missile
+    rack = "1xRK",  -- Which rack to spawn this missile on?
+	length = 200,
+	caliber = 11,
 	weight = 85,    -- Don't scale down the weight though!
 	year = 1953,
 	round = {
 		model		= "models/missiles/aim9.mdl",
 		rackmdl		= "models/missiles/aim9.mdl",
-		maxlength	= 26*1.75,
+		maxlength	= 25,
 		casing		= 0.2,	        -- thickness of missile casing, cm
-		propweight	= 1.75,	        -- motor mass - motor casing
-		thrust		= 12000,	    -- average thrust - kg*in/s^2
-		burnrate	= 630,	        -- cm^3/s at average chamber pressure
+		propweight	= 1,	        -- motor mass - motor casing
+		thrust		= 20000,	    -- average thrust - kg*in/s^2
+		burnrate	= 300,	        -- cm^3/s at average chamber pressure
 		starterpct	= 0.2,          -- percentage of the propellant consumed in the starter motor.
-		minspeed	= 10000,		-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.0025,		-- drag coefficient of the missile
-		finmul		= 0.005			-- fin multiplier (mostly used for unpropelled guidance)
+		minspeed	= 14000,		-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.004,		-- drag coefficient of the missile
+		finmul		= 0.006			-- fin multiplier (mostly used for unpropelled guidance)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = ACF_GetAllGuidanceNames(),
+    guidance    = {"Dumb", "Radar"},
     fuses       = ACF_GetAllFuseNames(),
     
-    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+
+    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 45,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 0.9     -- multiplier for missile turn-rate.
+    agility     = 2.5     -- multiplier for missile turn-rate.
 } )
 
 
@@ -115,37 +117,39 @@ ACF_defineGun("70mmAAM", { --id
 
 -- The phoenix analogue. we have to scale it down because acf is scaled down.  It's also short-range due to AAM guidelines.
 -- Balance the round in line with the 70mm pod rocket.
-ACF_defineGun("120mmAAM", { --id
-	name = "120mm Air-to-air Missile",
+ACF_defineGun("AIM-120 AAM", { --id
+	name = "AIM-120 Missile",
 	desc = "The big guy of the skies - you're not getting any closer to a nuclear dogfight than this.",
 	model = "models/missiles/aim120.mdl",
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 150,
-	caliber = 12.0,
-	weight = 200,
-	year = 1974,
+	length = 1000,
+	caliber = 13.0,
+	weight = 152,    -- Don't scale down the weight though!
+	year = 1991,
     modeldiameter = 7.1 * 2.54, -- in cm
 	round = {
 		model		= "models/missiles/aim120.mdl",
 		rackmdl		= "models/missiles/aim120.mdl",
-		maxlength	= 32*1.75,
+		maxlength	= 45,
 		casing		= 0.4,	        -- thickness of missile casing, cm
-		propweight	= 3.5,	        -- motor mass - motor casing
-		thrust		= 15000,	    -- average thrust - kg*in/s^2
-		burnrate	= 450,	        -- cm^3/s at average chamber pressure
+		propweight	= 3,	        -- motor mass - motor casing
+		thrust		= 30000,	    -- average thrust - kg*in/s^2
+		burnrate	= 1000,	        -- cm^3/s at average chamber pressure
 		starterpct	= 0.15,          -- percentage of the propellant consumed in the starter motor.
-		minspeed	= 10000,			-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.004,		-- drag coefficient of the missile
+		minspeed	= 20000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.003,		-- drag coefficient of the missile
 		finmul		= 0.005			-- fin multiplier (mostly used for unpropelled guidance)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = ACF_GetAllGuidanceNames(),
+    guidance    = {"Dumb", "Radar"},
     fuses       = ACF_GetAllFuseNames(),
     
+	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+
     seekcone    = 30,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 45,   -- getting outside this cone will break the lock.  Divided by 2. 
+    viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 0.75     -- multiplier for missile turn-rate.
+    agility     = 2     -- multiplier for missile turn-rate.
 } )
