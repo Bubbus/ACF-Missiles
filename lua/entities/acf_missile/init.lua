@@ -468,7 +468,7 @@ function ENT:ConfigureFlight()
 	self.LastPos = self.CurPos
     self.Hit = false
 	self.FirstThink = true
-    self.MinArmingDelay = round.armdelay or 0
+    self.MinArmingDelay = Round.armdelay or 0
     
     local Mass = GunData.weight
     local Length = GunData.length
@@ -500,7 +500,10 @@ end
 
 function ENT:Detonate()
 
-    if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay) then
+    print(self.Fuse, CurTime() - self.Fuse.TimeStarted, (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay), self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay))
+
+    if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed()) then
+        print("dud!")
         self:Dud()
         return
     end
@@ -535,6 +538,7 @@ end
 
 function ENT:Dud()
     
+    self.MissileDetonated = true
     self:Remove() -- Add neat things here?
     
 end
