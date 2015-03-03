@@ -16,20 +16,37 @@ this.Name = ClassName
 
 this.desc = "This fuse triggers upon direct contact against solid surfaces."
 
+this.Primer = 0
 
--- function this:Draw(ent, duration)
-	-- local Guidance = self:GetGuidance(ent)
-	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)
--- end
+-- Configuration information for things like acfmenu.
+this.Configurable = 
+{
+    {
+        Name = "Primer",            -- name of the variable to change
+        DisplayName = "Arming Delay",   -- name displayed to the user
+        CommandName = "AD",         -- shorthand name used in console commands
+        
+        Type = "number",            -- lua type of the configurable variable
+        Min = 0,                    -- number specific: minimum value
+        Max = 10                    -- number specific: maximum value
+        
+        -- in future if needed: min/max getter function based on munition type.  useful for modifying radar cones?
+    }
+}
 
 
 function this:Init()
-	
+	self.TimeStarted = nil
+end
+
+
+function this:IsArmed()
+    return self.TimeStarted + self.Primer <= CurTime()
 end
 
 
 function this:Configure(missile, guidance)
-
+    self.TimeStarted = CurTime()
 end
 
 
