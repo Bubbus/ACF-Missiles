@@ -26,11 +26,19 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
             acfmenupanel.CData.GuidanceSelect.OnSelect = function( index , value , data )
                 RunConsoleCommand( "acfmenu_data7", data )
                 
+                local gun = {}
+                
+                local gunId = acfmenupanel.CData.CaliberSelect:GetValue()
+                if gunId then
+                    local guns = list.Get("ACFEnts").Guns
+                    gun = guns[gunId]
+                end
+                
                 local guidance = ACF.Guidance[data]
                 if guidance and guidance.desc then
                     acfmenupanel:CPanelText("GuidanceDesc", guidance.desc .. "\n")
                     
-                    local configPanel = ACFMissiles_CreateMenuConfiguration(guidance, acfmenupanel.CData.GuidanceSelect, "acfmenu_data7", acfmenupanel.CData.GuidanceSelect.ConfigPanel)
+                    local configPanel = ACFMissiles_CreateMenuConfiguration(guidance, acfmenupanel.CData.GuidanceSelect, "acfmenu_data7", acfmenupanel.CData.GuidanceSelect.ConfigPanel, gun)
                     acfmenupanel.CData.GuidanceSelect.ConfigPanel = configPanel
                 else
                     acfmenupanel:CPanelText("GuidanceDesc", "Missiles and bombs can be given a guidance package to steer them during flight.\n")
@@ -57,7 +65,6 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
         end
         
         
-        
         -- Create fuse selection combobox + description label
         
         default = "Contact"  -- Contact is the only acceptable default
@@ -68,12 +75,20 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
             acfmenupanel.CData.FuseSelect.OnSelect = function( index , value , data )
                 ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
                 
+                local gun = {}
+                
+                local gunId = acfmenupanel.CData.CaliberSelect:GetValue()
+                if gunId then
+                    local guns = list.Get("ACFEnts").Guns
+                    gun = guns[gunId]
+                end
+                
                 local fuse = ACF.Fuse[data]
                 
                 if fuse and fuse.desc then
                     acfmenupanel:CPanelText("FuseDesc", fuse.desc .. "\n")
                     
-                    local configPanel = ACFMissiles_CreateMenuConfiguration(fuse, acfmenupanel.CData.FuseSelect, "acfmenu_data8", acfmenupanel.CData.FuseSelect.ConfigPanel)
+                    local configPanel = ACFMissiles_CreateMenuConfiguration(fuse, acfmenupanel.CData.FuseSelect, "acfmenu_data8", acfmenupanel.CData.FuseSelect.ConfigPanel, gun)
                     acfmenupanel.CData.FuseSelect.ConfigPanel = configPanel
                 else
                     acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")

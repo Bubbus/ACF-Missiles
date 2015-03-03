@@ -1,10 +1,10 @@
-function ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd)
+function ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd, min, max)
 
     local slider = vgui.Create( "DNumSlider" )
         slider.Label:SetText(config.DisplayName or "")
         slider.Label:SetDark(true)
-        slider:SetMin( config.Min )
-        slider:SetMax( config.Max )
+        slider:SetMin( min )
+        slider:SetMax( max )
         slider:SetValue( config.Min )
         slider:SetDecimals( 2 )
         --slider:Dock(FILL)
@@ -55,15 +55,17 @@ end
 
 ACFMissiles_ConfigurationFactory = 
 {
-    number =    function(config, controlGroup, combo, conCmd) 
-                    return ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd)
+    number =    function(config, controlGroup, combo, conCmd, gundata) 
+                    print(config.MinConfig, gundata.armdelay, config.Min, gundata[config.MinConfig], gundata.id)
+                    local min = config.MinConfig and gundata.armdelay or config.Min
+                    return ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd, min, config.Max)
                 end
 }
 
 
 
 
-function ACFMissiles_CreateMenuConfiguration(tbl, combo, conCmd, existingPanel)
+function ACFMissiles_CreateMenuConfiguration(tbl, combo, conCmd, existingPanel, gundata)
     
     local panel = existingPanel or vgui.Create("DScrollPanel")
     
@@ -79,12 +81,12 @@ function ACFMissiles_CreateMenuConfiguration(tbl, combo, conCmd, existingPanel)
     local height = 0
     
     for _, config in pairs(tbl.Configurable) do
-        local control = ACFMissiles_ConfigurationFactory[config.Type](config, controlGroup, combo, conCmd)
+        local control = ACFMissiles_ConfigurationFactory[config.Type](config, controlGroup, combo, conCmd, gundata)
         control:SetPos(6, height)
         
         panel:Add(control)
         
-        control:SetWide(panel:GetWide() - 6)   
+        control:StretchToParent(0,nil,0,nil)
         
         height = height + control:GetTall()
     end
