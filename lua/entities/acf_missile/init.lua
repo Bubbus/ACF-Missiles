@@ -468,6 +468,7 @@ function ENT:ConfigureFlight()
 	self.LastPos = self.CurPos
     self.Hit = false
 	self.FirstThink = true
+    self.MinArmingDelay = round.armdelay or 0
     
     local Mass = GunData.weight
     local Length = GunData.length
@@ -499,6 +500,11 @@ end
 
 function ENT:Detonate()
 
+    if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay) then
+        self:Dud()
+        return
+    end
+
     if self.BulletData.MuzzleVel and self.LastVel then
         self.BulletData.Flight = self.LastVel:GetNormalized() * self.BulletData.MuzzleVel
     elseif self.LastVel then 
@@ -522,6 +528,15 @@ function ENT:Detonate()
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
 	self.BaseClass.Detonate(self)
 
+end
+
+
+
+
+function ENT:Dud()
+    
+    self:Remove() -- Add neat things here?
+    
 end
 
 
