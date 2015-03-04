@@ -42,7 +42,8 @@ ACF_defineGun("40mmFFAR", { --id
         starterpct	= 0.15,         -- percentage of the propellant consumed in the starter motor.
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.003,		-- drag coefficient of the missile
-		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
+		penmul		= math.sqrt(0.3)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -86,7 +87,7 @@ ACF_defineGun("70mmFFAR", { --id
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
 		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(1.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(0.1)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 	
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.

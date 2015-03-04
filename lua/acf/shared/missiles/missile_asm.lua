@@ -39,12 +39,12 @@ ACF_defineGun("BGM-71E ASM", { --id
 		casing		= 0.3,				-- thickness of missile casing, cm
 		propweight	= 1.2,				-- motor mass - motor casing
 		thrust		= 6000,				-- average thrust - kg*in/s^2
-		burnrate	= 400,				-- cm^3/s at average chamber pressure
+		burnrate	= 350,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 7000,				-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.006,			-- drag coefficient of the missile
 		finmul		= 0.012,				-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(1.4)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(0.9)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -84,7 +84,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 		minspeed	= 8000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(2)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(1.8)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
