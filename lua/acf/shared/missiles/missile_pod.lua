@@ -55,7 +55,8 @@ ACF_defineGun("40mmFFAR", { --id
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1     -- multiplier for missile turn-rate. 
+    agility     = 1,     -- multiplier for missile turn-rate. 
+    armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
 
@@ -99,7 +100,8 @@ ACF_defineGun("70mmFFAR", { --id
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1     -- multiplier for missile turn-rate.
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
 

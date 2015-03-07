@@ -328,9 +328,10 @@ function ENT:CalcFlight()
 	tracedata.filter = self.Filter
 	local trace = util.TraceLine(tracedata)
 
-	if trace.Hit then		
+	if trace.Hit then
+		self.HitNorm = trace.HitNormal
 		self:DoFlight(trace.HitPos)
-        self.LastVel = Vel
+		self.LastVel = Vel / DeltaTime
 		self:Detonate()
 		return
 	end
@@ -340,17 +341,9 @@ function ENT:CalcFlight()
 	--print("Vel = "..math.Round(Vel:Length() / DeltaTime))
     
     if self.Fuse:GetDetonate(self, self.Guidance) then
-	
-		local DetonatePos = EndPos--Guidance.EndPos
-		if DetonatePos then
-			self:DoFlight(DetonatePos)
-		end
-		--print("FUSE DET")
-        self.LastVel = Vel
-        self.CurPos = EndPos
+		self.LastVel = Vel / DeltaTime
 		self:Detonate()
 		return
-		
 	end
     
 	self.LastVel = Vel
@@ -463,18 +456,19 @@ function ENT:ConfigureFlight()
 	self.FinMultiplier = Round.finmul
 	self.Agility = GunData.agility or 1
 	self.CutoutTime = Time + self.MotorLength
-	self.CurPos = BulletData.Pos --self:GetPos()
-	self.CurDir = BulletData.Flight:GetNormalized() --self:GetForward()
+	self.CurPos = BulletData.Pos
+	self.CurDir = BulletData.Flight:GetNormalized()
 	self.LastPos = self.CurPos
     self.Hit = false
+	self.HitNorm = Vector(0,0,0)
 	self.FirstThink = true
     self.MinArmingDelay = Round.armdelay or 0
     
     local Mass = GunData.weight
     local Length = GunData.length
 	local Width = GunData.caliber
-	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length) -- cylinder, non-roll axes
-	self.TorqueMul = Length * 25	--Kinda cheated here because it was unrealistic
+	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length)
+	self.TorqueMul = Length * 25
 	self.RotAxis = Vector(0,0,0)
     
 end
@@ -500,10 +494,10 @@ end
 
 function ENT:Detonate()
 
-    print(self.Fuse, CurTime() - self.Fuse.TimeStarted, (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay), self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay))
+    --print(self.Fuse, CurTime() - self.Fuse.TimeStarted, (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay), self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay))
 
     if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed()) then
-        print("dud!")
+        --print("dud!")
         self:Dud()
         return
     end
@@ -539,8 +533,25 @@ end
 function ENT:Dud()
     
     self.MissileDetonated = true
-    self:Remove() -- Add neat things here?
-    
+
+	local Dud = ents.Create( "debris" )
+	Dud:SetModel( self.Entity:GetModel() )
+	Dud:SetPos( self.CurPos )
+	Dud:SetAngles( self.CurDir:Angle() )
+	Dud:Spawn()
+    self:Remove()
+
+	local Phys = Dud:GetPhysicsObject()
+	local Vel = self.LastVel
+
+	if self.HitNorm != Vector(0,0,0) then
+		local Dot = self.CurDir:Dot(self.HitNorm)
+		local NewDir = self.CurDir - 2 * Dot * self.HitNorm
+		local VelMul = (0.8 + Dot * 0.7) * Vel:Length()
+		Vel = NewDir * VelMul
+	end
+
+	Phys:SetVelocity(Vel)
 end
 
 
