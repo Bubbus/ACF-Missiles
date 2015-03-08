@@ -159,3 +159,22 @@ ACF_DefineRack("2x FIM-92", {
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	} 
 } )
+
+ACF_DefineRack("4x FIM-92", {
+	name = "Double Munition FIM-92 Rack",
+	desc = "An FIM-92 rack designed to carry 4 missile.",
+	model		= "models/missiles/fim_92_4xrk.mdl",
+	gunclass = "RK",
+	weight = 30,
+	year = 1984,
+    magsize = 4,
+	caliber = 5.9,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )
