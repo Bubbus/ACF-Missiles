@@ -58,7 +58,8 @@ ACF_defineGun("50kgBOMB", { --id
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1     -- multiplier for missile turn-rate.
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 1     -- minimum fuse arming delay
 } )
 
 
@@ -97,7 +98,8 @@ ACF_defineGun("100kgBOMB", { --id
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1     -- multiplier for missile turn-rate.
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 1     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("250kgBOMB", { --id
@@ -135,7 +137,8 @@ ACF_defineGun("250kgBOMB", { --id
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1     -- multiplier for missile turn-rate.
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 1     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("500kgBOMB", { --id
@@ -172,7 +175,8 @@ ACF_defineGun("500kgBOMB", { --id
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1     -- multiplier for missile turn-rate.
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 1     -- minimum fuse arming delay
 } )
 
 ACF_defineGun("1000kgBOMB", { --id
@@ -209,7 +213,8 @@ ACF_defineGun("1000kgBOMB", { --id
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1     -- multiplier for missile turn-rate.
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 1     -- minimum fuse arming delay
 } )
 
 

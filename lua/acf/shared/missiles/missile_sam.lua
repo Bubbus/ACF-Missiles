@@ -48,11 +48,12 @@ ACF_defineGun("FIM-92 SAM", { --id
     guidance    = {"Dumb", "Radar"},
     fuses       = ACF_GetAllFuseNames(),
     
-	racks       = {["1x FIM-92"] = true,  ["2x FIM-92"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1x FIM-92"] = true,  ["2x FIM-92"] = true,  ["4x FIM-92"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
    
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1.8     -- multiplier for missile turn-rate.
+    agility     = 1.8,     -- multiplier for missile turn-rate.
+    armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
