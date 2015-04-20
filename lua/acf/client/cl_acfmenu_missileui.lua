@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 function ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd, min, max)
 
     local slider = vgui.Create( "DNumSlider" )
