@@ -4,13 +4,13 @@ AddCSLuaFile( "shared.lua" )
 
 include('shared.lua')
 
-CreateConVar('sbox_max_acf_grenade', 20)
+CreateConVar('sbox_max_acf_explosive', 20)
 
 
 
 
 function ENT:Initialize()
-	
+    
 	self.BulletData = self.BulletData or {}	
 	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
 	self.ShouldTrace = false
@@ -53,14 +53,14 @@ end
 
 
 
-function MakeACF_Grenade(Owner, Pos, Angle, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Mdl)
+function MakeACF_Explosive(Owner, Pos, Angle, Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Mdl)
 
-	if not Owner:CheckLimit("_acf_grenade") then return false end
+	if not Owner:CheckLimit("_acf_explosive") then return false end
 	
 
 	local weapon = ACF.Weapons.Guns[Data1]
 
-	local Bomb = ents.Create("acf_grenade")
+	local Bomb = ents.Create("acf_explosive")
 	if not Bomb:IsValid() then return false end
 	Bomb:SetAngles(Angle)
 	Bomb:SetPos(Pos)
@@ -75,13 +75,13 @@ function MakeACF_Grenade(Owner, Pos, Angle, Data1, Data2, Data3, Data4, Data5, D
 	Bomb.Id = Id
 	Bomb:CreateBomb(Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, Data9, Data10, Mdl)
 	
-	Owner:AddCount( "_acf_grenade", Bomb )
+	Owner:AddCount( "_acf_explosive", Bomb )
 	Owner:AddCleanup( "acfmenu", Bomb )
 	
 	return Bomb
 end
-list.Set( "ACFCvars", "acf_grenade", {"id", "data1", "data2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data10", "mdl"} )
-duplicator.RegisterEntityClass("acf_grenade", MakeACF_Grenade, "Pos", "Angle", "RoundId", "RoundType", "RoundPropellant", "RoundProjectile", "RoundData5", "RoundData6", "RoundData7", "RoundData8", "RoundData9", "RoundData10", "Model" )
+list.Set( "ACFCvars", "acf_explosive", {"id", "data1", "data2", "data3", "data4", "data5", "data6", "data7", "data8", "data9", "data10", "mdl"} )
+duplicator.RegisterEntityClass("acf_explosive", MakeACF_Explosive, "Pos", "Angle", "RoundId", "RoundType", "RoundPropellant", "RoundProjectile", "RoundData5", "RoundData6", "RoundData7", "RoundData8", "RoundData9", "RoundData10", "Model" )
 
 
 
@@ -141,7 +141,7 @@ end
 
 function ENT:SetBulletData(bdata)
 
-	if not (bdata.IsShortForm or bdata.Data5) then error("acf_grenade requires short-form bullet-data but was given expanded bullet-data.") end
+	if not (bdata.IsShortForm or bdata.Data5) then error("acf_explosive requires short-form bullet-data but was given expanded bullet-data.") end
 	
     bdata = ACF_CompactBulletData(bdata)
     
@@ -216,13 +216,14 @@ end
 
 
 
-function ENT:Detonate()
+function ENT:Detonate(overrideBData)
 	
 	if self.Detonated then return end
 	
 	self.Detonated = true
 	
-	local bdata = self.BulletData
+	local bdata = overrideBData or self.BulletData
+    
 	local phys = self:GetPhysicsObject()
 	local pos = self:GetPos()
 	
@@ -232,6 +233,8 @@ function ENT:Detonate()
 	bdata.Pos = 	pos + bdata.Flight:GetNormalized() * (self.VelocityOffset or 0)
 	bdata.NoOcc = 	self
     bdata.Gun =     self
+    
+    debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Flight, 10, Color(255, 128, 0))
     
     if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
     else bdata.Filter = {self} end
@@ -254,11 +257,6 @@ function ENT:Detonate()
     self:SetNoDraw(true)
 
 end
-
-
-
-
-
 
 
 

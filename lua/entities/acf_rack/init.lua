@@ -7,7 +7,7 @@ include('shared.lua')
 
 
 
-DEFINE_BASECLASS("acf_grenade")
+DEFINE_BASECLASS("acf_explosive")
 
 
 
@@ -39,6 +39,9 @@ function ENT:GetFireDelay(nextMsl)
     local bdata = nextMsl.BulletData
 
     local gun = list.Get("ACFEnts").Guns[bdata.Id]
+    
+    if not gun then return self.LastValidFireDelay or 1 end
+    
     local class = list.Get("ACFClasses").GunClass[gun.gunclass]
 
     
@@ -537,7 +540,7 @@ function ENT:Think()
         end
     end
     
-	self:NextThink(Time)
+	self:NextThink(Time + 0.5)
     
     self.LastThink = Time
     
@@ -681,6 +684,7 @@ function ENT:AddMissile()
     
     local NextIdx = #self.Missiles
     
+    local ply = self.Owner
     
     local missile = ents.Create("acf_missile")
     missile.Owner = ply
@@ -688,6 +692,7 @@ function ENT:AddMissile()
     missile.Launcher = self
     
     local BulletData = ACF_CompactBulletData(Crate)
+    
     BulletData.IsShortForm = true    
     BulletData.Owner = ply
     missile:SetBulletData(BulletData)
@@ -707,6 +712,7 @@ function ENT:AddMissile()
     if self.ProtectMissile then missile.DisableDamage = true end
     
     missile:Spawn()
+    --missile:SetBulletData(BulletData)
     
     self:EmitSound( "acf_extra/tankfx/resupply_single.wav", 500, 100 )
     

@@ -4,40 +4,7 @@ AddCSLuaFile("shared.lua")
 include("shared.lua")
 
 
-DEFINE_BASECLASS("acf_grenade")
-
-
-if SERVER then
-	concommand.Add("makeMissile", function(ply, args)
-		local missile = ents.Create("acf_missile")
-		missile:SetPos(ply:GetShootPos() + ply:GetAimVector() * 50)
-		missile:SetAngles(ply:GetAimVector():Angle())
-		missile.Owner = ply
-		
-		local BulletData = {}
-		BulletData["Colour"]		= Color(255, 255, 255)
-        BulletData["Data10"]		= "0.00"
-        BulletData["Data5"]		= "312.49"
-        BulletData["Data6"]		= "48.830002"
-        BulletData["Data7"]		= "0"
-        BulletData["Data8"]		= "0"
-        BulletData["Data9"]		= "0"
-        BulletData["Id"]		= "40mmAAM"
-        BulletData["ProjLength"]		= "31.99"
-        BulletData["PropLength"]		= "0.01"
-        BulletData["Type"]		= "HE"
-		BulletData.IsShortForm = true
-		
-        missile.Launcher = ply
-        
-		missile:SetBulletData(BulletData)
-		missile:SetGuidance(ACF.Guidance.Radar())
-        missile:SetFuse(ACF.Fuse.Timed())
-		
-		missile:Spawn()
-        missile:Launch()
-	end)
-end
+DEFINE_BASECLASS("acf_explosive")
 
 
 
@@ -51,20 +18,13 @@ function ENT:Initialize()
 	end
 
 	self.Entity:SetOwner(self.Entity.Owner)
-	-- self:SetModelEasy( "models/missiles/aim9.mdl" )
-	-- self.Entity:PhysicsInit( SOLID_VPHYSICS )
-	-- self.Entity:SetMoveType( MOVETYPE_VPHYSICS )
-	-- self.Entity:SetSolid( SOLID_VPHYSICS )
 
     self.VelocityOffset = -1
     
 	self.PhysObj = self.Entity:GetPhysicsObject()
 	self.PhysObj:EnableGravity( false )
 	self.PhysObj:EnableMotion( false )
-
-	self:ConfigureFlight()
-	
-	--self:Launch()
+    
 end
 
 
@@ -88,6 +48,8 @@ function ENT:SetBulletData(bdata)
 	end 
     
     self.RoundWeight = roundWeight
+    
+    self:ConfigureFlight()
     
 end
 
@@ -440,9 +402,10 @@ end
 
 function ENT:ConfigureFlight()
 
-
 	local BulletData = self.BulletData
+    
 	local GunData = list.Get("ACFEnts").Guns[BulletData.Id]
+    
 	local Round = GunData.round
 	local BurnRate = Round.burnrate
 
@@ -493,23 +456,15 @@ end
 
 
 function ENT:Detonate()
-
-    --print(self.Fuse, CurTime() - self.Fuse.TimeStarted, (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay), self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay))
-
+ 
     if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed()) then
-        --print("dud!")
         self:Dud()
         return
     end
-
-    if self.BulletData.MuzzleVel and self.LastVel then
-        self.BulletData.Flight = self.LastVel:GetNormalized() * self.BulletData.MuzzleVel
-    elseif self.LastVel then 
-        self.BulletData.Flight = self.LastVel
-    else
-        self.BulletData.Flight = self:GetForward()
-    end
-
+        
+    self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
+    debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
+    
     if self.Motor ~= 0 then
         self.Entity:StopParticles()
         self.Motor = 0
@@ -520,11 +475,9 @@ function ENT:Detonate()
         return
     end
      
-    self:DoFlight(self.BulletData.Pos, self.BulletData.Flight:GetNormalized())
-     
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
-	self.BaseClass.Detonate(self)
-
+    
+    self.BaseClass.Detonate(self, self.BulletData)
 end
 
 
