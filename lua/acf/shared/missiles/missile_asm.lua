@@ -101,5 +101,92 @@ ACF_defineGun("AGM-114 ASM", { --id
     armdelay    = 1     -- minimum fuse arming delay
 } )
 
+-- DUMB ROCKETS!!!!!1111111 --
+
+ACF_defineGun("82mmDUMB", { --id
+
+	name		= "82mm Rocket",
+	desc		= "A small, unguided rocket. Mostly used by MLRS system and late WW2/Vietnam era planes/helicopters  .",
+	model		= "models/missiles/rs82.mdl",
+	caliber		= 8,
+	gunclass	= "FFAR",
+    rack        = "1xRK",  -- Which rack to spawn this missile on? 
+    weight		= 5,
+    length	    = 32,
+	year		= 1933,
+	rofmod		= 0.6,
+	roundclass	= "Rocket",
+	round		= 
+	{
+		model		= "models/missiles/rs82.mdl",
+		rackmdl		= "models/missiles/rs82.mdl",
+		maxlength	= 25,
+		casing		= 0.2,	// thickness of missile casing, cm
+		propweight	= 0.7,	// motor mass - motor casing
+		thrust		= 15000,	// average thrust - kg*in/s^2
+		burnrate	= 400,	// cm^3/s at average chamber pressure
+		starterpct	= 0.15,
+        minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
+        dragcoef	= 0.004,		-- drag coefficient of the missile
+		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.1)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+	
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = {"Dumb"},
+    fuses       = {"Contact", "Timed"},
+    
+    racks       = {["70mm7xPOD"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 0.3     -- minimum fuse arming delay
+} )
+
+
+ACF_defineGun("127mmDUMB", { --id
+
+	name		= "127mm Rocket",
+	desc		= "A medium, unguided rocket. Mostly used by late WW2/Vietnam era planes/helicopters.",
+	model		= "models/missiles/hvar.mdl",
+	caliber		= 12,
+	gunclass	= "FFAR",
+    rack        = "1xRK",  -- Which rack to spawn this missile on? 
+    weight		= 63,
+    length	    = 43,
+	year		= 1933,
+	rofmod		= 0.6,
+	roundclass	= "Rocket",
+	round		= 
+	{
+		model		= "models/missiles/hvar.mdl",
+		rackmdl		= "models/missiles/hvar.mdl",
+		maxlength	= 25,
+		casing		= 0.2,	// thickness of missile casing, cm
+		propweight	= 0.7,	// motor mass - motor casing
+		thrust		= 15000,	// average thrust - kg*in/s^2
+		burnrate	= 400,	// cm^3/s at average chamber pressure
+		starterpct	= 0.15,
+        minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
+        dragcoef	= 0.004,		-- drag coefficient of the missile
+		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.1)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+	
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = {"Dumb"},
+    fuses       = {"Contact", "Timed"},
+    
+    racks       = {["70mm7xPOD"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 0.3     -- minimum fuse arming delay
+} )
+
 
 
