@@ -29,7 +29,7 @@ ACF_DefineRack("1xRK", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0, 0, 3),	["scaledir"] = Vector(0, 0, -1)}
+		["missile1"] = {["offset"] = Vector(-5, 0, 3),	["scaledir"] = Vector(0, 0, -1)}
 	}
 } )
 
@@ -98,7 +98,7 @@ ACF_DefineRack("2x AGM-114", {
 	weight = 50,
 	year = 1984,
     magsize = 2,
-	caliber = 16,
+	caliber = 20,
 
     mountpoints = 
 	{
@@ -115,7 +115,7 @@ ACF_DefineRack("4x AGM-114", {
 	weight = 80,
 	year = 1984,
     magsize = 4,
-	caliber = 16,
+	caliber = 20,
 
     mountpoints = 
 	{

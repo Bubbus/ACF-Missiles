@@ -83,8 +83,9 @@ ACF_defineGun("AIM-9 AAM", { --id
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 200,
-	caliber = 11,
+	caliber = 9,
 	weight = 85,    -- Don't scale down the weight though!
+	rofmod = 0.5,
 	year = 1953,
 	round = {
 		model		= "models/missiles/aim9.mdl",
@@ -106,11 +107,11 @@ ACF_defineGun("AIM-9 AAM", { --id
     
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 45,   -- getting outside this cone will break the lock.  Divided by 2. 
+    seekcone    = 15,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 20,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 2.5,  -- multiplier for missile turn-rate.
-    armdelay    = 0.4     -- minimum fuse arming delay
+    armdelay    = 0.8     -- minimum fuse arming delay
 } )
 
 
@@ -125,14 +126,14 @@ ACF_defineGun("AIM-120 AAM", { --id
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 1000,
-	caliber = 13.0,
+	caliber = 12.0,
 	weight = 152,    -- Don't scale down the weight though!
 	year = 1991,
     modeldiameter = 7.1 * 2.54, -- in cm
 	round = {
 		model		= "models/missiles/aim120.mdl",
 		rackmdl		= "models/missiles/aim120.mdl",
-		maxlength	= 45,
+		maxlength	= 40,
 		casing		= 0.4,	        -- thickness of missile casing, cm
 		propweight	= 3,	        -- motor mass - motor casing
 		thrust		= 30000,	    -- average thrust - kg*in/s^2
@@ -149,8 +150,8 @@ ACF_defineGun("AIM-120 AAM", { --id
     
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-    seekcone    = 30,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2. 
+    seekcone    = 10,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 15,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 2,    -- multiplier for missile turn-rate.
     armdelay    = 0.8     -- minimum fuse arming delay

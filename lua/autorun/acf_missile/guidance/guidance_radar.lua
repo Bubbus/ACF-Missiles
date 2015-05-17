@@ -20,7 +20,7 @@ this.Target = nil
 this.SeekCone = 15
 
 -- Cone to retain targets within.
-this.ViewCone = 30
+this.ViewCone = 20
 
 -- Targets this close to the front are good enough.
 this.SeekTolerance = math.cos( math.rad( 5 ) )

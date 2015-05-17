@@ -27,8 +27,8 @@ ACF_defineGun("40mmFFAR", { --id
 	gunclass	= "FFAR",
     rack        = "40mm7xPOD",  -- Which rack to spawn this missile on?
 	weight		= 6,
-    length	    = 32 / 20, -- Length affects inertia calculations
-    rofmod		= 0.9,
+    length	    = 2, -- Length affects inertia calculations
+    rofmod		= 0.7,
 	year		= 1960,
 	round		= 
 	{
@@ -43,7 +43,7 @@ ACF_defineGun("40mmFFAR", { --id
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.003,		-- drag coefficient of the missile
 		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
-		penmul		= math.sqrt(0.3)
+		penmul		= math.sqrt(5)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -56,7 +56,7 @@ ACF_defineGun("40mmFFAR", { --id
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1,     -- multiplier for missile turn-rate. 
-    armdelay    = 0.3     -- minimum fuse arming delay
+    armdelay    = 0.5     -- minimum fuse arming delay
 } )
 
 
@@ -71,7 +71,7 @@ ACF_defineGun("70mmFFAR", { --id
 	gunclass	= "FFAR",
     rack        = "70mm7xPOD",  -- Which rack to spawn this missile on? 
     weight		= 12,
-    length	    = 45 / 3,
+    length	    = 15,
 	year		= 1960,
 	rofmod		= 0.6,
 	roundclass	= "Rocket",
@@ -88,7 +88,7 @@ ACF_defineGun("70mmFFAR", { --id
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
 		finmul		= 0.003,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.1)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(8)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 	
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -101,7 +101,7 @@ ACF_defineGun("70mmFFAR", { --id
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1,     -- multiplier for missile turn-rate.
-    armdelay    = 0.3     -- minimum fuse arming delay
+    armdelay    = 0.5     -- minimum fuse arming delay
 } )
 
 
