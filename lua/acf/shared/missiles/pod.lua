@@ -85,7 +85,7 @@ ACF_DefineRack("1x BGM-71E", {
 	weight = 10,
 	year = 1970,
     magsize = 1,
-    caliber = 13,
+    caliber = 16,
 
     whitelistonly   = true,
     
@@ -105,7 +105,7 @@ ACF_DefineRack("2x BGM-71E", {
 	weight = 60,
 	year = 1970,
     magsize = 2,
-    caliber = 13,
+    caliber = 16,
 
     whitelistonly   = true,
     
@@ -126,7 +126,7 @@ ACF_DefineRack("4x BGM-71E", {
 	weight = 100,
 	year = 1970,
     magsize = 4,
-    caliber = 13,
+    caliber = 16,
 
     whitelistonly   = true,
     

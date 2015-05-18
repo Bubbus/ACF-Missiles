@@ -79,7 +79,7 @@ ACF_defineGun("100kgBOMB", { --id
 		model		= "models/bombs/fab100.mdl",
 		rackmdl		= "models/bombs/fab100.mdl",
 		maxlength	= 75,
-		casing		= 0.5,	        -- thickness of missile casing, cm
+		casing		= 0.7,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
 		burnrate	= 1,	        -- cm^3/s at average chamber pressure
@@ -117,7 +117,7 @@ ACF_defineGun("250kgBOMB", { --id
 		model		= "models/bombs/fab250.mdl",
 		rackmdl		= "models/bombs/fab250.mdl",
 		maxlength	= 125,
-		casing		= 0.5,	        -- thickness of missile casing, cm
+		casing		= 1.5,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
 		burnrate	= 1,	        -- cm^3/s at average chamber pressure
@@ -156,7 +156,7 @@ ACF_defineGun("500kgBOMB", { --id
 		model		= "models/bombs/fab500.mdl",
 		rackmdl		= "models/bombs/fab500.mdl",
 		maxlength	= 250,
-		casing		= 0.5,	        -- thickness of missile casing, cm
+		casing		= 2.0,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
 		burnrate	= 1,	        -- cm^3/s at average chamber pressure
@@ -185,16 +185,16 @@ ACF_defineGun("1000kgBOMB", { --id
 	model = "models/bombs/fab500.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 75,
+	length = 30000,
 	caliber = 50.0,
-	weight = 1000,    -- Don't scale down the weight though!
+	weight = 1000,    -- Don't scale down the weight though! 
 	year = 1945,
     modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/bombs/fab500.mdl",
 		rackmdl		= "models/bombs/fab500.mdl",
 		maxlength	= 500,
-		casing		= 0.5,	        -- thickness of missile casing, cm
+		casing		= 2.0,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
 		thrust		= 1,	    -- average thrust - kg*in/s^2
 		burnrate	= 1,	        -- cm^3/s at average chamber pressure
