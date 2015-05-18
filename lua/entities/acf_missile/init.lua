@@ -389,7 +389,7 @@ function ENT:LaunchEffect()
     local guns = list.Get("ACFEnts").Guns
     local class = guns[self.BulletData.Id]
     
-    local sound = ACF_GetGunValue(self.BulletData, "sound")
+    local sound = self.BulletData.Sound or ACF_GetGunValue(self.BulletData, "sound")
     
     if sound then
         self:EmitSound(sound, 511, 100)

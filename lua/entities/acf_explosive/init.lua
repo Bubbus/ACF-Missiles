@@ -101,7 +101,7 @@ function ENT:CreateBomb(Data1, Data2, Data3, Data4, Data5, Data6, Data7, Data8, 
 	self.RoundData9 = ( Data9 or 0 )
 	self.RoundData10 = ( Data10 or 0 )
 	
-	local PlayerData = bdata or ACF_CompactBulletData(self)
+	local PlayerData = bdata or ACFM_CompactBulletData(self)
 	
 	local guntable = ACF.Weapons.Guns
 	local gun = guntable[self.RoundId] or {}
@@ -143,7 +143,7 @@ function ENT:SetBulletData(bdata)
 
 	if not (bdata.IsShortForm or bdata.Data5) then error("acf_explosive requires short-form bullet-data but was given expanded bullet-data.") end
 	
-    bdata = ACF_CompactBulletData(bdata)
+    bdata = ACFM_CompactBulletData(bdata)
     
 	self:CreateBomb(
 		bdata.Data1 or bdata.Id,
@@ -166,7 +166,7 @@ end
 
 
 function ENT:ConfigBulletDataShortForm(bdata)
-	bdata = ACF_ExpandBulletData(bdata)
+	bdata = ACFM_ExpandBulletData(bdata)
 	
 	self.BulletData = bdata
 	self.BulletData.Entity = self
@@ -245,7 +245,7 @@ function ENT:Detonate(overrideBData)
 	bdata.HandlesOwnIteration = nil
 
 	
-	ACF_BulletLaunch(bdata)
+	ACFM_BulletLaunch(bdata)
 	timer.Simple(1, function() if IsValid(self) then self:Remove() end end)
 	
 
@@ -271,14 +271,14 @@ function ENT:DoReplicatedPropHit(Bullet)
 	
 	if Retry == "Penetrated" then		--If we should do the same trace again, then do so
 		--print("a")
-        ACF_ResetVelocity(Bullet)
+        ACFM_ResetVelocity(Bullet)
         
 		if Bullet.OnPenetrated then Bullet.OnPenetrated(Index, Bullet, FlightRes) end
 		ACF_BulletClient( Index, Bullet, "Update" , 2 , FlightRes.HitPos  )
 		ACF_CalcBulletFlight( Index, Bullet, true )
 	elseif Retry == "Ricochet"  then
 		--print("b")
-        ACF_ResetVelocity(Bullet)
+        ACFM_ResetVelocity(Bullet)
         
 		if Bullet.OnRicocheted then Bullet.OnRicocheted(Index, Bullet, FlightRes) end
 		ACF_BulletClient( Index, Bullet, "Update" , 3 , FlightRes.HitPos  )
@@ -324,6 +324,6 @@ end
 
 function ENT:RefreshClientInfo()
 
-	ACF_MakeCrateForBullet(self, self.BulletData)
+	ACFM_MakeCrateForBullet(self, self.BulletData)
 	
 end

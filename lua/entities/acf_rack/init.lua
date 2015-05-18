@@ -216,7 +216,7 @@ function ENT:DetonateAmmo(inflictor)
         self.BulletData["Type"]		= "HE"
         self.BulletData["FillerMass"]		= fillerMass
         
-        local bdata = ACF_CompactBulletData(self.BulletData)
+        local bdata = ACFM_CompactBulletData(self.BulletData)
         
         self:SetBulletData(bdata)
         
@@ -691,7 +691,7 @@ function ENT:AddMissile()
     missile.DoNotDuplicate = true
     missile.Launcher = self
     
-    local BulletData = ACF_CompactBulletData(Crate)
+    local BulletData = ACFM_CompactBulletData(Crate)
     
     BulletData.IsShortForm = true    
     BulletData.Owner = ply
