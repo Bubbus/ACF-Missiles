@@ -496,7 +496,7 @@ end
 
 function ENT:Think()
 
-    local Ammo = table.Count(self.Missiles)
+    local Ammo = table.Count(self.Missiles or {})
     
 	local Time = CurTime()
 	if self.LastSend+1 <= Time then

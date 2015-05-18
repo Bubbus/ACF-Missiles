@@ -23,7 +23,7 @@ this.SeekCone = 15
 this.ViewCone = 30
 
 -- Targets this close to the front are good enough.
-this.SeekTolerance = math.cos( math.rad( 5 ) )
+this.SeekTolerance = math.cos( math.rad( 1 ) )
 
 -- This instance must wait this long between target seeks.
 this.SeekDelay = 100000 -- The re-seek cycle is expensive, let's disable it until we figure out some optimization.
