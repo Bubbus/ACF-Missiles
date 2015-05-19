@@ -182,7 +182,7 @@ ACF_defineGun("500kgBOMB", { --id
 ACF_defineGun("1000kgBOMB", { --id
 	name = "1000kg Free Falling Bomb",
 	desc = "2000lb bomb, biggest projectile in acf - keep it for some slow big target.",
-	model = "models/bombs/fab500.mdl",
+	model = "models/bombs/an-m66.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 30000,
@@ -191,8 +191,8 @@ ACF_defineGun("1000kgBOMB", { --id
 	year = 1945,
     modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
-		model		= "models/bombs/fab500.mdl",
-		rackmdl		= "models/bombs/fab500.mdl",
+		model		= "models/bombs/an-m66.mdl",
+		rackmdl		= "models/bombs/an-m66.mdl",
 		maxlength	= 500,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing
