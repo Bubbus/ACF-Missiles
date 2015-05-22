@@ -1,0 +1,6 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\missiles/rkx1"
+	$bumpmap		models\missiles/rkx1_bump
+	$surfaceprop	metal
+}
