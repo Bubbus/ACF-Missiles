@@ -29,7 +29,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 	gunclass = "ASM",
     rack = "1x BGM-71E",  -- Which rack to spawn this missile on?
 	length = 46,		--Used for the physics calculations
-	caliber = 16,
+	caliber = 13,
 	weight = 23,    -- Don't scale down the weight though!
 	year = 1970,
 	round = {
@@ -44,7 +44,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 		minspeed	= 7000,				-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.006,			-- drag coefficient of the missile
 		finmul		= 0.012,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(10)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -69,7 +69,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 	gunclass = "ASM",
     rack = "2x AGM-114",  -- Which rack to spawn this missile on?
 	length = 66,
-	caliber = 20,
+	caliber = 16,
 	weight = 45,    -- Don't scale down the weight though!
     modeldiameter = 17.2 * 1.27, -- in cm
 	year = 1984,
@@ -85,7 +85,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 		minspeed	= 8000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(12)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.

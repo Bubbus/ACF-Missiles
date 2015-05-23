@@ -115,7 +115,7 @@ ACF_DefineRack("2x AGM-114", {
 	weight = 50,
 	year = 1984,
     magsize = 2,
-	caliber = 20,
+	caliber = 16,
 
     mountpoints = 
 	{
@@ -132,7 +132,7 @@ ACF_DefineRack("4x AGM-114", {
 	weight = 80,
 	year = 1984,
     magsize = 4,
-	caliber = 20,
+	caliber = 16,
 
     mountpoints = 
 	{
