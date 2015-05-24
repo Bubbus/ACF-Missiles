@@ -52,7 +52,7 @@ ACF_defineGun("50kgBOMB", { --id
     guidance    = {"Dumb"},
     fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
-	racks       = {["1xRK"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1xRK_small"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
   
 	
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
@@ -182,17 +182,17 @@ ACF_defineGun("500kgBOMB", { --id
 ACF_defineGun("1000kgBOMB", { --id
 	name = "1000kg Free Falling Bomb",
 	desc = "2000lb bomb, biggest projectile in acf - keep it for some slow big target.",
-	model = "models/bombs/fab500.mdl",
+	model = "models/bombs/an_m66.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 30000,
-	caliber = 50.0,
+	caliber = 30.0,
 	weight = 1000,    -- Don't scale down the weight though! 
 	year = 1945,
-    modeldiameter = 16.3 * 1.9, -- in cm
+    modeldiameter = 16.3 * 4.5, -- in cm
 	round = {
-		model		= "models/bombs/fab500.mdl",
-		rackmdl		= "models/bombs/fab500.mdl",
+		model		= "models/bombs/an_m66.mdl",
+		rackmdl		= "models/bombs/an_m66.mdl",
 		maxlength	= 500,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		propweight	= 0,	        -- motor mass - motor casing

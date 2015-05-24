@@ -19,7 +19,7 @@ ACF_DefineRackClass("RK", {
 ACF_DefineRack("1xRK", {
 	name = "Single Munitions Rack",
 	desc = "A lightweight rack for rockets and bombs which is vulnerable to shots and explosions.",
-	model		= "models/missiles/rack_single.mdl",
+	model		= "models/missiles/rkx1.mdl",
 	gunclass = "RK",
 	weight = 50,
 	rofmod = 2.2,
@@ -29,10 +29,27 @@ ACF_DefineRack("1xRK", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(-5, 0, 3),	["scaledir"] = Vector(0, 0, -1)}
+		["missile1"] = {["offset"] = Vector(0, 0, 2),	["scaledir"] = Vector(0, 0, -1)}
 	}
 } )
 
+--add a gun to the class
+ACF_DefineRack("1xRK_small", {
+	name = "Single Munitions Rack",
+	desc = "A lightweight rack for rockets and bombs which is vulnerable to shots and explosions.",
+	model		= "models/missiles/rkx1_sml.mdl",
+	gunclass = "RK",
+	weight = 50,
+	rofmod = 2.6,
+	year = 1915,
+    magsize = 1,
+	sound = "acf_extra/airfx/rocket_fire2.wav",
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0, 0, 2),	["scaledir"] = Vector(0, 0, -1)}
+	}
+} )
 
 
 
@@ -98,7 +115,7 @@ ACF_DefineRack("2x AGM-114", {
 	weight = 50,
 	year = 1984,
     magsize = 2,
-	caliber = 20,
+	caliber = 16,
 
     mountpoints = 
 	{
@@ -115,7 +132,7 @@ ACF_DefineRack("4x AGM-114", {
 	weight = 80,
 	year = 1984,
     magsize = 4,
-	caliber = 20,
+	caliber = 16,
 
     mountpoints = 
 	{
