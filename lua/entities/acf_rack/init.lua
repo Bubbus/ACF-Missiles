@@ -16,8 +16,9 @@ function ENT:GetReloadTime(nextMsl)
 
     local reloadMul = (self.ReloadMultiplier or 1)
     local reloadBonus = (self.ReloadMultiplierBonus or 0)
+	local mag = (self.MagSize or 1)
     
-    reloadMul = reloadMul - (reloadMul - 1) * reloadBonus
+    reloadMul = (reloadMul - (reloadMul - 1) * reloadBonus) / (mag^1.1)
     
     local ret = self:GetFireDelay(nextMsl) * reloadMul
     self:SetNetworkedBeamFloat(	"Reload",		ret)
@@ -66,6 +67,7 @@ function ENT:Initialize()
 	self.Ready = true
 	self.Firing = nil
 	self.NextFire = 1
+	self.PostReloadWait = CurTime()
     self.WaitFunction = self.GetFireDelay
 	self.LastSend = 0
 	self.Owner = self
@@ -358,6 +360,7 @@ function ENT:GetUser( inp )
 			return self:GetUser(inp.Inputs["Shoot"].Src) 
 		elseif inp.Inputs then
 			for _,v in pairs(inp.Inputs) do
+				if (!IsValid(v.Src)) then return inp.Owner or inp:GetOwner() end
 				if table.HasValue(WireTable, v.Src:GetClass()) then
 					return self:GetUser(v.Src) 
 				end
@@ -416,7 +419,11 @@ end
 
 
 function ENT:SetStatusString()
-
+	local phys = self:GetPhysicsObject()
+	if(!IsValid(phys)) then
+		self:SetNetworkedBeamString("Status", "Something truly horrifying happened to this rack - it has no physics object.")
+		return
+	end
     if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then
         self:SetNetworkedBeamString("Status", "Underweight! (should be " .. tostring(self.LegalWeight or self.Mass) .. " kg)")
         return
@@ -746,6 +753,7 @@ function ENT:LoadAmmo( Reload )
     end
     
 	self.NextFire = 0
+	self.PostReloadWait = CurTime() + 5
     self.WaitFunction = self.GetReloadTime
 
 	self.Ready = false
@@ -882,7 +890,7 @@ end
 
 function ENT:FireMissile()
     
-	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and not self:GetParent():IsValid() then
+	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and not self:GetParent():IsValid() and (self.PostReloadWait < CurTime()) then
         
         local nextMsl = self:PeekMissile()
     
