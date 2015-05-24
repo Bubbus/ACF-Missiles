@@ -23,7 +23,7 @@ this.SeekCone = 15
 this.ViewCone = 20
 
 -- Targets this close to the front are good enough.
-this.SeekTolerance = math.cos( math.rad( 1 ) )
+this.SeekTolerance = math.cos( math.rad( 2 ) )
 
 -- This instance must wait this long between target seeks.
 this.SeekDelay = 100000 -- The re-seek cycle is expensive, let's disable it until we figure out some optimization.
@@ -31,21 +31,33 @@ this.SeekDelay = 100000 -- The re-seek cycle is expensive, let's disable it unti
 -- Delay between re-seeks if an entity is provided via wiremod.
 this.WireSeekDelay = 0.1
 
--- Entities to ignore by default
+-- Entity class whitelist
+-- thanks to Sestze for the listing.
 this.DefaultFilter = 
 {
-    acf_missile 	    = true;
-	debris				= true;
-	player				= true
+    prop_physics                = true,
+    gmod_wheel                  = true,
+    gmod_hoverball              = true,
+    gmod_wire_expression2       = true,
+    gmod_wire_thruster          = true,
+    gmod_thruster               = true,
+    gmod_wire_light             = true,
+    gmod_light                  = true,
+    gmod_emitter                = true,
+    gmod_button                 = true,
+    phys_magnet                 = true,
+    prop_vehicle_jeep           = true,
+    prop_vehicle_airboat        = true,
+    prop_vehicle_prisoner_pod   = true,
+    acf_engine                  = true,
+    acf_ammo                    = true,
+    acf_gun                     = true,
+    acf_gearbox                 = true
 }
 
 
 this.desc = "This guidance package detects a target in front of it when launched, and guides the munition towards it."
 
--- function this:Draw(ent, duration)
-	-- local Guidance = self:GetGuidance(ent)
-	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)
--- end
 
 
 function this:Init()
@@ -180,13 +192,13 @@ function this:GetWireTarget(missile)
     local outputs = launcher.Outputs
     
     if not IsValid(self.InputSource) then 
-		return {} 
+		return nil
 	end
     
     local outputs = self.InputSource.Outputs
     
     if not outputs then
-        return {} 
+        return nil
 	end
     
     
@@ -209,6 +221,35 @@ end
 
 
 
+
+function this:GetWhitelistedEntsInCone(missile)
+
+    local missilePos = missile:GetPos()
+	local missileForward = missile:GetForward()
+	local found = ents.FindInCone(missilePos, missileForward, 50000, self.SeekCone)
+    
+    --print("radar found", #found, "ents")
+	
+	local foundAnim = {}
+	local foundAnimIdx = 1
+	local foundEnt
+	
+    local filter = self.Filter
+	for i=1, #found do
+		foundEnt = found[i]
+		if IsValid(foundEnt) and self.Filter[foundEnt:GetClass()] then
+			foundAnim[foundAnimIdx] = foundEnt
+			foundAnimIdx = foundAnimIdx + 1
+		end
+	end
+    
+    return foundAnim
+    
+end
+
+
+
+
 -- Return the first entity found within the seek-tolerance, or the entity within the seek-cone closest to the seek-tolerance.
 function this:AcquireLock(missile)
 
@@ -219,40 +260,32 @@ function this:AcquireLock(missile)
         local wireEnt = self:GetWireTarget(missile)
         
         if wireEnt then
+            --print("wiremod provided", wireEnt)
             return wireEnt
         end
         
     end
     
-	if self.LastSeek + self.SeekDelay > curTime then return nil end
+	if self.LastSeek + self.SeekDelay > curTime then 
+        --print("tried seeking within timeout period")
+        return nil 
+    end
 	self.LastSeek = curTime
 
-	-- Part 1: get all entities in seek-cone of type "anim"
-	
-	local missilePos = missile:GetPos()
-	local missileForward = missile:GetForward()
-	local found = ents.FindInCone(missilePos, missileForward, 50000, self.SeekCone)
-	
-	local foundAnim = {}
-	local foundAnimIdx = 1
-	local foundEnt
-	
-    local filter = self.Filter
-	for i=1, #found do
-		foundEnt = found[i]
-		if IsValid(foundEnt:GetPhysicsObject()) and not self.Filter[foundEnt:GetClass()] then
-			foundAnim[foundAnimIdx] = foundEnt
-			foundAnimIdx = foundAnimIdx + 1
-		end
-	end
-	
-	found = foundAnim
+	-- Part 1: get all whitelisted entities in seek-cone.
+	local found = self:GetWhitelistedEntsInCone(missile)
+    
 	
 	-- Part 2: get a good seek target
-	
 	local foundCt = #found
-	if foundCt < 2 then return found[1] end
+	if foundCt < 2 then 
+        --print("shortcircuited and found", found[1])
+        return found[1] 
+    end
 	
+    local missilePos = missile:GetPos()
+	local missileForward = missile:GetForward()
+    
 	local mostCentralEnt = found[1]
 	local mostCentralPos = mostCentralEnt:GetPos()
 	local highestDot = (mostCentralEnt:GetPos() - missilePos):GetNormalized():Dot(missileForward)
@@ -267,9 +300,14 @@ function this:AcquireLock(missile)
 			mostCentralEnt = currentEnt
 			highestDot = currentDot
 			
-			if currentDot >= self.SeekTolerance then return currentEnt end
+			if currentDot >= self.SeekTolerance then 
+                --print("found", mostCentralEnt, "in tolerance")
+                return currentEnt 
+            end
 		end
 	end
+    
+    --print("iterated and found", mostCentralEnt)
     
 	return mostCentralEnt
 end
