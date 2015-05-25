@@ -20,7 +20,7 @@ ACF_DefineRackClass("POD", {
 
 
 
---add a gun to the class
+-- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
 ACF_DefineRack("40mm7xPOD", {
 	name        = "7x FFAR Pod (40mm)",
 	desc        = "A lightweight pod for small rockets which is vulnerable to shots and explosions.",
@@ -49,6 +49,7 @@ ACF_DefineRack("40mm7xPOD", {
 
 
 
+-- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
 ACF_DefineRack("70mm7xPOD", {
 	name        = "7x FFAR Pod (70mm)",
 	desc        = "A lightweight pod for rockets which is vulnerable to shots and explosions.",
@@ -77,6 +78,7 @@ ACF_DefineRack("70mm7xPOD", {
 
 
 
+-- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
 ACF_DefineRack("1x BGM-71E", {
 	name = "BGM-71E Round",
 	desc = "A single BGM-71E round.",
@@ -85,7 +87,7 @@ ACF_DefineRack("1x BGM-71E", {
 	weight = 10,
 	year = 1970,
     magsize = 1,
-    caliber = 16,
+    caliber = 13,
 
     whitelistonly   = true,
     
@@ -97,6 +99,7 @@ ACF_DefineRack("1x BGM-71E", {
 
 
 
+-- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
 ACF_DefineRack("2x BGM-71E", {
 	name = "BGM-71E 2x Rack",
 	desc = "A BGM-71E rack designed to carry 2 rounds.",
@@ -118,6 +121,7 @@ ACF_DefineRack("2x BGM-71E", {
 
 
 
+-- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
 ACF_DefineRack("4x BGM-71E", {
 	name = "BGM-71E 4x Rack",
 	desc = "A BGM-71E rack designed to carry 4 rounds.",
