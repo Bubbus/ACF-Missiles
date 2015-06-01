@@ -57,7 +57,7 @@ ACF_defineGun("BGM-71E ASM", { --id
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 0.7,     -- multiplier for missile turn-rate.
-    armdelay    = 0.8     -- minimum fuse arming delay
+    armdelay    = 0.4     -- minimum fuse arming delay
 } )
 
 
@@ -98,7 +98,7 @@ ACF_defineGun("AGM-114 ASM", { --id
     viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 0.5,		-- multiplier for missile turn-rate.
-    armdelay    = 1     -- minimum fuse arming delay
+    armdelay    = 0.7     -- minimum fuse arming delay
 } )
 
 -- DUMB ROCKETS!!!!!1111111 --

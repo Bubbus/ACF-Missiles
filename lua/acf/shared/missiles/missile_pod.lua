@@ -56,7 +56,7 @@ ACF_defineGun("40mmFFAR", { --id
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1,     -- multiplier for missile turn-rate. 
-    armdelay    = 0.5     -- minimum fuse arming delay
+    armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
 
@@ -101,7 +101,7 @@ ACF_defineGun("70mmFFAR", { --id
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1,     -- multiplier for missile turn-rate.
-    armdelay    = 0.5     -- minimum fuse arming delay
+    armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
 

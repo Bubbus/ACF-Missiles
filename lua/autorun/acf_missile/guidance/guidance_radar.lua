@@ -56,7 +56,7 @@ this.DefaultFilter =
 }
 
 
-this.desc = "This guidance package detects a target in front of it when launched, and guides the munition towards it."
+this.desc = "This guidance package detects a target-position infront of itself, and guides the munition towards it."
 
 
 

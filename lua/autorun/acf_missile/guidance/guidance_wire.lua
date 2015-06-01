@@ -24,7 +24,7 @@ this.WireLength = 10000
 this.WireSnapped = false
 
 
-this.desc = "This guidance package reads a target-position from the launcher and guides the munition towards it."
+this.desc = "This guidance package is controlled by the launcher, which reads a target-position and steers the munition towards it."
 
 
 
