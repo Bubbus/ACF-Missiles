@@ -23,7 +23,7 @@ this.Configurable =
 {
     {
         Name = "Primer",            -- name of the variable to change
-        DisplayName = "Arming Delay",   -- name displayed to the user
+        DisplayName = "Arming Delay (in seconds)",   -- name displayed to the user
         CommandName = "AD",         -- shorthand name used in console commands
         
         Type = "number",            -- lua type of the configurable variable

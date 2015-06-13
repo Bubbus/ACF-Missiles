@@ -18,7 +18,7 @@ this.Name = ClassName
 this.Distance = 2000
 
 
-this.desc = "This fuse fires a beam directly ahead and detonates when the beam hits something close-by."
+this.desc = "This fuse fires a beam directly ahead and detonates when the beam hits something close-by.\nDistance in inches."
 
 
 -- Configuration information for things like acfmenu.

@@ -18,7 +18,7 @@ this.Name = ClassName
 this.Timer = 10
 
 
-this.desc = "This fuse triggers upon direct contact, or when the timer ends."
+this.desc = "This fuse triggers upon direct contact, or when the timer ends.\nDelay in seconds."
 
 
 -- Configuration information for things like acfmenu.
