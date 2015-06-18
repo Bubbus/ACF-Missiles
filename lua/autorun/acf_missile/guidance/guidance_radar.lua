@@ -129,6 +129,10 @@ function this:GetGuidance(missile)
 	local ret = self:CheckTarget(missile)
 	if ret then return ret end
 	
+	if self.Target and self.Target.FlareUID then
+		return {TargetPos = self.Target.Pos, TargetVel = self.Target.Flight, ViewCone = self.ViewCone}
+	end
+	
 	if not IsValid(self.Target) then 
 		return {} 
 	end
@@ -165,7 +169,19 @@ end
 
 function this:CheckTarget(missile)
 
-	if not IsValid(self.Target) then	
+	if not self.Target or not self.Target.FlareUID then
+		local flares = ACFM_GetFlaresInCone(missile:GetPos(), missile:GetForward(), self.ViewCone)
+		local flare = flares[1]
+		
+		if flare then
+			self.Target = flare
+			print("Targeting flare #", flare.FlareUID)
+			return
+		end
+	end
+	
+
+	if not self.Target then	
 		local target = self:AcquireLock(missile)
 		
 		if IsValid(target) then 
