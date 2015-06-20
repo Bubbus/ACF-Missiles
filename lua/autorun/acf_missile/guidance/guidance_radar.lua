@@ -99,13 +99,9 @@ function this:GetNamedWireInputs(missile)
 
     local names = {}
     
-    
     if outputs.Target and outputs.Target.Type == "ENTITY" then
-    
         names[#names+1] = "Target"
-    
     end
-    
     
     return names
 
@@ -124,14 +120,16 @@ end
 
 
 
+--TODO: still a bit messy, refactor this so we can check if a flare exits the viewcone too.
 function this:GetGuidance(missile)
+	
+	self:PreGuidance(missile)
+	
+	local override = self:ApplyOverride(missile)
+	if override then return override end
 	
 	local ret = self:CheckTarget(missile)
 	if ret then return ret end
-	
-	if self.Target and self.Target.FlareUID then
-		return {TargetPos = self.Target.Pos, TargetVel = self.Target.Flight, ViewCone = self.ViewCone}
-	end
 	
 	if not IsValid(self.Target) then 
 		return {} 
@@ -167,21 +165,29 @@ end
 
 
 
+function this:ApplyOverride(missile)
+
+	if self.Override then
+	
+		local ret = self.Override:GetGuidanceOverride(missile, self)
+		
+		if ret then
+			pbn(ret)
+		
+			ret.ViewCone = self.ViewCone
+			return ret
+		end
+		
+	end
+
+end
+
+
+
+
 function this:CheckTarget(missile)
 
-	if not self.Target or not self.Target.FlareUID then
-		local flares = ACFM_GetFlaresInCone(missile:GetPos(), missile:GetForward(), self.ViewCone)
-		local flare = flares[1]
-		
-		if flare then
-			self.Target = flare
-			print("Targeting flare #", flare.FlareUID)
-			return
-		end
-	end
-	
-
-	if not self.Target then	
+	if not (self.Target or self.Override) then	
 		local target = self:AcquireLock(missile)
 		
 		if IsValid(target) then 

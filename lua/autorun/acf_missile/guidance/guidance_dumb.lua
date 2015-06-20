@@ -18,10 +18,8 @@ this.Name = ClassName
 this.desc = "This guidance package is empty and provides no control."
 
 
--- function this:Draw(ent, duration)
-	-- local Guidance = self:GetGuidance(ent)
-	-- debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)
--- end
+-- an object containing an obj:GetGuidanceOverride(missile, guidance) function
+this.Override = nil
 
 
 function this:Init()
@@ -35,7 +33,22 @@ end
 
 
 function this:GetGuidance(missile)
-	return {}
+
+	self:PreGuidance(missile)
+
+	return self:ApplyOverride(missile) or {}
+	
 end
 
 
+function this:PreGuidance(missile)
+
+	ACFM_ApplyCountermeasures(missile, self)
+
+end
+
+
+function this:ApplyOverride(missile)
+
+
+end
