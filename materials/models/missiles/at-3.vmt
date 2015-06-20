@@ -3,6 +3,5 @@
 	"$baseTexture" "models\missiles/at-3"
 	$halflambert 			1
 	$blendtintbybasealpha		1
-	$bumpmap		models\missiles/at3_b
 	$surfaceprop	metal
 }
