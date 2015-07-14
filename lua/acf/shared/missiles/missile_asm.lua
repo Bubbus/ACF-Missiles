@@ -101,4 +101,41 @@ ACF_defineGun("AGM-114 ASM", { --id
     armdelay    = 0.7     -- minimum fuse arming delay
 } )
 
--- DUMB ROCKETS!!!!!1111111 --
+-- The AT-3, a wire guided missile with better anti-tank effectiveness than TOW but much slower.
+ACF_defineGun("AT-3 ASM", { --id
+	name = "AT-3 Missile",
+	desc = "The AT-3 missile (9M14P) is a wire guided anti-tank munition. It can be used in both air-to-surface and surface-to-surface combat, making it a decent alternative for ground vehicles.",
+	model = "models/missiles/at3.mdl",
+	gunclass = "ASM",
+    rack = "1xRK_small",  -- Which rack to spawn this missile on?
+	length = 43,		--Used for the physics calculations
+	caliber = 12.5,
+	weight = 12,    -- Don't scale down the weight though!
+	year = 1969,
+	round = {
+		model		= "models/missiles/at3.mdl",
+		rackmdl		= "models/missiles/at3.mdl",
+		maxlength	= 30,
+		casing		= 0.3,				-- thickness of missile casing, cm
+		propweight	= 5,				-- motor mass - motor casing
+		thrust		= 4000,				-- average thrust - kg*in/s^2
+		burnrate	= 200,				-- cm^3/s at average chamber pressure
+		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
+		minspeed	= 1500,				-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.1006,			-- drag coefficient of the missile
+		finmul		= 0.1012,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+    
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = {"Dumb", "Wire"},
+    fuses       = {"Contact", "Timed"},
+    
+    racks       = {["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 0.4,     -- multiplier for missile turn-rate.
+    armdelay    = -10.8     -- minimum fuse arming delay
+} )
