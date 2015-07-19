@@ -378,6 +378,8 @@ function ENT:Launch()
 	
     self:LaunchEffect()
     
+	ACF_ActiveMissiles[self] = true
+	
 	self:Think()
 end
 
@@ -463,20 +465,22 @@ function ENT:Detonate()
     end
         
     self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
-    debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
+    --debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
     
-    if self.Motor ~= 0 then
-        self.Entity:StopParticles()
-        self.Motor = 0
-    end    
-     
     -- Safeguard against teleporting explosions.
     if IsValid(self.Launcher) and not self.Launched then
         return
     end
-     
+
+    if self.Motor ~= 0 then
+        self.Entity:StopParticles()
+        self.Motor = 0
+    end    
+      
     self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
     
+	ACF_ActiveMissiles[self] = nil
+	
     self.BaseClass.Detonate(self, self.BulletData)
 end
 
@@ -487,6 +491,8 @@ function ENT:Dud()
     
     self.MissileDetonated = true
 
+	ACF_ActiveMissiles[self] = nil
+	
 	local Dud = ents.Create( "debris" )
 	Dud:SetModel( self.Entity:GetModel() )
 	Dud:SetPos( self.CurPos )
@@ -503,7 +509,7 @@ function ENT:Dud()
 		local VelMul = (0.8 + Dot * 0.7) * Vel:Length()
 		Vel = NewDir * VelMul
 	end
-
+	
 	Phys:SetVelocity(Vel)
 end
 
@@ -547,7 +553,20 @@ end
 
 
 function ENT:PhysicsCollide()
+
 	if self.Launched then self:Detonate() end
+	
+end
+
+
+
+
+function ENT:OnRemove()
+
+	self.BaseClass.OnRemove(self)
+
+	ACF_ActiveMissiles[self] = nil
+	
 end
 
 

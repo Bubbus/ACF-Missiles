@@ -171,9 +171,7 @@ function this:ApplyOverride(missile)
 	
 		local ret = self.Override:GetGuidanceOverride(missile, self)
 		
-		if ret then
-			pbn(ret)
-		
+		if ret then		
 			ret.ViewCone = self.ViewCone
 			return ret
 		end

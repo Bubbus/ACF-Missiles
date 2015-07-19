@@ -1,4 +1,4 @@
-/*
+--[[
               _____ ______   __  __ _         _ _           
         /\   / ____|  ____| |  \/  (_)       (_) |          
        /  \ | |    | |__    | \  / |_ ___ ___ _| | ___  ___ 
@@ -10,12 +10,16 @@
     
     A reimplementation of XCF missiles and bombs, with guidance and more.
 
-*/
+]]
 
 
 
 if not ACF then error("ACF is not installed - ACF Missiles require it!") end
 
+
+
+-- Lookup table of all currently flying missiles.
+ACF_ActiveMissiles = ACF_ActiveMissiles or {}
 
 
 

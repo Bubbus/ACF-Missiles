@@ -22,6 +22,10 @@ this.desc = "This guidance package is empty and provides no control."
 this.Override = nil
 
 
+
+this.AppliedSpawnCountermeasures = false
+
+
 function this:Init()
 	
 end
@@ -42,6 +46,13 @@ end
 
 
 function this:PreGuidance(missile)
+
+	if not self.AppliedSpawnCountermeasures then
+	
+		ACFM_ApplySpawnCountermeasures(missile, self)
+		self.AppliedSpawnCountermeasures = true
+		
+	end
 
 	ACFM_ApplyCountermeasures(missile, self)
 

@@ -18,7 +18,17 @@ this.AppliesTo =
 }
 
 
+-- bulletdata bound to this object
 this.Flare = nil
+
+
+-- chance as a fraction, 0 - 1
+this.SuccessChance = 1
+
+
+-- indicate to ACFM that this should only be applied when guidance is activated or flare is spawned - not per-frame.
+this.ApplyContinuous = false
+
 
 
 
@@ -52,6 +62,64 @@ end
 
 
 
+-- TODO: refine formula.
+function this:ApplyChance(missile, guidance)
+	
+	return math.random() < self.SuccessChance
+	
+end
+
+
+
+
+-- roll the dice against a missile.  returns true if the flare succeeds in distracting the missile.
+-- does not actually apply the effect, just tests the chance of it happening.
+-- 'flare' is bulletdata.
+function this:TryAgainst(missile, guidance)
+	
+	if not self.Flare then return end
+	
+	local cone = guidance.ViewCone
+	
+	if not cone or cone <= 0 then return end
+	
+	local pos = missile:GetPos()
+	local dir = missile:GetForward()
+	
+	return ACFM_ConeContainsPos(pos, dir, cone, self.Flare.Pos) and self:ApplyChance(missile, guidance, flare)
+	
+end
+
+
+
+
+-- counterpart to ApplyAll.  this takes one flare and applies it to all missiles.
+-- returns all missiles which should be affected by this flare.
+function this:ApplyToAll()
+
+	if not self.Flare then return end
+
+	local ret = {}
+	
+	local targets = ACFM_GetAllMissilesWhichCanSee(self.Flare.Pos)
+	
+	for k, missile in pairs(targets) do
+	
+		local guidance = missile.Guidance
+		
+		if self:ApplyChance(missile, guidance) then
+			ret[#ret+1] = missile
+		end
+	
+	end
+
+	return ret
+	
+end
+
+
+
+
 -- 'static' function to iterate over all flares in flight and return one which affects the guidance.
 -- TODO: apply sub-1 chance to distract guidance in ACFM_GetAnyFlareInCone.
 function this.ApplyAll(missile, guidance)
@@ -63,13 +131,21 @@ function this.ApplyAll(missile, guidance)
 	local pos = missile:GetPos()
 	local dir = missile:GetForward()
 	
-	local flare = ACFM_GetAnyFlareInCone(pos, dir, cone)
-
-	if not flare then return end
+	local flares = ACFM_GetFlaresInCone(pos, dir, cone)
 	
-	local ret = this()
-	ret:Configure(flare)
+	for k, flare in pairs(flares) do
 	
-	return ret
+		local ret = flare.FlareObj
+	
+		if ret:ApplyChance(missile, guidance, flare) then		
+			return ret
+		end
+		
+	end
+	
+	return nil
 	
 end
+
+
+
