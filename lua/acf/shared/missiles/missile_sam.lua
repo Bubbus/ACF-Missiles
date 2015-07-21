@@ -35,11 +35,12 @@ ACF_defineGun("FIM-92 SAM", { --id
 		rackmdl		= "models/missiles/fim_92_folded.mdl",
 		maxlength	= 45,
 		casing		= 0.2,	        -- thickness of missile casing, cm
+		armour		= 5,			-- effective armour thickness of casing, in mm
 		propweight	= 1,	        -- motor mass - motor casing
-		thrust		= 16000,	    	-- average thrust - kg*in/s^2
+		thrust		= 16000,	    -- average thrust - kg*in/s^2
 		burnrate	= 500,	        -- cm^3/s at average chamber pressure
-		starterpct	= 0.2,         -- percentage of the propellant consumed in the starter motor.
-		minspeed	= 12000,			-- minimum speed beyond which the fins work at 100% efficiency
+		starterpct	= 0.2,         	-- percentage of the propellant consumed in the starter motor.
+		minspeed	= 12000,		-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.006,		-- drag coefficient of the missile
 		finmul		= 0.005			-- fin multiplier (mostly used for unpropelled guidance)
 	},

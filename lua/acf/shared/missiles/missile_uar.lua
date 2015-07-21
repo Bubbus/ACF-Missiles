@@ -36,10 +36,11 @@ ACF_defineGun("RS82 ASR", { --id
 		model		= "models/missiles/rs82.mdl",
 		rackmdl		= "models/missiles/rs82.mdl",
 		maxlength	= 25,
-		casing		= 0.2,	// thickness of missile casing, cm
-		propweight	= 0.7,	// motor mass - motor casing
-		thrust		= 10000,	// average thrust - kg*in/s^2
-		burnrate	= 800,	// cm^3/s at average chamber pressure
+		casing		= 0.2,			-- thickness of missile casing, cm
+		armour		= 8,			-- effective armour thickness of casing, in mm
+		propweight	= 0.7,			-- motor mass - motor casing
+		thrust		= 10000,		-- average thrust - kg*in/s^2
+		burnrate	= 800,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.15,
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
@@ -79,10 +80,11 @@ ACF_defineGun("HVAR ASR", { --id
 		model		= "models/missiles/hvar.mdl",
 		rackmdl		= "models/missiles/hvar.mdl",
 		maxlength	= 25,
-		casing		= 0.2,	// thickness of missile casing, cm
-		propweight	= 0.7,	// motor mass - motor casing
-		thrust		= 12000,	// average thrust - kg*in/s^2
-		burnrate	= 600,	// cm^3/s at average chamber pressure
+		casing		= 0.2,			-- thickness of missile casing, cm
+		armour		= 12,			-- effective armour thickness of casing, in mm
+		propweight	= 0.7,			-- motor mass - motor casing
+		thrust		= 12000,		-- average thrust - kg*in/s^2
+		burnrate	= 600,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.15,
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
@@ -121,10 +123,11 @@ ACF_defineGun("S-24 ASR", { --id
 		model		= "models/missiles/s24.mdl",
 		rackmdl		= "models/missiles/s24.mdl", 
 		maxlength	= 40,
-		casing		= 0.5,	// thickness of missile casing, cm
-		propweight	= 15,	// motor mass - motor casing
-		thrust		= 12000,	// average thrust - kg*in/s^2
-		burnrate	= 1400,	// cm^3/s at average chamber pressure
+		casing		= 0.5,			-- thickness of missile casing, cm
+		armour		= 18,			-- effective armour thickness of casing, in mm
+		propweight	= 15,			-- motor mass - motor casing
+		thrust		= 12000,		-- average thrust - kg*in/s^2
+		burnrate	= 1400,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.15,
         minspeed	= 7000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
@@ -144,7 +147,10 @@ ACF_defineGun("S-24 ASR", { --id
     agility     = 1,     -- multiplier for missile turn-rate.
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
-/*
+
+
+
+--[[
 ACF_defineGun("298mmDUMB", { --id placeholder for tinytim
 
 	name		= "298mm Rocket",
@@ -163,10 +169,11 @@ ACF_defineGun("298mmDUMB", { --id placeholder for tinytim
 		model		= "models/missiles/tinytim.mdl",
 		rackmdl		= "models/missiles/tinytim.mdl",
 		maxlength	= 60,
-		casing		= 0.2,	// thickness of missile casing, cm
-		propweight	= 0.7,	// motor mass - motor casing
-		thrust		= 15000,	// average thrust - kg*in/s^2
-		burnrate	= 400,	// cm^3/s at average chamber pressure
+		casing		= 0.2,			-- thickness of missile casing, cm
+		armour		= 24,			-- effective armour thickness of casing, in mm
+		propweight	= 0.7,			-- motor mass - motor casing
+		thrust		= 15000,		-- average thrust - kg*in/s^2
+		burnrate	= 400,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.15,
         minspeed	= 6000,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoef	= 0.004,		-- drag coefficient of the missile
@@ -187,4 +194,4 @@ ACF_defineGun("298mmDUMB", { --id placeholder for tinytim
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
-//*/
+]]
