@@ -92,7 +92,7 @@ ACF_defineGun("100kgBOMB", { --id
     guidance    = {"Dumb"},
     fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
-	racks       = {["1xRK"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1xRK_small"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
  
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 

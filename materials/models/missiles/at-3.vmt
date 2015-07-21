@@ -1,7 +1,6 @@
 "VertexLitGeneric"
 {
-	"$baseTexture" "models\missiles/rkx1"
-	$bumpmap		models\missiles/rkx1_bump
+	"$baseTexture" "models\missiles/at-3"
 	$halflambert 			1
 	$blendtintbybasealpha		1
 	$surfaceprop	metal

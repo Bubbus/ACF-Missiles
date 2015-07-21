@@ -333,6 +333,8 @@ end
 local WireTable = { "gmod_wire_adv_pod", "gmod_wire_pod", "gmod_wire_keyboard", "gmod_wire_joystick", "gmod_wire_joystick_multi" }
 
 function ENT:GetUser( inp )
+	if not inp then return nil end
+
 	if inp:GetClass() == "gmod_wire_adv_pod" then
 		if inp.Pod then
 			return inp.Pod:GetDriver()
