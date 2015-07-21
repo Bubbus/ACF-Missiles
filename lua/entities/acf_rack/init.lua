@@ -107,7 +107,7 @@ end
 
 function ENT:ACF_Activate( Recalc )
 	
-	local EmptyMass = self.Mass --math.max(self.Mass, self:GetPhysicsObject():GetMass() - self.Mass)
+	local EmptyMass = self.RoundWeight or self.Mass or 10
 
 	self.ACF = self.ACF or {} 
 	
@@ -119,7 +119,9 @@ function ENT:ACF_Activate( Recalc )
 		self.ACF.Volume = PhysObj:GetVolume() * 16.38
 	end
 	
-	local Armour = self.CustomArmour or ( EmptyMass*1000 / self.ACF.Aera / 0.78 ) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
+	local ForceArmour = self.CustomArmour
+	
+	local Armour = ForceArmour or (EmptyMass*1000 / self.ACF.Aera / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
 	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone 
 	local Percent = 1 
 	
