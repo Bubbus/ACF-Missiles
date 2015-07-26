@@ -37,7 +37,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 		rackmdl		= "models/missiles/bgm_71e.mdl",
 		maxlength	= 30,
 		casing		= 0.3,				-- thickness of missile casing, cm
-		armour		= 12,				-- effective armour thickness of casing, in mm
+		armour		= 14,				-- effective armour thickness of casing, in mm
 		propweight	= 1.2,				-- motor mass - motor casing
 		thrust		= 6000,				-- average thrust - kg*in/s^2
 		burnrate	= 200,				-- cm^3/s at average chamber pressure
@@ -79,7 +79,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 		rackmdl		= "models/missiles/agm_114.mdl",
 		maxlength	= 35,
 		casing		= 0.3,			-- thickness of missile casing, cm
-		armour		= 7.5,			-- effective armour thickness of casing, in mm
+		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 1,			-- motor mass - motor casing
 		thrust		= 10000,			-- average thrust - kg*in/s^2
 		burnrate	= 500,			-- cm^3/s at average chamber pressure
@@ -119,6 +119,7 @@ ACF_defineGun("AT-3 ASM", { --id
 		rackmdl		= "models/missiles/at3.mdl",
 		maxlength	= 30,
 		casing		= 0.3,				-- thickness of missile casing, cm
+		armour		= 16,				-- effective armour thickness of casing, in mm
 		propweight	= 5,				-- motor mass - motor casing
 		thrust		= 4000,				-- average thrust - kg*in/s^2
 		burnrate	= 200,				-- cm^3/s at average chamber pressure

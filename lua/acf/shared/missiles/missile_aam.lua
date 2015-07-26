@@ -93,7 +93,7 @@ ACF_defineGun("AIM-9 AAM", { --id
 		rackmdl		= "models/missiles/aim9.mdl",
 		maxlength	= 25,
 		casing		= 0.2,	        -- thickness of missile casing, cm
-		armour		= 6,			-- effective armour thickness of casing, in mm
+		armour		= 5,			-- effective armour thickness of casing, in mm
 		propweight	= 1,	        -- motor mass - motor casing
 		thrust		= 20000,	    -- average thrust - kg*in/s^2
 		burnrate	= 300,	        -- cm^3/s at average chamber pressure
@@ -137,7 +137,7 @@ ACF_defineGun("AIM-120 AAM", { --id
 		rackmdl		= "models/missiles/aim120.mdl",
 		maxlength	= 40,
 		casing		= 0.4,	        -- thickness of missile casing, cm
-		armour		= 12,			-- effective armour thickness of casing, in mm
+		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 3,	        -- motor mass - motor casing
 		thrust		= 30000,	    -- average thrust - kg*in/s^2
 		burnrate	= 1000,	        -- cm^3/s at average chamber pressure
