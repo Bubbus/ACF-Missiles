@@ -20,3 +20,6 @@ AddCSLuaFile("autorun/client/acfm_wiki.lua")
 
 AddCSLuaFile("acf/shared/sh_acfm_getters.lua")
 AddCSLuaFile("autorun/sh_acfm_roundinject.lua")
+
+AddCSLuaFile("autorun/sh_acfm_cvars.lua")
+include("autorun/sh_acfm_cvars.lua")

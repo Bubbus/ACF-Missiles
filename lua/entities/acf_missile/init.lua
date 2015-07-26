@@ -27,6 +27,8 @@ function ENT:Initialize()
 	
 	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
 	self.SpecialHealth = true	--If true needs a special ACF_Activate function
+	
+	self:SetNWFloat("LightSize", 0)
     
 end
 
@@ -270,6 +272,7 @@ function ENT:CalcFlight()
 		if self.Motor ~= 0 then
 			self.Entity:StopParticles()
 			self.Motor = 0
+			self:SetNWFloat("LightSize", self.BulletData.Caliber)
 		end
 	end
 
@@ -377,6 +380,7 @@ function ENT:Launch()
 	
 	if self.Motor > 0 or self.MotorLength > 0.1 then
 		self.CacheParticleEffect = CurTime() + 0.01
+		self:SetNWFloat("LightSize", self.BulletData.Caliber)
 	end
 	
     self:LaunchEffect()
@@ -460,6 +464,12 @@ end
 
 function ENT:Detonate()
  
+	if self.Motor ~= 0 then
+        self.Entity:StopParticles()
+        self.Motor = 0
+		self:SetNWFloat("LightSize", 0)
+    end 
+ 
     if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed()) then
         self:Dud()
         return
@@ -467,11 +477,6 @@ function ENT:Detonate()
         
     self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
     debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
-    
-    if self.Motor ~= 0 then
-        self.Entity:StopParticles()
-        self.Motor = 0
-    end    
      
     -- Safeguard against teleporting explosions.
     if IsValid(self.Launcher) and not self.Launched then
