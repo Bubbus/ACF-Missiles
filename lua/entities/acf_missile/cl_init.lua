@@ -45,14 +45,14 @@ function ENT:RenderMotorLight()
 
 	if ( dlight ) then
 		
-		local size = self:GetNWFloat("LightSize") * 20
+		local size = self:GetNWFloat("LightSize") * 15
 		local c = Color(255, 128, 48)
 
 		dlight.Pos = self:GetPos() - self:GetForward() * 64
 		dlight.r = c.r
 		dlight.g = c.g
 		dlight.b = c.b
-		dlight.Brightness = 7 + math.random() * 3
+		dlight.Brightness = 5 + math.random() * 2
 		dlight.Decay = size * 5
 		dlight.Size = size * 0.66 + math.random() * (size * 0.33)
 		dlight.DieTime = CurTime() + 1
