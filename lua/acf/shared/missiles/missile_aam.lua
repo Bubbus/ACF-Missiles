@@ -80,7 +80,7 @@ ACF_defineGun("40mmAAM", { --id
 ACF_defineGun("AIM-9 AAM", { --id
 	name = "AIM-9 Missile",
 	desc = "The gold standard in airborne jousting sticks: decent agility, decent boom.  Lock on and rock on.",
-	model = "models/missiles/aim9m.mdl",
+	model = "models/missiles/aim9.mdl",
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 200,
@@ -89,8 +89,8 @@ ACF_defineGun("AIM-9 AAM", { --id
 	rofmod = 0.5,
 	year = 1953,
 	round = {
-		model		= "models/missiles/aim9m.mdl",
-		rackmdl		= "models/missiles/aim9m.mdl",
+		model		= "models/missiles/aim9.mdl",
+		rackmdl		= "models/missiles/aim9.mdl",
 		maxlength	= 25,
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		armour		= 5,			-- effective armour thickness of casing, in mm
