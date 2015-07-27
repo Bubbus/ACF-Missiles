@@ -186,10 +186,10 @@ function this:GetWireTarget()
         
         local val = outTbl.Value
         
-        if type(val) == "Vector" and val ~= Vector() then
+        if isvector(val) and (val.x ~= 0 or val.y ~= 0 or val.z ~= 0) then
             posVec = val
             break
-        elseif type(val) == "Entity" and IsValid(val) then 
+        elseif IsEntity(val) and IsValid(val) then 
             posVec = val:GetPos()
             break
         end
