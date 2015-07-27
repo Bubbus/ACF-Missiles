@@ -164,40 +164,28 @@ end
 
 
 function this:GetWireTarget()
-	
-    if not IsValid(self.InputSource) then 
-		return {} 
+	if not IsValid(self.InputSource) then
+		return {}
 	end
-    
-    local outputs = self.InputSource.Outputs
-    
-    if not outputs then
-        return {} 
+
+	local inputs = self.InputSource.Inputs
+	if inputs then
+		local TargetInput = inputs["Target Ent"]
+		if TargetInput then
+			local Target = TargetInput.Value
+			if IsEntity(Target) and Target:IsValid() then
+				return Target:GetPos()
+			end
+		end
+
+		local VectorInput = inputs["Target Pos"]
+		if VectorInput then
+			local Pos = VectorInput.Value
+			if isvector(Pos) and Pos ~= Vector() then
+				return Pos
+			end
+		end
 	end
-    
-    
-    local posVec
-    
-    for k, name in pairs(self.InputNames) do
-        
-        local outTbl = outputs[name]
-        
-        if not (outTbl and outTbl.Value) then continue end
-        
-        local val = outTbl.Value
-        
-        if type(val) == "Vector" and val ~= Vector() then
-            posVec = val
-            break
-        elseif type(val) == "Entity" and IsValid(val) then 
-            posVec = val:GetPos()
-            break
-        end
-        
-    end
-    
-    
-    return posVec
-    
+	return {}
 end
 
