@@ -38,6 +38,8 @@ ACFM_EffectOverrides =
 			self.FlareEffect = true
 		
 		end
+		
+		ACFM_RenderLight(self.Index, 1024, nil, setPos)
 	
 	end
 }
@@ -75,6 +77,47 @@ function ACFM_InspectEffect(ent)
 	
 	if override then
 		ent.ApplyMovement = override	
+	end
+
+end
+
+
+
+
+function ACFM_CanEmitLight(lightSize)
+
+	local minLightSize = GetConVar("ACFM_MissileLights"):GetFloat()
+	
+	if minLightSize == 0 then return false end
+	if minLightSize == 1 then return true end
+	
+	return minLightSize < lightSize
+
+end
+
+
+
+
+function ACFM_RenderLight(idx, lightSize, colour, pos)
+
+	if not ACFM_CanEmitLight(lightSize) then return end
+
+	local dlight = DynamicLight( idx )
+
+	if ( dlight ) then
+		
+		local size = lightSize
+		local c = colour or Color(255, 128, 48)
+
+		dlight.Pos = pos
+		dlight.r = c.r
+		dlight.g = c.g
+		dlight.b = c.b
+		dlight.Brightness = 2 + math.random() * 1
+		dlight.Decay = size * 15
+		dlight.Size = size * 0.66 + math.random() * (size * 0.33)
+		dlight.DieTime = CurTime() + 1
+
 	end
 
 end

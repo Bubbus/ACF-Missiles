@@ -1,7 +1,7 @@
 
 AddCSLuaFile()
 
-ACF.AmmoBlacklist.FLR = { "AC", "AL", "C", "GL", "HMG", "HW", "MG", "MO", "RAC", "SA", "SC" }
+ACF.AmmoBlacklist.FLR = { "AC", "AL", "C", "HMG", "HW", "MG", "MO", "RAC", "SA", "SC" }
 
 local Round = {}
 
@@ -36,7 +36,7 @@ function Round.convert( Crate, PlayerData )
 	Data.ProjMass = Data.FrAera * (Data.ProjLength*7.9/1000) --Volume of the projectile as a cylinder * density of steel
 	Data.ShovePower = 0.2
 	Data.PenAera = Data.FrAera^ACF.PenAreaMod
-	Data.DragCoef = ((Data.FrAera/10000)/Data.ProjMass)
+	Data.DragCoef = ((Data.FrAera/375)/Data.ProjMass)
 	Data.LimitVel = 800										--Most efficient penetration speed in m/s
 	Data.KETransfert = 0.1									--Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet = 75										--Base ricochet angle
