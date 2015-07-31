@@ -21,3 +21,7 @@ AddCSLuaFile("autorun/client/acfm_wiki.lua")
 
 AddCSLuaFile("acf/shared/sh_acfm_getters.lua")
 AddCSLuaFile("autorun/sh_acfm_roundinject.lua")
+
+
+game.AddParticles( "particles/flares_fx.pcf" )
+PrecacheParticleSystem( "ACFM_Flare" )
