@@ -25,6 +25,7 @@ ACF_DefineRack("1xRK", {
 	rofmod = 2.2,
 	year = 1915,
     magsize = 1,
+	armour  = 20,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints = 
@@ -43,6 +44,7 @@ ACF_DefineRack("1xRK_small", {
 	rofmod = 2.6,
 	year = 1915,
     magsize = 1,
+	armour  = 12,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints = 
@@ -61,6 +63,7 @@ ACF_DefineRack("2xRK", {
 	weight = 100,
 	year = 1915,
     magsize = 2,
+	armour  = 20,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints = 
@@ -78,6 +81,7 @@ ACF_DefineRack("3xRK", {
 	gunclass = "RK",
 	weight = 150,
 	year = 1936,
+	armour  = 20,
     magsize = 3,
 
     mountpoints = 
@@ -96,6 +100,7 @@ ACF_DefineRack("4xRK", {
 	gunclass = "RK",
 	weight = 100,
 	year = 1936,
+	armour  = 20,
     magsize = 4,
 
     mountpoints = 
@@ -115,6 +120,7 @@ ACF_DefineRack("2x AGM-114", {
 	weight = 50,
 	year = 1984,
     magsize = 2,
+	armour  = 24,
 	caliber = 16,
 
     mountpoints = 
@@ -132,6 +138,7 @@ ACF_DefineRack("4x AGM-114", {
 	weight = 80,
 	year = 1984,
     magsize = 4,
+	armour  = 24,
 	caliber = 16,
 
     mountpoints = 
@@ -152,6 +159,7 @@ ACF_DefineRack("1x FIM-92", {
 	weight = 10,
 	year = 1984,
     magsize = 1,
+	armour  = 12,
 	caliber = 5.9,
 
     mountpoints = 
@@ -168,6 +176,7 @@ ACF_DefineRack("2x FIM-92", {
 	weight = 30,
 	year = 1984,
     magsize = 2,
+	armour  = 12,
 	caliber = 5.9,
 
     mountpoints = 
@@ -185,6 +194,7 @@ ACF_DefineRack("4x FIM-92", {
 	weight = 30,
 	year = 1984,
     magsize = 4,
+	armour  = 18,
 	caliber = 5.9,
 
     mountpoints = 

@@ -24,6 +24,11 @@ function ENT:Initialize()
 	self.PhysObj = self.Entity:GetPhysicsObject()
 	self.PhysObj:EnableGravity( false )
 	self.PhysObj:EnableMotion( false )
+	
+	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
+	self.SpecialHealth = true	--If true needs a special ACF_Activate function
+	
+	self:SetNWFloat("LightSize", 0)
     
 end
 
@@ -267,6 +272,7 @@ function ENT:CalcFlight()
 		if self.Motor ~= 0 then
 			self.Entity:StopParticles()
 			self.Motor = 0
+			self:SetNWFloat("LightSize", self.BulletData.Caliber)
 		end
 	end
 
@@ -374,6 +380,7 @@ function ENT:Launch()
 	
 	if self.Motor > 0 or self.MotorLength > 0.1 then
 		self.CacheParticleEffect = CurTime() + 0.01
+		self:SetNWFloat("LightSize", self.BulletData.Caliber)
 	end
 	
     self:LaunchEffect()
@@ -459,6 +466,12 @@ end
 
 function ENT:Detonate()
  
+	if self.Motor ~= 0 then
+        self.Entity:StopParticles()
+        self.Motor = 0
+		self:SetNWFloat("LightSize", 0)
+    end 
+ 
     if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed()) then
         self:Dud()
         return
@@ -466,22 +479,22 @@ function ENT:Detonate()
         
     self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
     --debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
-    
-    -- Safeguard against teleporting explosions.
-    if IsValid(self.Launcher) and not self.Launched then
-        return
-    end
-
-    if self.Motor ~= 0 then
-        self.Entity:StopParticles()
-        self.Motor = 0
-    end    
       
-    self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
+    self:ForceDetonate()
+	
+end
+
+
+
+
+function ENT:ForceDetonate()
+
+	self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
     
 	ACF_ActiveMissiles[self] = nil
 	
     self.BaseClass.Detonate(self, self.BulletData)
+	
 end
 
 
@@ -566,6 +579,77 @@ function ENT:OnRemove()
 	self.BaseClass.OnRemove(self)
 
 	ACF_ActiveMissiles[self] = nil
+	
+end
+
+
+
+
+function ENT:ACF_Activate( Recalc )
+	
+	local EmptyMass = self.RoundWeight or self.Mass or 10
+
+	self.ACF = self.ACF or {} 
+	
+	local PhysObj = self:GetPhysicsObject()
+	if not self.ACF.Aera then
+		self.ACF.Aera = PhysObj:GetSurfaceArea() * 6.45
+	end
+	if not self.ACF.Volume then
+		self.ACF.Volume = PhysObj:GetVolume() * 16.38
+	end
+	
+	local ForceArmour = ACF_GetGunValue(self.BulletData, "armour")
+	
+	local Armour = ForceArmour or (EmptyMass*1000 / self.ACF.Aera / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
+	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone 
+	local Percent = 1 
+	
+	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
+		Percent = self.ACF.Health/self.ACF.MaxHealth
+	end
+	
+	self.ACF.Health = Health * Percent
+	self.ACF.MaxHealth = Health
+	self.ACF.Armour = Armour * (0.5 + Percent/2)
+	self.ACF.MaxArmour = Armour
+	self.ACF.Type = nil
+	self.ACF.Mass = self.Mass
+	self.ACF.Density = (self:GetPhysicsObject():GetMass()*1000) / self.ACF.Volume
+	self.ACF.Type = "Prop"
+	
+end
+
+
+
+
+local nullhit = {Damage = 0, Overkill = 1, Loss = 0, Kill = false}
+
+function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This function needs to return HitRes
+
+	if self.Detonated or self.DisableDamage then return table.Copy(nullhit) end
+
+	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
+	
+	-- Detonate if the shot penetrates the casing.
+	HitRes.Kill = HitRes.Kill or HitRes.Overkill > 0
+	
+	if HitRes.Kill then
+	
+		local CanDo = hook.Run("ACF_AmmoExplode", self, self.BulletData )
+		if CanDo == false then return HitRes end
+		
+		self.Exploding = true
+		
+		if( Inflictor and Inflictor:IsValid() and Inflictor:IsPlayer() ) then
+			self.Inflictor = Inflictor
+		end
+		
+		self:ForceDetonate()
+		
+	end
+	
+	return HitRes
 	
 end
 

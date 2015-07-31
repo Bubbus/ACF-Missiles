@@ -34,7 +34,7 @@ ACF_defineGunClass("AAM", {
 
 
 
-/*
+--[[
 -- Not based on any real missile - this is for smaller aircraft.
 -- Balance the round in line with the 40mm pod rocket.
 ACF_defineGun("40mmAAM", { --id
@@ -52,6 +52,7 @@ ACF_defineGun("40mmAAM", { --id
 		rackmdl		= "models/missiles/70mmffar.mdl",
 		maxlength	= 32,
 		casing		= 0.2,	        -- thickness of missile casing, cm
+		armour		= 5,				-- effective armour thickness of casing, in mm
 		propweight	= 1,	        -- motor mass - motor casing
 		thrust		= 8000,	    -- average thrust - kg*in/s^2
 		burnrate	= 450,	        -- cm^3/s at average chamber pressure
@@ -70,7 +71,7 @@ ACF_defineGun("40mmAAM", { --id
     
     agility     = 1     -- multiplier for missile turn-rate.
 } )
-*/
+]]
 
 
 
@@ -79,7 +80,7 @@ ACF_defineGun("40mmAAM", { --id
 ACF_defineGun("AIM-9 AAM", { --id
 	name = "AIM-9 Missile",
 	desc = "The gold standard in airborne jousting sticks: decent agility, decent boom.  Lock on and rock on.",
-	model = "models/missiles/aim9.mdl",
+	model = "models/missiles/aim9m.mdl",
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 200,
@@ -88,10 +89,11 @@ ACF_defineGun("AIM-9 AAM", { --id
 	rofmod = 0.5,
 	year = 1953,
 	round = {
-		model		= "models/missiles/aim9.mdl",
-		rackmdl		= "models/missiles/aim9.mdl",
+		model		= "models/missiles/aim9m.mdl",
+		rackmdl		= "models/missiles/aim9m.mdl",
 		maxlength	= 25,
 		casing		= 0.2,	        -- thickness of missile casing, cm
+		armour		= 5,			-- effective armour thickness of casing, in mm
 		propweight	= 1,	        -- motor mass - motor casing
 		thrust		= 20000,	    -- average thrust - kg*in/s^2
 		burnrate	= 300,	        -- cm^3/s at average chamber pressure
@@ -135,6 +137,7 @@ ACF_defineGun("AIM-120 AAM", { --id
 		rackmdl		= "models/missiles/aim120.mdl",
 		maxlength	= 40,
 		casing		= 0.4,	        -- thickness of missile casing, cm
+		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 3,	        -- motor mass - motor casing
 		thrust		= 30000,	    -- average thrust - kg*in/s^2
 		burnrate	= 1000,	        -- cm^3/s at average chamber pressure

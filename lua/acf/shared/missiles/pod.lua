@@ -11,7 +11,7 @@ ACF_DefineRackClass("POD", {
     
     hidemissile     = true,
     protectmissile  = true,
-    armour          = 5,
+    armour          = 15,
     
     reloadmul       = 8,
 } )
@@ -29,7 +29,7 @@ ACF_DefineRack("40mm7xPOD", {
 	weight      = 20,
 	year        = 1940,
     magsize     = 7,
-    armour      = 10,
+    armour      = 15,
     caliber     = 4,
     
     hidemissile     = false,
@@ -58,7 +58,7 @@ ACF_DefineRack("70mm7xPOD", {
 	weight      = 40,
 	year        = 1940,
     magsize     = 7,
-    armour      = 10,
+    armour      = 24,
     caliber     = 7,
 
     hidemissile     = false,
@@ -87,6 +87,7 @@ ACF_DefineRack("1x BGM-71E", {
 	weight = 10,
 	year = 1970,
     magsize = 1,
+	armour  = 18,
     caliber = 13,
 
     whitelistonly   = true,
@@ -108,6 +109,7 @@ ACF_DefineRack("2x BGM-71E", {
 	weight = 60,
 	year = 1970,
     magsize = 2,
+	armour  = 18,
     caliber = 13,
 
     whitelistonly   = true,
@@ -130,6 +132,7 @@ ACF_DefineRack("4x BGM-71E", {
 	weight = 100,
 	year = 1970,
     magsize = 4,
+	armour  = 24,
     caliber = 13,
 
     whitelistonly   = true,
