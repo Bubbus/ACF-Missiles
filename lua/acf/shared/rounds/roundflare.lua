@@ -1,7 +1,7 @@
 
 AddCSLuaFile()
 
-ACF.AmmoBlacklist.FLR = { "AC", "AL", "C", "HMG", "HW", "MG", "MO", "RAC", "SA", "SC" }
+ACF.AmmoBlacklist.FLR = { "AC", "AL", "C", "HMG", "HW", "MG", "MO", "RAC", "SA", "SC", "SAM", "AAM", "ASM", "BOMB", "FFAR", "UAR" }
 
 local Round = {}
 
@@ -123,6 +123,22 @@ function Round.cratetxt( BulletData )
 end
 
 function Round.propimpact( Index, Bullet, Target, HitNormal, HitPos, Bone )
+	
+	if ACFM.FlaresIgniteSquishies then
+		
+		--TODO: use ACF_BulletDamage( Type, Entity, Energy, Area, Angle, Inflictor, Bone, Gun, IsFromAmmo )
+		
+		local Type = ACF_Check(Target)
+		
+		if Type == "Squishy" then
+			
+			if (Target:IsPlayer() and not Target:HasGodMode()) or Target:IsNPC() then
+				Target:Ignite(30)
+			end
+			
+		end
+		
+	end
 	
 	return false
 	

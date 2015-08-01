@@ -94,11 +94,13 @@ function this:ApplyChance(missile, guidance)
 	
 	self:UpdateActive()
 	
-	--print("Applying chance", self.SuccessChance, "Active", self.Active)
-	
 	if not self.Active then return false end
 	
-	return math.random() < self.SuccessChance
+	local success = math.random() < self.SuccessChance
+	
+	--print("Applying chance", math.Round(self.SuccessChance * 100, 1) .. "% : ", success and "success" or "failed")
+	
+	return success
 	
 end
 
