@@ -26,6 +26,10 @@ this.Flare = nil
 this.SuccessChance = 1
 
 
+-- Can deactivate after time has passed
+this.Active = false
+
+
 -- indicate to ACFM that this should only be applied when guidance is activated or flare is spawned - not per-frame.
 this.ApplyContinuous = false
 
@@ -42,7 +46,27 @@ end
 function this:Configure(flare)
 
 	self.Flare = flare
+	self.SuccessChance = flare.DistractChance	
+	self:UpdateActive()
+	
+	--print("SuccessChance", self.SuccessChance, "Active", self.Active)
 
+end
+
+
+
+
+function this:UpdateActive()
+
+	local flare = self.Flare
+	
+	if not flare then 
+		self.Active = false 
+		return 
+	end
+
+	self.Active = (flare.CreateTime + flare.BurnTime) > SysTime()
+	
 end
 
 
@@ -51,6 +75,9 @@ end
 function this:GetGuidanceOverride(missile, guidance)
 
 	if not self.Flare then return end
+	
+	self:UpdateActive()
+	if not self.Active then return end
 	
 	local activeFlare = ACF.Bullet[self.Flare.Index]
 	if not (activeFlare and activeFlare.FlareUID == self.Flare.FlareUID) then return end
@@ -65,6 +92,12 @@ end
 -- TODO: refine formula.
 function this:ApplyChance(missile, guidance)
 	
+	self:UpdateActive()
+	
+	--print("Applying chance", self.SuccessChance, "Active", self.Active)
+	
+	if not self.Active then return false end
+	
 	return math.random() < self.SuccessChance
 	
 end
@@ -78,6 +111,9 @@ end
 function this:TryAgainst(missile, guidance)
 	
 	if not self.Flare then return end
+	
+	self:UpdateActive()
+	if not self.Active then return end
 	
 	local cone = guidance.ViewCone
 	
@@ -97,8 +133,11 @@ end
 -- returns all missiles which should be affected by this flare.
 function this:ApplyToAll()
 
-	if not self.Flare then return end
+	if not self.Flare then return {} end
 
+	self:UpdateActive()
+	if not self.Active then return {} end
+	
 	local ret = {}
 	
 	local targets = ACFM_GetAllMissilesWhichCanSee(self.Flare.Pos)

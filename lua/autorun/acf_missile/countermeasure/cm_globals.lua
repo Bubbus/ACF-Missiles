@@ -58,8 +58,6 @@ end
 
 
 
---TODO: this causes O(n^2) performance during missile iteration, which will be horrible with things like 100 missiles and 100 flares etc. optimize or limit flare launch rate.
--- TODO: do not apply sub-1 chance to distract guidance in ACFM_GetFlaresInCone.
 function ACFM_GetFlaresInCone(pos, dir, degs)
 
 	local ret = {}
@@ -85,8 +83,6 @@ end
 
 
 
-
--- TODO: apply sub-1 chance to distract guidance in ACFM_GetAnyFlareInCone.  update function name accordingly.
 function ACFM_GetAnyFlareInCone(pos, dir, degs)
 
 	local minDot = math.cos( math.rad(degs) )

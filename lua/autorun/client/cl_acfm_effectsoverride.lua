@@ -30,16 +30,40 @@ ACFM_EffectOverrides =
 			Bullet.Tracer = nil
 		
 		end
+
+		local curtime = CurTime()
+		local cutoutTime = curtime - 1
 		
-		
-		if not self.FlareEffect then
-		
-			ParticleEffectAttach( "ACFM_Flare", PATTACH_ABSORIGIN_FOLLOW, self, 0 )
-			self.FlareEffect = true
-		
+		if not self.FlareCutout then
+			
+			local frArea = 3.1416 * (Bullet.Caliber/2) ^ 2
+			local burnRate = frArea * ACFM.FlareBurnMultiplier
+			local burnDuration = Bullet.FillerMass / burnRate
+			
+			cutoutTime = self.CreateTime + burnDuration
+			
+			if self.FlareEffect then
+				ACFM_RenderLight(self.Index, 1024, nil, setPos)
+			end
+			
 		end
+
 		
-		ACFM_RenderLight(self.Index, 1024, nil, setPos)
+		if not self.FlareEffect and curtime < cutoutTime then
+						
+			if not self.FlareCutout then
+				
+				ParticleEffectAttach( "ACFM_Flare", PATTACH_ABSORIGIN_FOLLOW, self, 0 )
+				self.FlareEffect = true
+			
+			end
+			
+		elseif not self.FlareCutout and curtime >= cutoutTime then
+			
+			self:StopParticles()
+			self.FlareCutout = true
+			
+		end
 	
 	end
 }
@@ -65,8 +89,6 @@ hook.Add("OnEntityCreated", "ACFM_EffectTryOverride", ACFM_EffectTryOverride)
 
 function ACFM_InspectEffect(ent)
 	
-	print("ACFM_EffectOverride", ent, ent.Index, ACF.BulletEffect[ent.Index])
-	
 	local index = ent.Index
 	if not index then return end
 	
@@ -77,6 +99,7 @@ function ACFM_InspectEffect(ent)
 	
 	if override then
 		ent.ApplyMovement = override	
+		ent:ApplyMovement(bullet)
 	end
 
 end
