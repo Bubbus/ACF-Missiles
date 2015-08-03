@@ -99,13 +99,9 @@ function this:GetNamedWireInputs(missile)
 
     local names = {}
     
-    
     if outputs.Target and outputs.Target.Type == "ENTITY" then
-    
         names[#names+1] = "Target"
-    
     end
-    
     
     return names
 
@@ -124,7 +120,13 @@ end
 
 
 
+--TODO: still a bit messy, refactor this so we can check if a flare exits the viewcone too.
 function this:GetGuidance(missile)
+	
+	self:PreGuidance(missile)
+	
+	local override = self:ApplyOverride(missile)
+	if override then return override end
 	
 	local ret = self:CheckTarget(missile)
 	if ret then return ret end
@@ -163,9 +165,27 @@ end
 
 
 
+function this:ApplyOverride(missile)
+
+	if self.Override then
+	
+		local ret = self.Override:GetGuidanceOverride(missile, self)
+		
+		if ret then		
+			ret.ViewCone = self.ViewCone
+			return ret
+		end
+		
+	end
+
+end
+
+
+
+
 function this:CheckTarget(missile)
 
-	if not IsValid(self.Target) then	
+	if not (self.Target or self.Override) then	
 		local target = self:AcquireLock(missile)
 		
 		if IsValid(target) then 
