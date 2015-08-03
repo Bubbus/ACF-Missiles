@@ -124,7 +124,9 @@ end
 
 function Round.propimpact( Index, Bullet, Target, HitNormal, HitPos, Bone )
 	
-	if ACFM.FlaresIgniteSquishies then
+	local canIgnite = GetConVar("ACFM_FlaresIgnite"):GetBool()
+	
+	if canIgnite then
 		
 		--TODO: use ACF_BulletDamage( Type, Entity, Energy, Area, Angle, Inflictor, Bone, Gun, IsFromAmmo )
 		
