@@ -156,6 +156,7 @@ end
 
 
 aaa_IncludeShared("acf/shared/missiles")
+aaa_IncludeShared("acf/shared/guns")
 
 
 
