@@ -13,7 +13,7 @@ ACF_defineGunClass("BOMB", {
     
     reloadmul       = 8,
     
-    ammoBlacklist   = {"AP", "HEAT", "FL"} -- Including FL would mean changing the way round classes work.
+    ammoBlacklist   = {"AP", "FL"} -- Including FL would mean changing the way round classes work.
 } )
 
 
@@ -43,7 +43,8 @@ ACF_defineGun("50kgBOMB", { --id
 		starterpct	= 0.01,         -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.6),  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -85,7 +86,8 @@ ACF_defineGun("100kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -124,7 +126,8 @@ ACF_defineGun("250kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.002			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.02,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.4)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -164,7 +167,8 @@ ACF_defineGun("500kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.002			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.02,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.3)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -203,7 +207,8 @@ ACF_defineGun("1000kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.002			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.01,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.2)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
