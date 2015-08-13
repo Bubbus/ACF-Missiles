@@ -148,7 +148,48 @@ ACF_defineGun("S-24 ASR", { --id
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
+ACF_defineGun("RW61", { --id 
 
+	name		= "Raketwerfer-61",
+	desc		= "Sturmtiger main weapon - 360mm missile - it gives thrust just for first second and gives boom comparable to 500kg bomb.",
+	model		= "models/bombs/fab500.mdl",
+	caliber		= 38,
+	gunclass	= "UAR",
+    rack        = "380mmRW61",  -- Which rack to spawn this missile on? 
+    weight		= 1500,
+    length	    = 38,
+	year		= 1960,
+	rofmod		= 0.6,
+	roundclass	= "Rocket",
+	round		= 
+	{
+		model		= "models/bombs/fab500.mdl",
+		rackmdl		= "models/bombs/fab500.mdl", 
+		maxlength	= 140,
+		casing		= 2.0,	        -- thickness of missile casing, cm
+		armour		= 24,			-- effective armour thickness of casing, in mm
+		propweight	= 5,	        -- motor mass - motor casing
+		thrust		= 5000,	    	-- average thrust - kg*in/s^2
+		burnrate	= 10000,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.015,        -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.002,		-- drag coefficient of the missile
+		finmul		= 0.0001,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(2)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+	
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = {"Dumb"},
+    fuses       = {"Contact", "Timed"},
+    
+    racks       = {["380mmRW61"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1,     -- multiplier for missile turn-rate.
+    armdelay    = 0.3     -- minimum fuse arming delay
+} )
 
 --[[
 ACF_defineGun("298mmDUMB", { --id placeholder for tinytim

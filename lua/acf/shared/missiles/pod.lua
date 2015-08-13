@@ -145,3 +145,24 @@ ACF_DefineRack("4x BGM-71E", {
 		["missile4"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
 } )
+
+-- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
+ACF_DefineRack("380mmRW61", {
+	name        = "1x 380mm Pod",
+	desc        = "A lightweight pod for rockets which is vulnerable to shots and explosions.",
+	model		= "models/launcher/RW61.mdl",
+	gunclass    = "POD",
+	weight      = 40,
+	year        = 1945,
+    magsize     = 1,
+    armour      = 24,
+    caliber     = 38,
+
+    hidemissile     = false,
+    whitelistonly   = true,
+    
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+	}
+} )
