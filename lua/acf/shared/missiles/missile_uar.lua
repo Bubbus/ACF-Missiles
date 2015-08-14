@@ -148,11 +148,11 @@ ACF_defineGun("S-24 ASR", { --id
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
-ACF_defineGun("RW61", { --id 
+ACF_defineGun("RW61 ASR", { --id 
 
 	name		= "Raketwerfer-61",
 	desc		= "Sturmtiger main weapon - 360mm missile - it gives thrust just for first second and gives boom comparable to 500kg bomb.",
-	model		= "models/bombs/fab500.mdl",
+	model		= "models/missiles/RW61M.mdl",
 	caliber		= 38,
 	gunclass	= "UAR",
     rack        = "380mmRW61",  -- Which rack to spawn this missile on? 
@@ -163,8 +163,8 @@ ACF_defineGun("RW61", { --id
 	roundclass	= "Rocket",
 	round		= 
 	{
-		model		= "models/bombs/fab500.mdl",
-		rackmdl		= "models/bombs/fab500.mdl", 
+		model		= "models/missiles/RW61M.mdl",
+		rackmdl		= "models/missiles/RW61M.mdl", 
 		maxlength	= 140,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		armour		= 24,			-- effective armour thickness of casing, in mm
