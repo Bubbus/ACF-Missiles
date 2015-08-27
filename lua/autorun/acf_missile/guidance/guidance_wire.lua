@@ -139,6 +139,9 @@ end
 
 
 function this:GetGuidance(missile)
+    if not self.InputSource:IsValid() then
+        return {}
+    end
     
     local dist = missile:GetPos():Distance(self.InputSource:GetPos())
     
