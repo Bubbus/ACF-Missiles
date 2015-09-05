@@ -40,9 +40,7 @@ ACFM_EffectOverrides =
 			local burnRate = frArea * ACFM.FlareBurnMultiplier
 			local burnDuration = Bullet.FillerMass / burnRate
 			
-			local jitter = util.SharedRandom( "FlareJitter", 0, 1, self.CreateTime * 1000 )
-			
-			print("jitter", self.CreateTime, jitter)
+			local jitter = util.SharedRandom( "FlareJitter", 0, 0.4, self.CreateTime * 10000 )
 			
 			cutoutTime = self.CreateTime + burnDuration + jitter
 			

@@ -7,7 +7,9 @@ ACF_defineGunClass("FGL", {
 	rofmod = 0.66,
 	sound = "weapons/acf_gun/grenadelauncher.wav",
 	soundDistance = " ",
-	soundNormal = " "
+	soundNormal = " ",
+	
+	ammoBlacklist   = {"AP", "APHE", "FL", "HE", "HEAT", "HP", "SM"} -- ok fun's over
 } )
 
 --add a gun to the class
