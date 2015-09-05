@@ -148,6 +148,7 @@ ACF_defineGun("S-24 ASR", { --id
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
+--[[
 ACF_defineGun("RW61 ASR", { --id 
 
 	name		= "Raketwerfer-61",
@@ -191,7 +192,6 @@ ACF_defineGun("RW61 ASR", { --id
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
---[[
 ACF_defineGun("298mmDUMB", { --id placeholder for tinytim
 
 	name		= "298mm Rocket",

@@ -13,7 +13,7 @@ ACF_defineGunClass("BOMB", {
     
     reloadmul       = 8,
     
-    ammoBlacklist   = {"AP", "FL"} -- Including FL would mean changing the way round classes work.
+    ammoBlacklist   = {"AP", "FL", "HEAT"} -- Including FL would mean changing the way round classes work.
 } )
 
 
