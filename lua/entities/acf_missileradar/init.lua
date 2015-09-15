@@ -17,7 +17,7 @@ function ENT:Initialize()
 	self.Outputs = WireLib.CreateOutputs( self, {"Detected", "Position [ARRAY]", "Velocity [ARRAY]"} )
 	
 	self.ThinkDelay = 0.05
-	self.StatusUpdateDelay = 1
+	self.StatusUpdateDelay = 0.5
 	self.LastStatusUpdate = CurTime()
 	
 	self.LegalMass = self.Weight or 0
@@ -144,6 +144,7 @@ function ENT:Think()
 	
 	if (self.LastStatusUpdate + self.StatusUpdateDelay < curTime) then
 		self:UpdateStatus()
+		self.LastStatusUpdate = curTime
 	end
 	
 	return true
