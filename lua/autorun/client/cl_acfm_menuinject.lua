@@ -297,7 +297,56 @@ function ModifyACFMenu(panel)
     else
         ErrorNoHalt("ACFM: Unable to find the ACF Guns node.")
     end
+	
+	AddDetectionNode(acfmenupanel)
     
+end
+
+
+
+
+function AddDetectionNode(panel)
+	
+	local radarClasses = ACF.Classes.Radar
+	local radars = ACF.Weapons.Radar
+	
+	if radarClasses and radars then
+	
+		local radar = panel.WeaponSelect:AddNode("Radar")	
+	
+	
+		local nodes = {}
+		
+		for k, v in pairs(radarClasses) do
+			
+			nodes[k] = radar:AddNode( v.name or "No Name" )
+		
+		end
+	
+		
+		for id, Class in pairs(radarClasses) do
+			
+			for Type, Ent in pairs(radars) do	
+				
+				local curNode = nodes[Ent.class]
+				
+				if curNode then
+					local EndNode = curNode:AddNode( Ent.name or "No Name" )
+					EndNode.mytable = Ent
+					
+					function EndNode:DoClick()
+						RunConsoleCommand( "acfmenu_type", self.mytable.type )
+						acfmenupanel:UpdateDisplay( self.mytable )
+					end
+					
+					EndNode.Icon:SetImage( "icon16/newspaper.png" )
+				end
+			end
+			
+		end
+		
+	end
+
 end
 
 

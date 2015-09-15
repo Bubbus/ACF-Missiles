@@ -9,8 +9,14 @@ AddCSLuaFile()
 ACF.Weapons.Rack = ACF.Weapons.Rack or {}
 ACF.Classes.Rack = ACF.Classes.Rack or {}
 
+ACF.Weapons.Radar = ACF.Weapons.Radar or {}
+ACF.Classes.Radar = ACF.Classes.Radar or {}
+
 local Racks =           ACF.Weapons.Rack
 local RackClasses =     ACF.Classes.Rack
+
+local Radars =           ACF.Weapons.Radar
+local RadarClasses =     ACF.Classes.Radar
 
 
 -- setup base classes
@@ -24,12 +30,20 @@ local rack_base = {
 	type =  "Rack"
 }
 
+local radar_base = {
+	ent =   "acf_missileradar",
+	type =  "Radar"
+}
+
 
 
 -- add gui stuff to base classes if this is client
 if CLIENT then
-	gun_base.guicreate = function( Panel, Table ) ACFGunGUICreate( Table ) end or nil
+	gun_base.guicreate = function( Panel, Table ) ACFGunGUICreate( Table ) end
 	gun_base.guiupdate = function() return end
+	
+	radar_base.guicreate = function( Panel, Table ) ACFRadarGUICreate( Table ) end
+	radar_base.guiupdate = function() return end
 end
 
 
@@ -43,8 +57,21 @@ end
 
 function ACF_DefineRackClass( id, data )
 	data.id = id
-	//table.Inherit( data, rack_base )
 	RackClasses[ id ] = data
+end
+
+
+
+function ACF_DefineRadar( id, data )
+	data.id = id
+	table.Inherit( data, radar_base )
+	Radars[ id ] = data
+end
+
+
+function ACF_DefineRadarClass( id, data )
+	data.id = id
+	RadarClasses[ id ] = data
 end
 
 
@@ -157,6 +184,7 @@ end
 
 aaa_IncludeShared("acf/shared/missiles")
 aaa_IncludeShared("acf/shared/guns")
+aaa_IncludeShared("acf/shared/radars")
 
 
 
