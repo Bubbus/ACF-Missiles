@@ -189,6 +189,9 @@ function ENT:CalcFlight()
 
     local Time = CurTime()
     local DeltaTime = Time - self.LastThink
+	
+	if DeltaTime <= 0 then return end
+	
     self.LastThink = Time
 	Flight = Flight + DeltaTime
 
@@ -277,11 +280,13 @@ function ENT:CalcFlight()
 	end
 
 	--Physics calculations
+
 	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
 	local VelNorm = Vel / Speed
 	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
+
 	Vel = Vel - Up * Speed * DotSimple * self.FinMultiplier
 
 	local SpeedSq = Vel:LengthSqr()
@@ -507,7 +512,7 @@ end
 
 
 function ENT:Dud()
-    
+
     self.MissileDetonated = true
 
 	ACF_ActiveMissiles[self] = nil

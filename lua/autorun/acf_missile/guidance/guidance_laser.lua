@@ -73,7 +73,7 @@ function this:GetGuidance(missile)
 		
 		local res = util.TraceLine(traceArgs)
 	
-		--debugoverlay.Line( missile:GetPos(), posVec, 15, Color(res.Hit and 255 or 0, res.Hit and 0 or 255, 0), true )
+		--debugoverlay.Line( launcher:GetPos(), posVec, 15, Color(res.Hit and 255 or 0, res.Hit and 0 or 255, 0), true )
 	
 		if res.Hit then return {} end
 		
