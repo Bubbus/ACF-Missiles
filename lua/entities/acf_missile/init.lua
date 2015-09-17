@@ -297,11 +297,15 @@ function ENT:CalcFlight()
 	local trace = util.TraceLine(tracedata)
 
 	if trace.Hit then
-		self.HitNorm = trace.HitNormal
-		self:DoFlight(trace.HitPos)
-		self.LastVel = Vel / DeltaTime
-		self:Detonate()
-		return
+	
+		if not (IsValid(trace.Entity) and CurTime() < self.GhostPeriod) then
+			self.HitNorm = trace.HitNormal
+			self:DoFlight(trace.HitPos)
+			self.LastVel = Vel / DeltaTime
+			self:Detonate()
+			return
+		end
+		
 	end
 
 
@@ -370,6 +374,8 @@ function ENT:Launch()
 	self.Launched = true
 	self.ThinkDelay = 1 / 66
 	self.Filter = self.Filter or {self}
+	
+	self.GhostPeriod = CurTime() + ACFM_GhostPeriod:GetFloat()
     
     self:SetParent(nil)
     
@@ -385,6 +391,11 @@ function ENT:Launch()
 	
     self:LaunchEffect()
     
+	-- Get one tick of flight time for ABSOLUTELY FREE
+	self.LastThink = CurTime() - self.ThinkDelay
+	self.LastVel = self.Launcher:GetVelocity() * self.ThinkDelay
+	self:CalcFlight()
+	
 	ACF_ActiveMissiles[self] = true
 	
 	self:Think()
@@ -541,9 +552,8 @@ function ENT:Think()
 
 		if self.FirstThink == true then
 			self.FirstThink = false
-			self.LastThink = CurTime()
-			self.LastVel = self.Launcher:GetVelocity() / 66
-
+			self.LastThink = CurTime() - self.ThinkDelay
+			self.LastVel = self.Launcher:GetVelocity() * self.ThinkDelay
 		end
 		self:CalcFlight()
 		
