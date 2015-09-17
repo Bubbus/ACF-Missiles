@@ -390,11 +390,6 @@ function ENT:Launch()
 	end
 	
     self:LaunchEffect()
-    
-	-- Get one tick of flight time for ABSOLUTELY FREE
-	self.LastThink = CurTime() - self.ThinkDelay
-	self.LastVel = self.Launcher:GetVelocity() * self.ThinkDelay
-	self:CalcFlight()
 	
 	ACF_ActiveMissiles[self] = true
 	
