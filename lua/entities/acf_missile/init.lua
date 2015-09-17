@@ -512,14 +512,12 @@ function ENT:Dud()
 
 	ACF_ActiveMissiles[self] = nil
 	
-	local Dud = ents.Create( "debris" )
-	Dud:SetModel( self.Entity:GetModel() )
+	local Dud = self
 	Dud:SetPos( self.CurPos )
 	Dud:SetAngles( self.CurDir:Angle() )
-	Dud:Spawn()
-    self:Remove()
 
 	local Phys = Dud:GetPhysicsObject()
+	Phys:EnableMotion(true)
 	local Vel = self.LastVel
 
 	if self.HitNorm != Vector(0,0,0) then
@@ -530,6 +528,8 @@ function ENT:Dud()
 	end
 	
 	Phys:SetVelocity(Vel)
+	
+	timer.Simple(30, function() if IsValid(self) then self:Remove() end end)
 end
 
 
@@ -538,7 +538,7 @@ end
 function ENT:Think()
 	local Time = CurTime()
 
-	if self.Launched then
+	if self.Launched and not self.MissileDetonated then
 	
 		if self.Hit then
 			self:Detonate()
@@ -572,7 +572,14 @@ end
 
 function ENT:PhysicsCollide()
 
-	if self.Launched then self:Detonate() end
+	if self.Launched then 
+	
+		if not self.MissileDetonated then
+			self:Detonate() 
+			return
+		end
+		
+	end
 	
 end
 
