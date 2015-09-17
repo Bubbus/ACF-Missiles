@@ -62,6 +62,21 @@ function this:GetGuidance(missile)
 		local maxAng    = math.cos(math.rad(self.ViewCone))
 
 		if dot < maxAng then return {} end
+		
+		local traceArgs = 
+		{
+			start = missile:GetPos(),
+			endpos = posVec,
+			mask = MASK_SOLID_BRUSHONLY,
+			filter = {missile}
+		}
+		
+		local res = util.TraceLine(traceArgs)
+	
+		--debugoverlay.Line( missile:GetPos(), posVec, 15, Color(res.Hit and 255 or 0, res.Hit and 0 or 255, 0), true )
+	
+		if res.Hit then return {} end
+		
 	end
 	
     self.TargetPos = posVec
