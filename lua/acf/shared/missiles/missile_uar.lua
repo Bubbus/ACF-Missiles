@@ -78,7 +78,7 @@ ACF_defineGun("HVAR ASR", { --id
 	round		= 
 	{
 		model		= "models/missiles/hvar.mdl",
-		rackmdl		= "models/missiles/hvar.mdl",
+		rackmdl		= "models/missiles/hvar_folded.mdl",
 		maxlength	= 25,
 		casing		= 0.2,			-- thickness of missile casing, cm
 		armour		= 12,			-- effective armour thickness of casing, in mm
@@ -96,7 +96,7 @@ ACF_defineGun("HVAR ASR", { --id
     guidance    = {"Dumb"},
     fuses       = {"Contact", "Timed"},
     
-    racks       = {["1xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    racks       = {["1xRK"] = true}, ["3xUARRK"] = true,    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
