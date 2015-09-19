@@ -365,3 +365,13 @@ function this:AcquireLock(missile)
     
 	return mostCentralEnt
 end
+
+
+
+function this:GetDisplayConfig()
+	return 
+	{
+		["Seeking"] = math.Round(self.SeekCone * 2, 1) .. " deg",
+		["Tracking"] = math.Round(self.ViewCone * 2, 1) .. " deg"
+	}
+end

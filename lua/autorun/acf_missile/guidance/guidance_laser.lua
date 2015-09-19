@@ -84,3 +84,9 @@ function this:GetGuidance(missile)
 	
 end
 
+
+
+
+function this:GetDisplayConfig()
+	return {["Tracking"] = math.Round(self.ViewCone * 2, 1) .. " deg"}
+end

@@ -7,6 +7,25 @@ include("acf/shared/sh_acfm_getters.lua")
 
 
 
+local function checkIfDataIsMissile(data)
+
+	local guns = list.Get("ACFEnts").Guns
+	local class = guns[data.Id]
+	
+	if not (class and class.gunclass) then
+		return oldDisplayData(data)
+	end
+	
+	local classes = list.Get("ACFClasses").GunClass
+	class = classes[class.gunclass]
+	
+	return (class.type and class.type == "missile")
+
+end
+
+
+
+
 function ACFM_ModifyRoundDisplayFuncs()
     
     local roundTypes = list.GetForEdit("ACFRoundTypes")
@@ -29,19 +48,9 @@ function ACFM_ModifyRoundDisplayFuncs()
         if oldDisplayData then
             v.getDisplayData = function(data)
             
-                local guns = list.Get("ACFEnts").Guns
-                local class = guns[data.Id]
-                
-                if not (class and class.gunclass) then
-                    return oldDisplayData(data)
-                end
-                
-                local classes = list.Get("ACFClasses").GunClass
-                class = classes[class.gunclass]
-                
-                if not class.type or class.type ~= "missile" then
-                    return oldDisplayData(data)
-                end
+                if not checkIfDataIsMissile(data) then
+					return oldDisplayData(data)
+				end
             
                 -- NOTE: if these replacements cause side-effects somehow, move to a masking-metatable approach
             
@@ -66,74 +75,92 @@ end
 
 
 
--- function ACFM_ModifyRoundGUIFuncs()
-    
-    -- local roundTypes = list.GetForEdit("ACFRoundTypes")
-    
-    -- if not ACFM_RoundGUIFuncs then
-        
-        -- ACFM_RoundGUIFuncs = {}
-    
-        -- for k, v in pairs(roundTypes) do
-            -- ACFM_RoundGUIFuncs[k] = v.guiupdate
-        -- end
+local function configConcat(tbl, sep)
 
-    -- end
+	local toConcat = {}
+	
+	for k, v in pairs(tbl) do
+		toConcat[#toConcat+1] = tostring(k) .. " = " .. tostring(v)
+	end
+
+	return table.concat(toConcat, sep)
+	
+end
+
+
+
+
+function ACFM_ModifyCrateTextFuncs()
     
+    local roundTypes = list.GetForEdit("ACFRoundTypes")
     
-    -- for k, v in pairs(roundTypes) do
+    if not ACFM_CrateTextFuncs then
         
-        -- local oldGuiUpdate = ACFM_RoundGUIFuncs[k]
+        ACFM_CrateTextFuncs = {}
     
-        -- if oldGuiUpdate then
-            -- v.guiupdate = function(Panel, Table)
-            
-                -- local ret = oldGuiUpdate(Panel, Table)
-            
-                -- local round = ACF_GetRoundFromCVars()
-            
-                -- local guns = list.Get("ACFEnts").Guns
-                -- local class = guns[round.Id]
-                
-                -- if not (class and class.gunclass) then
-                    -- print("no 1")
-                    -- return ret
-                -- end
-                
-                -- local classes = list.Get("ACFClasses").GunClass
-                -- class = classes[class.gunclass]
-                
-                -- if not class.type or class.type ~= "missile" then
-                    -- print("no 2")
-                    -- return ret
-                -- end
-            
-                
-                
-                -- local conv = v.convert( Panel, round )
-                
-                -- print("aeiou2", acfmenupanel["CData"]["SlugDisplay_text"])
-                -- if acfmenupanel["CData"]["SlugDisplay_text"] then
-                    -- local R50V, R50P    = ACF_PenRanging( 50, conv.DragCoef, conv.ProjMass, conv.PenAera, conv.LimitVel, 0 )
-                    -- local R200V, R200P  = ACF_PenRanging( 200, conv.DragCoef, conv.ProjMass, conv.PenAera, conv.LimitVel, 0 )
-                    -- local R100V, R100P = ACF_PenRanging( 100, conv.DragCoef, conv.ProjMass, conv.PenAera, conv.LimitVel, 0 )
-                    -- acfmenupanel:CPanelText("SlugDisplay", "Penetrator Mass : "..(math.floor(conv.SlugMass*10000)/10).." g \n Penetrator Caliber : "..(math.floor(conv.SlugCaliber*100)/10).." mm \n Penetrator Velocity : "..math.floor(conv.SlugMV).." m/s \n Penetrator Maximum Penetration : "..math.floor(conv.MaxPen).." mm RHA\n\n300m pen: "..math.Round(R1P,0).."mm @ "..math.Round(R1V,0).." m\\s\n800m pen: "..math.Round(R2P,0).."mm @ "..math.Round(R2V,0).." m\\s\n\nThe range data is an approximation and may not be entirely accurate.")	--Proj muzzle penetration (Name, Desc)
-                    -- --acfmenupanel:CPanelText("PenetrationDisplay", "Penetration at 100m/s: "..math.floor(R100P).." mm RHA")	--Proj muzzle penetration (Name, Desc)
-                -- end
-                
-                -- print("aeiou3", acfmenupanel["CData"]["PenetrationRanging_text"])
-                -- if acfmenupanel["CData"]["PenetrationRanging_text"] then
-                    
-                    -- acfmenupanel:CPanelText("PenetrationRanging", "\n50m/s pen: "..math.Round(R50P,0).."mm \n200m/s pen: "..math.Round(R200P,0).."mm \n\nThe range data is an approximation and may not be entirely accurate.")	--Proj muzzle penetration (Name, Desc)
-                -- end
-                
-                
-                -- return ret
-            -- end
-        -- end
-    -- end
+        for k, v in pairs(roundTypes) do
+            ACFM_CrateTextFuncs[k] = v.cratetxt
+			print("ayy", k, v.cratetxt)
+        end
+
+    end
     
--- end
+    
+    for k, v in pairs(roundTypes) do
+        
+        local oldCratetxt = ACFM_CrateTextFuncs[k]
+	
+        if oldCratetxt then
+            v.cratetxt = function(data, crate)
+			
+                local origCrateTxt = oldCratetxt(data)
+				
+				if not checkIfDataIsMissile(data) then
+					return origCrateTxt
+				end
+				
+				print("ayay")
+				
+				--if not SERVER then return origCrateTxt end
+				
+				local str = { origCrateTxt }
+				
+				pbn(data)
+				
+				local guidance  = IsValid(crate) and crate.RoundData7 or data.Data7
+				local fuse      = IsValid(crate) and crate.RoundData8 or data.Data8
+				
+				if guidance then
+					guidance = ACFM_CreateConfigurable(guidance, ACF.Guidance, bdata, "guidance")
+					if guidance and guidance.Name ~= "Dumb" then 
+						str[#str+1] = "\n\n"
+						str[#str+1] = guidance.Name
+						str[#str+1] = " guidance\n("
+						str[#str+1] = configConcat(guidance:GetDisplayConfig(), ", ")
+						str[#str+1] = ")"
+					end
+				end
+				
+				if fuse then
+					fuse = ACFM_CreateConfigurable(fuse, ACF.Fuse, bdata, "fuses")
+					if fuse then 
+						str[#str+1] = "\n\n"
+						str[#str+1] = fuse.Name
+						str[#str+1] = " fuse\n("
+						str[#str+1] = configConcat(fuse:GetDisplayConfig(), ", ")
+						str[#str+1] = ")"
+					end
+				end
+                
+                return table.concat(str)
+            end
+			
+			ACF.RoundTypes[k].cratetxt = v.cratetxt
+			print("oi", ACF.RoundTypes[k].cratetxt, v.cratetxt)
+        end
+    end
+    
+end
 
 
 
@@ -162,6 +189,7 @@ end
 
 timer.Simple(1, ACFM_ModifyRoundBaseGunpowder)
 timer.Simple(1, ACFM_ModifyRoundDisplayFuncs)
+timer.Simple(1, ACFM_ModifyCrateTextFuncs)
 
 -- if CLIENT then
     -- timer.Simple(1, ACFM_ModifyRoundGUIFuncs)

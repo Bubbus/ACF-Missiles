@@ -63,3 +63,8 @@ function this:ApplyOverride(missile)
 
 
 end
+
+
+function this:GetDisplayConfig()
+	return {}
+end

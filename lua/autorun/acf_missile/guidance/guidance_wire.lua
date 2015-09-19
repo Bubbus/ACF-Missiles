@@ -204,3 +204,8 @@ function this:GetWireTarget()
     
 end
 
+
+
+function this:GetDisplayConfig()
+	return {["Wire Length"] = math.Round(self.WireLength / 39.37, 1) .. " m"}
+end
