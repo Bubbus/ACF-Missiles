@@ -396,7 +396,7 @@ function ENT:ConfigureFlight()
     self.Hit = false
 	self.HitNorm = Vector(0,0,0)
 	self.FirstThink = true
-    self.MinArmingDelay = Round.armdelay or 0
+    self.MinArmingDelay = math.max(Round.armdelay or GunData.armdelay, GunData.armdelay)
     
     local Mass = GunData.weight
     local Length = GunData.length

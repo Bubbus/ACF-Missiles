@@ -14,7 +14,8 @@ function ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd, min, max)
         slider.Configurable = config
         
         slider.GetConfigValue = function( slider )
-            return math.Round(slider:GetValue(), 3)
+			local config = slider.Configurable
+            return math.Round(math.Clamp(slider:GetValue(), config.Min, config.Max), 3)
         end
         
         slider.OnValueChanged = function( slider, val )
