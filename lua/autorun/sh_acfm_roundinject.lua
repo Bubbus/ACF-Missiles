@@ -100,7 +100,6 @@ function ACFM_ModifyCrateTextFuncs()
     
         for k, v in pairs(roundTypes) do
             ACFM_CrateTextFuncs[k] = v.cratetxt
-			print("ayy", k, v.cratetxt)
         end
 
     end
@@ -119,13 +118,7 @@ function ACFM_ModifyCrateTextFuncs()
 					return origCrateTxt
 				end
 				
-				print("ayay")
-				
-				--if not SERVER then return origCrateTxt end
-				
 				local str = { origCrateTxt }
-				
-				pbn(data)
 				
 				local guidance  = IsValid(crate) and crate.RoundData7 or data.Data7
 				local fuse      = IsValid(crate) and crate.RoundData8 or data.Data8
@@ -156,7 +149,6 @@ function ACFM_ModifyCrateTextFuncs()
             end
 			
 			ACF.RoundTypes[k].cratetxt = v.cratetxt
-			print("oi", ACF.RoundTypes[k].cratetxt, v.cratetxt)
         end
     end
     
