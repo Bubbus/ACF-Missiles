@@ -714,10 +714,18 @@ function ENT:AddMissile()
         missile.RackModelApplied = true
     end
     
-    local attach, muzzle = self:GetMuzzle(NextIdx, missile)
     missile:SetParent(self)
-    missile:SetPos(self:WorldToLocal(muzzle.Pos))
-    missile:SetAngles(muzzle.Ang)
+	missile:SetParentPhysNum(0)
+	
+	timer.Simple(0.02,	
+		function() 
+			if IsValid(missile) then 
+				local attach, muzzle = self:GetMuzzle(NextIdx, missile)
+				missile:SetPos(self:WorldToLocal(muzzle.Pos))
+				missile:SetAngles(muzzle.Ang)
+			end 
+		end)
+    
     
     if self.HideMissile then missile:SetNoDraw(true) end
     if self.ProtectMissile then missile.DisableDamage = true end
