@@ -26,7 +26,7 @@ ACF_defineGun("9M117", { --id
 	name = "9M117 Missile",
 	desc = "PUT DESC HERE",
 	model = "models/missiles/glatgm/9m117.mdl",
-	gunclass = "ASM",
+	gunclass = "GLATGM",
     rack = "100mmC",  -- Which rack to spawn this missile on?
 	length = 46,		--Used for the physics calculations
 	caliber = 10,
@@ -66,7 +66,7 @@ ACF_defineGun("9M112", { --id
 	name = "9M112 Missile",
 	desc = "PUT DESC HERE",
 	model = "models/missiles/glatgm/9m112.mdl",
-	gunclass = "ASM",
+	gunclass = "GLATGM",
     rack = "120mmC",  -- Which rack to spawn this missile on?
 	length = 46,		--Used for the physics calculations
 	caliber = 12,
@@ -92,7 +92,7 @@ ACF_defineGun("9M112", { --id
     guidance    = {"Dumb", "Wire"},
     fuses       = {"Contact", "Timed"},
     
-    racks       = {["120mmC"] = true, ["120mmM"] = true, ["120mmSC"] = true}, ["122mmHW"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    racks       = {["120mmC"] = true, ["120mmM"] = true, ["120mmSC"] = true, ["122mmHW"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
@@ -106,7 +106,7 @@ ACF_defineGun("MGM-51", { --id
 	name = "MGM-51 Shillelagh",
 	desc = "PUT DESC HERE",
 	model = "models/missiles/glatgm/mgm51.mdl",
-	gunclass = "ASM",
+	gunclass = "GLATGM",
     rack = "150mmM",  -- Which rack to spawn this missile on?
 	length = 46,		--Used for the physics calculations
 	caliber = 15,
@@ -132,7 +132,7 @@ ACF_defineGun("MGM-51", { --id
     guidance    = {"Dumb", "Wire"},
     fuses       = {"Contact", "Timed"},
     
-    racks       = {["150mmM"] = true, ["155mmHW"] = true,    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    racks       = {["150mmM"] = true, ["155mmHW"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
