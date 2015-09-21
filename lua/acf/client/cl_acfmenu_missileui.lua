@@ -58,7 +58,7 @@ end
 ACFMissiles_ConfigurationFactory = 
 {
     number =    function(config, controlGroup, combo, conCmd, gundata) 
-                    print(config.MinConfig, gundata.armdelay, config.Min, gundata[config.MinConfig], gundata.id)
+                    --print(config.MinConfig, gundata.armdelay, config.Min, gundata[config.MinConfig], gundata.id)
                     local min = config.MinConfig and gundata.armdelay or config.Min
                     return ACFMissiles_MenuSlider(config, controlGroup, combo, conCmd, min, config.Max)
                 end
