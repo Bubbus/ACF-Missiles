@@ -251,6 +251,8 @@ function ENT:SetGuidance(guidance)
 	self.Guidance = guidance
 	guidance:Configure(self)
 
+	self:UpdateBodygroups()
+	
     return guidance
     
 end
@@ -264,6 +266,44 @@ function ENT:SetFuse(fuse)
     fuse:Configure(self, self.Guidance or self:SetGuidance(ACF.Guidance.Dumb()))
 
     return fuse
+
+end
+
+
+
+
+function ENT:UpdateBodygroups()
+
+	local bodygroups = self:GetBodyGroups()
+	
+	for idx, group in pairs(bodygroups) do
+	
+		if string.lower(group.name) == "guidance" then
+			
+			self:ApplyGuidanceBodygroup(group)
+			continue
+			
+		end
+	
+	end
+
+end
+
+
+
+
+function ENT:ApplyGuidanceBodygroup(group)
+
+	if self.Guidance then
+		local guidance = string.lower(self.Guidance.Name) .. ".smd"
+		
+		for subId, subName in pairs(group.submodels) do
+			if subName == guidance then			
+				self:SetBodygroup(group.id, subId)
+				return
+			end
+		end
+	end
 
 end
 
