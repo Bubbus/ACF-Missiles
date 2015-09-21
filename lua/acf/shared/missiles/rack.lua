@@ -92,6 +92,23 @@ ACF_DefineRack("3xRK", {
 	}
 } )
 
+ACF_DefineRack("3xUARRK", {
+	name = "A-20 3xHVAR Rack",
+	desc = "A lightweight rack for bombs which is vulnerable to shots and explosions.",
+	model		= "models/missiles/rk3uar.mdl",
+	gunclass = "RK",
+	weight = 150,
+	year = 1936,
+	armour  = 20,
+    magsize = 3,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
+	}
+} )
 
 ACF_DefineRack("4xRK", {
 	name = "Quad Munitions Rack",

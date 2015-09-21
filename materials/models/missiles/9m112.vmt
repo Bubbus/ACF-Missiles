@@ -1,0 +1,8 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\missiles/9m112"
+	$halflambert 			1
+	$blendtintbybasealpha		1
+	$surfaceprop	metal
+	"$model" "1"
+}
