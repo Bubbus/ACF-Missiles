@@ -250,8 +250,6 @@ function ENT:SetGuidance(guidance)
     
 	self.Guidance = guidance
 	guidance:Configure(self)
-
-	self:UpdateBodygroups()
 	
     return guidance
     
@@ -278,9 +276,17 @@ function ENT:UpdateBodygroups()
 	
 	for idx, group in pairs(bodygroups) do
 	
-		if string.lower(group.name) == "guidance" then
+		if string.lower(group.name) == "guidance" and self.Guidance then
 			
-			self:ApplyGuidanceBodygroup(group)
+			self:ApplyBodySubgroup(group, self.Guidance.Name)
+			continue
+			
+		end
+		
+		
+		if string.lower(group.name) == "warhead" and self.BulletData then
+			
+			self:ApplyBodySubgroup(group, self.BulletData.Type)
 			continue
 			
 		end
@@ -292,16 +298,14 @@ end
 
 
 
-function ENT:ApplyGuidanceBodygroup(group)
+function ENT:ApplyBodySubgroup(group, targetname)
 
-	if self.Guidance then
-		local guidance = string.lower(self.Guidance.Name) .. ".smd"
-		
-		for subId, subName in pairs(group.submodels) do
-			if subName == guidance then			
-				self:SetBodygroup(group.id, subId)
-				return
-			end
+	local name = string.lower(targetname) .. ".smd"
+	
+	for subId, subName in pairs(group.submodels) do
+		if string.lower(subName) == name then			
+			self:SetBodygroup(group.id, subId)
+			return
 		end
 	end
 
@@ -400,7 +404,9 @@ function ENT:ConfigureFlight()
 	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length)
 	self.TorqueMul = Length * 25
 	self.RotAxis = Vector(0,0,0)
-    
+   
+	self:UpdateBodygroups()
+   
 end
 
 
@@ -469,6 +475,7 @@ function ENT:Dud()
 	Dud:SetAngles( self.CurDir:Angle() )
 
 	local Phys = Dud:GetPhysicsObject()
+	Phys:EnableGravity(true)
 	Phys:EnableMotion(true)
 	local Vel = self.LastVel
 
