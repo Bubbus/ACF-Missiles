@@ -1,0 +1,7 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\missiles/at-3_heat"
+	$halflambert 			1
+	$blendtintbybasealpha		1
+	$surfaceprop	metal
+}
