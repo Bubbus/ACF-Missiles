@@ -222,3 +222,59 @@ ACF_DefineRack("4x FIM-92", {
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	} 
 } )
+
+
+ACF_DefineRack("1x Strela-1", {
+	name = "Single Munition 9M31 Rack",
+	desc = "An 9M31 rack designed to carry 1 missile.",
+	model		= "models/missiles/9m31_rk1.mdl",
+	gunclass = "RK",
+	weight = 10,
+	year = 1984,
+    magsize = 1,
+	armour  = 12,
+	caliber = 5.9,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+ACF_DefineRack("2x Strela-1", {
+	name = "Double Munition 9M31 Rack",
+	desc = "An 9M31 rack designed to carry 1 missile.",
+	model		= "models/missiles/9m31_rk2.mdl",
+	gunclass = "RK",
+	weight = 30,
+	year = 1984,
+    magsize = 2,
+	armour  = 12,
+	caliber = 5.9,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )
+
+ACF_DefineRack("4x Strela-1", {
+	name = "Double Munition 9M31 Rack",
+	desc = "An 9m31 rack designed to carry 4 missile.",
+	model		= "models/missiles/9m31_rk4.mdl",
+	gunclass = "RK",
+	weight = 30,
+	year = 1984,
+    magsize = 4,
+	armour  = 18,
+	caliber = 5.9,
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )
