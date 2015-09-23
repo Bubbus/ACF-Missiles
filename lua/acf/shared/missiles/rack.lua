@@ -58,7 +58,7 @@ ACF_DefineRack("1xRK_small", {
 ACF_DefineRack("2xRK", {
 	name = "Dual Munitions Rack",
 	desc = "A lightweight rack for rockets and bombs which is vulnerable to shots and explosions.",
-	model		= "models/missiles/rack_double.mdl",
+	model		= "models/missiles/bomb_3xrk.mdl",
 	gunclass = "RK",
 	weight = 100,
 	year = 1915,
@@ -68,8 +68,8 @@ ACF_DefineRack("2xRK", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(4, -1.5, -1.7),	["scaledir"] = Vector(0, -1, 0)},
-		["missile2"] = {["offset"] = Vector(4, 1.5, -1.7),	["scaledir"] = Vector(0, 1, 0)}
+		["missile1"] = {["offset"] = Vector(5.5,3,0), ["scaledir"] = Vector(-0.2,0.3,-0.1)},
+		["missile2"] = {["offset"] = Vector(5.5,-3,0), ["scaledir"] = Vector(-0.2,-0.3,-0.1)},
 	}
 } )
 
@@ -104,9 +104,9 @@ ACF_DefineRack("3xUARRK", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
-		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
 	}
 } )
 
