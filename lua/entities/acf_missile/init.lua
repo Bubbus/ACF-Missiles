@@ -406,7 +406,28 @@ function ENT:ConfigureFlight()
 	self.RotAxis = Vector(0,0,0)
    
 	self:UpdateBodygroups()
+	self:UpdateSkin()
    
+end
+
+
+
+
+function ENT:UpdateSkin()
+
+	if self.BulletData then
+	
+		local warhead = self.BulletData.Type
+		
+		local skins = ACF_GetGunValue(self.BulletData, "skinindex")
+		if not skins then return end
+		
+		local skin = skins[warhead] or 0
+		
+		self:SetSkin(skin)
+		
+	end
+
 end
 
 

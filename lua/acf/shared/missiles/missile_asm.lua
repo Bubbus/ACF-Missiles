@@ -135,6 +135,8 @@ ACF_defineGun("AT-3 ASM", { --id
     fuses       = {"Contact", "Timed"},
     
     racks       = {["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	
+	skinindex   = {HEAT = 0, HE = 1},
     
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
