@@ -847,7 +847,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
     
 	Rack.Muzzleflash        = gundef.muzzleflash or gunclass.muzzleflash or ""
 	Rack.RoFmod             = gunclass["rofmod"]
-	Rack.Sound              = gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
+	Rack.Sound              = gundef.sound or gunclass.sound
 	Rack.Inaccuracy         = gunclass["spread"]
     
     Rack.HideMissile        = ACF_GetRackValue(Id, "hidemissile")
@@ -959,6 +959,9 @@ function ENT:FireMissile()
                 phys:SetMass( missile.RoundWeight )
             end 
             
+			if self.Sound and self.Sound ~= "" then
+				missile.BulletData.Sound = self.Sound
+			end
             
             missile:DoFlight(bdata.Pos, ShootVec)
             missile:Launch()
