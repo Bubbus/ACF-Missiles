@@ -193,7 +193,7 @@ ACF_DefineRack("2x FIM-92", {
 	weight = 30,
 	year = 1984,
     magsize = 2,
-	armour  = 12,
+	armour  = 16,
 	caliber = 5.9,
 
     mountpoints = 
@@ -211,7 +211,7 @@ ACF_DefineRack("4x FIM-92", {
 	weight = 30,
 	year = 1984,
     magsize = 4,
-	armour  = 18,
+	armour  = 20,
 	caliber = 5.9,
 
     mountpoints = 
@@ -232,8 +232,8 @@ ACF_DefineRack("1x Strela-1", {
 	weight = 10,
 	year = 1984,
     magsize = 1,
-	armour  = 12,
-	caliber = 5.9,
+	armour  = 16,
+	caliber = 8,
 
     mountpoints = 
 	{
@@ -249,8 +249,8 @@ ACF_DefineRack("2x Strela-1", {
 	weight = 30,
 	year = 1984,
     magsize = 2,
-	armour  = 12,
-	caliber = 5.9,
+	armour  = 20,
+	caliber = 8,
 
     mountpoints = 
 	{
@@ -267,8 +267,8 @@ ACF_DefineRack("4x Strela-1", {
 	weight = 30,
 	year = 1984,
     magsize = 4,
-	armour  = 18,
-	caliber = 5.9,
+	armour  = 24,
+	caliber = 8,
 
     mountpoints = 
 	{
