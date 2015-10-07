@@ -148,3 +148,22 @@ ACF_DefineRack("4x AGM-114", {
 		["missile4"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)}
 	}
 } )
+
+
+ACF_DefineRack("1xAT3RK", {
+	name = "Single AT-3 Missile lRack",
+	desc = "An AT-3 anti tank missile handheld rack",
+	model		= "models/missiles/at3rk.mdl",
+	gunclass = "RK",
+	weight = 40,
+	rofmod = 1.6,
+	year = 1915,
+    magsize = 1,
+	armour  = 12,
+	sound = "acf_extra/airfx/rocket_fire2.wav",
+
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0, 0, 1),	["scaledir"] = Vector(0, 0, -1)}
+	}
+} )

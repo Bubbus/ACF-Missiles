@@ -109,7 +109,7 @@ ACF_defineGun("AT-3 ASM", { --id
 	desc = "The AT-3 missile (9M14P) is a wire guided anti-tank munition. It can be used in both air-to-surface and surface-to-surface combat, making it a decent alternative for ground vehicles.",
 	model = "models/missiles/at3.mdl",
 	gunclass = "ASM",
-    rack = "1xRK_small",  -- Which rack to spawn this missile on?
+    rack = "1xAT3RK",  -- Which rack to spawn this missile on?
 	length = 43,		--Used for the physics calculations
 	caliber = 12.5,
 	weight = 12,    -- Don't scale down the weight though!
@@ -134,7 +134,7 @@ ACF_defineGun("AT-3 ASM", { --id
     guidance    = {"Dumb", "Wire"},
     fuses       = {"Contact", "Timed"},
     
-    racks       = {["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    racks       = {["1xRK_small"] = true, ["1xAT3RK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	
 	skinindex   = {HEAT = 0, HE = 1},
     
