@@ -179,6 +179,8 @@ ACF_DefineRack("1x FIM-92", {
 	armour  = 12,
 	caliber = 5.9,
 
+	protectmissile 	= true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
@@ -195,6 +197,8 @@ ACF_DefineRack("2x FIM-92", {
     magsize = 2,
 	armour  = 16,
 	caliber = 5.9,
+	
+	protectmissile 	= true,
 
     mountpoints = 
 	{
@@ -214,6 +218,8 @@ ACF_DefineRack("4x FIM-92", {
 	armour  = 20,
 	caliber = 5.9,
 
+	protectmissile 	= true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -235,6 +241,8 @@ ACF_DefineRack("1x Strela-1", {
 	armour  = 16,
 	caliber = 8,
 
+	protectmissile 	= true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
@@ -252,6 +260,8 @@ ACF_DefineRack("2x Strela-1", {
 	armour  = 20,
 	caliber = 8,
 
+	protectmissile 	= true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -270,6 +280,8 @@ ACF_DefineRack("4x Strela-1", {
 	armour  = 24,
 	caliber = 8,
 
+	protectmissile 	= true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},

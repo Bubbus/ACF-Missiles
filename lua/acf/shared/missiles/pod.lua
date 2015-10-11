@@ -33,6 +33,7 @@ ACF_DefineRack("40mm7xPOD", {
     caliber     = 4,
     
     hidemissile     = false,
+	protectmissile 	= true,
     whitelistonly   = true,
 
     mountpoints = 
@@ -62,6 +63,7 @@ ACF_DefineRack("70mm7xPOD", {
     caliber     = 7,
 
     hidemissile     = false,
+	protectmissile 	= true,
     whitelistonly   = true,
     
     mountpoints = 
@@ -91,6 +93,8 @@ ACF_DefineRack("1x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+	protectmissile 	= true,
+	hidemissile     = true,
     
     mountpoints = 
 	{
@@ -113,6 +117,8 @@ ACF_DefineRack("2x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+	protectmissile 	= true,
+	hidemissile     = true,
     
     mountpoints = 
 	{
@@ -136,6 +142,8 @@ ACF_DefineRack("4x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+	protectmissile 	= true,
+	hidemissile     = true,
     
     mountpoints = 
 	{
@@ -160,6 +168,7 @@ ACF_DefineRack("380mmRW61", {
 
     hidemissile     = false,
     whitelistonly   = true,
+	protectmissile 	= true,
     
     mountpoints = 
 	{
