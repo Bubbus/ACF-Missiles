@@ -178,15 +178,18 @@ ACF_DefineRack("3xUARRK", {
 	model		= "models/missiles/rk3uar.mdl",
 	gunclass = "POD",
 	weight = 150,
-	year = 1936,
-	armour  = 20,
+	year = 1941,
+	armour  = 30,
     magsize = 3,
 
+    hidemissile     = false,
+    whitelistonly   = true,
+	
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
-		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 	}
 } )
 
@@ -203,6 +206,9 @@ ACF_DefineRack("1x FIM-92", {
 	armour  = 12,
 	caliber = 5.9,
 
+    hidemissile     = false,
+    whitelistonly   = true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
@@ -220,6 +226,9 @@ ACF_DefineRack("2x FIM-92", {
 	armour  = 16,
 	caliber = 5.9,
 
+    hidemissile     = false,
+    whitelistonly   = true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -238,6 +247,9 @@ ACF_DefineRack("4x FIM-92", {
 	armour  = 20,
 	caliber = 5.9,
 
+    hidemissile     = false,
+    whitelistonly   = true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -254,11 +266,14 @@ ACF_DefineRack("1x Strela-1", {
 	model		= "models/missiles/9m31_rk1.mdl",
 	gunclass = "POD",
 	weight = 10,
-	year = 1984,
+	year = 1968,
     magsize = 1,
 	armour  = 16,
 	caliber = 8,
 
+    hidemissile     = false,
+    whitelistonly   = true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
@@ -271,11 +286,14 @@ ACF_DefineRack("2x Strela-1", {
 	model		= "models/missiles/9m31_rk2.mdl",
 	gunclass = "POD",
 	weight = 30,
-	year = 1984,
+	year = 1968,
     magsize = 2,
 	armour  = 20,
 	caliber = 8,
 
+    hidemissile     = false,
+    whitelistonly   = true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -289,11 +307,14 @@ ACF_DefineRack("4x Strela-1", {
 	model		= "models/missiles/9m31_rk4.mdl",
 	gunclass = "POD",
 	weight = 30,
-	year = 1984,
+	year = 1968,
     magsize = 4,
-	armour  = 24,
+	armour  = 30,
 	caliber = 8,
 
+    hidemissile     = false,
+    whitelistonly   = true,
+	
     mountpoints = 
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
