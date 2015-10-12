@@ -145,7 +145,7 @@ ACF_defineGun("AT-3 ASM", { --id
     armdelay    = 0.8     -- minimum fuse arming delay
 } )
 
-
+--[[ commented for now
 -- The 9k114 Shturm/9M120 Ataka, a laser guided missile with high anti-tank effectiveness.
 ACF_defineGun("9M120 ASM", { --id
 	name = "9m120 Ataka Missile",
@@ -186,3 +186,4 @@ ACF_defineGun("9M120 ASM", { --id
     agility     = 0.5,		-- multiplier for missile turn-rate.
     armdelay    = 0.7     -- minimum fuse arming delay
 } )
+]]
