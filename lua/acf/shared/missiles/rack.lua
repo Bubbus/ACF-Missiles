@@ -164,7 +164,7 @@ ACF_DefineRack("1xAT3RK", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0, 0, 4),	["scaledir"] = Vector(0, 0, -1)}
+		["missile1"] = {["offset"] = Vector(3.2, 0, 1),	["scaledir"] = Vector(0, 0, -1)}
 	}
 } )
 
@@ -182,6 +182,6 @@ ACF_DefineRack("1xAT3RKS", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0, 0, 4),	["scaledir"] = Vector(0, 0, -1)}
+		["missile1"] = {["offset"] = Vector(21, 0, 6.2),	["scaledir"] = Vector(0, 0, -1)}
 	}
 } )
