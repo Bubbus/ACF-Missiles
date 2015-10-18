@@ -134,7 +134,7 @@ ACF_defineGun("AT-3 ASM", { --id
     guidance    = {"Dumb", "Wire"},
     fuses       = {"Contact", "Timed"},
     
-    racks       = {["1xRK_small"] = true, ["1xAT3RK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    racks       = {["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 	
 	skinindex   = {HEAT = 0, HE = 1},
     
