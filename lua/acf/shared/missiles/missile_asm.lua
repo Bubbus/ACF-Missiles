@@ -145,30 +145,29 @@ ACF_defineGun("AT-3 ASM", { --id
     armdelay    = 0.8     -- minimum fuse arming delay
 } )
 
---[[ commented for now
--- The 9k114 Shturm/9M120 Ataka, a laser guided missile with high anti-tank effectiveness.
-ACF_defineGun("9M120 ASM", { --id
+-- The 9M120 Ataka, a laser guided missile with high anti-tank effectiveness.
+ACF_defineGun("Ataka ASM", { --id
 	name = "9m120 Ataka Missile",
-	desc = "The 9k114 Shturm is an anti tank missile used by soviet helicopters and ground vehicles, while 9m120 ataka is another step in 9k114 development.In ACF when we base on warhead type, HE is 9k114 and HEAT is 9m120",
+	desc = "The 9M120 Ataka is an anti tank missile used by soviet helicopters and ground vehicles, can be armed with HE and HEAT warheads",
 	model = "models/missiles/9m120.mdl",
 	gunclass = "ASM",
     rack = "1x ataka",  -- Which rack to spawn this missile on?
 	length = 66,
-	caliber = 16,
+	caliber = 13,
 	weight = 45,    -- Don't scale down the weight though!
     modeldiameter = 17.2 * 1.27, -- in cm
 	year = 1984,
 	round = {
 		model		= "models/missiles/9m120.mdl",
 		rackmdl		= "models/missiles/9m120.mdl",
-		maxlength	= 35,
-		casing		= 0.3,			-- thickness of missile casing, cm
+		maxlength	= 36,
+		casing		= 0.4,			-- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 1,			-- motor mass - motor casing
 		thrust		= 10000,			-- average thrust - kg*in/s^2
 		burnrate	= 500,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
-		minspeed	= 8000,			-- minimum speed beyond which the fins work at 100% efficiency
+		minspeed	= 2000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(7)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
@@ -180,10 +179,10 @@ ACF_defineGun("9M120 ASM", { --id
     
     racks       = {["1x ataka"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     
-    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2. 
+    seekcone    = 30,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 25,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 0.5,		-- multiplier for missile turn-rate.
+    agility     = 0.3,		-- multiplier for missile turn-rate.
     armdelay    = 0.7     -- minimum fuse arming delay
 } )
-]]
+

@@ -330,3 +330,24 @@ ACF_DefineRack("4x Strela-1", {
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	} 
 } )
+
+ACF_DefineRack("1x ataka", {
+	name = "Single Munition 9M120 Rack",
+	desc = "An 9M120 rack designed to carry 1 missile.",
+	model		= "models/missiles/9m120_rk1.mdl",
+	gunclass = "POD",
+	weight = 10,
+	year = 1968,
+    magsize = 1,
+	armour  = 50,
+	caliber = 8,
+
+	protectmissile  = true,
+    hidemissile     = true,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
