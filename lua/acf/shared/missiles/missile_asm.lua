@@ -123,7 +123,7 @@ ACF_defineGun("AT-3 ASM", { --id
 		propweight	= 1,				-- motor mass - motor casing
 		thrust		= 3000,				-- average thrust - kg*in/s^2
 		burnrate	= 150,				-- cm^3/s at average chamber pressure
-		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
+		starterpct	= 0.15,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1500,				-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.0116,			-- drag coefficient of the missile
 		finmul		= 0.0412,			-- fin multiplier (mostly used for unpropelled guidance)
@@ -164,13 +164,13 @@ ACF_defineGun("Ataka ASM", { --id
 		casing		= 0.1,			-- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 1.8,			-- motor mass - motor casing
-		thrust		= 4000,			-- average thrust - kg*in/s^2
-		burnrate	= 200,			-- cm^3/s at average chamber pressure
+		thrust		= 8000,			-- average thrust - kg*in/s^2
+		burnrate	= 600,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 2000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.01,		-- drag coefficient of the missile
 		finmul		= 0.015,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(7)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
