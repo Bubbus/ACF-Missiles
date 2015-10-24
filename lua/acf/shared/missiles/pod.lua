@@ -331,7 +331,7 @@ ACF_DefineRack("4x Strela-1", {
 	} 
 } )
 
-ACF_DefineRack("1x ataka", {
+ACF_DefineRack("1x Ataka", {
 	name = "Single Munition 9M120 Rack",
 	desc = "An 9M120 rack designed to carry 1 missile.",
 	model		= "models/missiles/9m120_rk1.mdl",
@@ -340,7 +340,7 @@ ACF_DefineRack("1x ataka", {
 	year = 1968,
     magsize = 1,
 	armour  = 50,
-	caliber = 8,
+	caliber = 13,
 
 	protectmissile  = true,
     hidemissile     = true,

@@ -151,25 +151,25 @@ ACF_defineGun("Ataka ASM", { --id
 	desc = "The 9M120 Ataka is an anti tank missile used by soviet helicopters and ground vehicles, can be armed with HE and HEAT warheads",
 	model = "models/missiles/9m120.mdl",
 	gunclass = "ASM",
-    rack = "1x ataka",  -- Which rack to spawn this missile on?
-	length = 66,
+    rack = "1x Ataka",  -- Which rack to spawn this missile on?
+	length = 85,
 	caliber = 13,
-	weight = 45,    -- Don't scale down the weight though!
+	weight = 65,    -- Don't scale down the weight though!
     modeldiameter = 17.2 * 1.27, -- in cm
 	year = 1984,
 	round = {
 		model		= "models/missiles/9m120.mdl",
 		rackmdl		= "models/missiles/9m120.mdl",
-		maxlength	= 36,
-		casing		= 0.4,			-- thickness of missile casing, cm
+		maxlength	= 50,
+		casing		= 0.1,			-- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
-		propweight	= 1,			-- motor mass - motor casing
-		thrust		= 10000,			-- average thrust - kg*in/s^2
-		burnrate	= 500,			-- cm^3/s at average chamber pressure
+		propweight	= 1.8,			-- motor mass - motor casing
+		thrust		= 4000,			-- average thrust - kg*in/s^2
+		burnrate	= 200,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 2000,			-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
+		dragcoef	= 0.01,		-- drag coefficient of the missile
+		finmul		= 0.015,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(7)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
@@ -177,12 +177,12 @@ ACF_defineGun("Ataka ASM", { --id
     guidance    = {"Dumb", "Laser"},
     fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
-    racks       = {["1x ataka"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    racks       = {["1x Ataka"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     
-    seekcone    = 30,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 25,   -- getting outside this cone will break the lock.  Divided by 2. 
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 28,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 0.3,		-- multiplier for missile turn-rate.
+    agility     = 0.34,		-- multiplier for missile turn-rate.
     armdelay    = 0.7     -- minimum fuse arming delay
 } )
 
