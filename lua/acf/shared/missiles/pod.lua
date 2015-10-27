@@ -91,6 +91,7 @@ ACF_DefineRack("1x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+    hidemissile     = true,
     
     mountpoints = 
 	{
@@ -113,6 +114,7 @@ ACF_DefineRack("2x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+    hidemissile     = true,
     
     mountpoints = 
 	{
@@ -136,6 +138,7 @@ ACF_DefineRack("4x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+    hidemissile     = true,
     
     mountpoints = 
 	{
