@@ -106,7 +106,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 -- The AT-3, a wire guided missile with better anti-tank effectiveness than TOW but much slower.
 ACF_defineGun("AT-3 ASM", { --id
 	name = "AT-3 Missile",
-	desc = "The AT-3 missile (9M14P) is a wire guided anti-tank munition. It can be used in both air-to-surface and surface-to-surface combat, making it a decent alternative for ground vehicles.",
+	desc = "The AT-3 missile (9M14P) was made in soviet russia - they use some old wire and motor from vacuum cleaner so .",
 	model = "models/missiles/at3.mdl",
 	gunclass = "ASM",
     rack = "1xAT3RK",  -- Which rack to spawn this missile on?
