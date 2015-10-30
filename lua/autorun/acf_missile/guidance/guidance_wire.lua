@@ -18,7 +18,7 @@ this.Name = ClassName
 this.InputSource = nil
 
 -- Length of the guidance wire
-this.WireLength = 10000
+this.WireLength = 15000			-- about 380 meters, or half of gm_flatgrass' diagonal
 
 -- Disables guidance when true
 this.WireSnapped = false
@@ -143,9 +143,9 @@ function this:GetGuidance(missile)
         return {}
     end
     
-    local dist = missile:GetPos():Distance(self.InputSource:GetPos())
-    
-    if dist > self.WireLength then 
+    local dist = missile:GetPos():DistToSqr(self.InputSource:GetPos())		-- We're using squared distance to optimise
+
+    if dist > self.WireLength ^ 2 then
         self.WireSnapped = true
         return {}
     end

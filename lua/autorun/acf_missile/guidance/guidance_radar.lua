@@ -17,10 +17,10 @@ this.Name = ClassName
 this.Target = nil
 
 -- Cone to acquire targets within.
-this.SeekCone = 15
+this.SeekCone = 200
 
 -- Cone to retain targets within.
-this.ViewCone = 20
+this.ViewCone = 250
 
 -- Targets this close to the front are good enough.
 this.SeekTolerance = math.cos( math.rad( 2 ) )
@@ -152,12 +152,13 @@ function this:GetGuidance(missile)
 		return {}
 	else
         self.TargetPos = targetPos
-		local targetVel = targetPos - self.LastTargetPos
-		self.LastTargetPos = targetPos
+		--local targetVel = targetPos - self.LastTargetPos
+		--self.LastTargetPos = targetPos
 
-		if self.LastTargetPos == Vector() then targetVel = Vector() end
+		--if self.LastTargetPos == Vector() then targetVel = Vector() end
 
-		return {TargetPos = targetPos, TargetVel = targetVel, ViewCone = self.ViewCone}
+		--return {TargetPos = targetPos, TargetVel = targetVel, ViewCone = self.ViewCone}
+		return {TargetPos = targetPos, ViewCone = self.ViewCone}
 	end
 	
 end

@@ -11,9 +11,9 @@ ACF_defineGunClass("AAM", {
 	soundDistance   = " ",
 	soundNormal     = " ",
     effect          = "Rocket Motor",
-    
+
     reloadmul       = 8,
-    
+
     ammoBlacklist   = {"AP", "APHE", "FL", "HEAT"} -- Including FL would mean changing the way round classes work.
 } )
 
@@ -61,14 +61,14 @@ ACF_defineGun("40mmAAM", { --id
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.003			-- fin multiplier (mostly used for unpropelled guidance)
 	},
-   
+
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = ACF_GetAllGuidanceNames(),
     fuses       = ACF_GetAllFuseNames(),
-    
+
     seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
+    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2.
+
     agility     = 1     -- multiplier for missile turn-rate.
 } )
 ]]
@@ -79,7 +79,7 @@ ACF_defineGun("40mmAAM", { --id
 -- Balance the round in line with the 70mm pod rocket.
 ACF_defineGun("AIM-9 AAM", { --id
 	name = "AIM-9 Missile",
-	desc = "The gold standard in airborne jousting sticks: decent agility, decent boom.  Lock on and rock on.",
+        desc = "The gold standard in airborne jousting sticks. Fast and agile, this infrared-homing missile is the weapon of choice for medium-range aerial combat.",
 	model = "models/missiles/aim9m.mdl",
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
@@ -95,24 +95,25 @@ ACF_defineGun("AIM-9 AAM", { --id
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		armour		= 5,			-- effective armour thickness of casing, in mm
 		propweight	= 1,	        -- motor mass - motor casing
-		thrust		= 20000,	    -- average thrust - kg*in/s^2
-		burnrate	= 300,	        -- cm^3/s at average chamber pressure
+		thrust		= 100000,	    -- average thrust - kg*in/s^2
+		burnrate	= 350,	        -- cm^3/s at average chamber pressure
 		starterpct	= 0.2,          -- percentage of the propellant consumed in the starter motor.
-		minspeed	= 14000,		-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.004,		-- drag coefficient of the missile
+		minspeed	= 20000,		-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.006,		-- drag coefficient while falling
+                dragcoefflight  = 0.06,                 -- drag coefficient during flight
 		finmul		= 0.006			-- fin multiplier (mostly used for unpropelled guidance)
 	},
-    
+
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Radar"},
     fuses       = ACF_GetAllFuseNames(),
-    
+
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-    seekcone    = 15,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 20,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
-    agility     = 2.5,  -- multiplier for missile turn-rate.
+    seekcone    = 150,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 200,   -- getting outside this cone will break the lock.  Divided by 2.
+
+    agility     = 2.0,  -- multiplier for missile turn-rate.
     armdelay    = 0.5     -- minimum fuse arming delay
 } )
 
@@ -123,8 +124,8 @@ ACF_defineGun("AIM-9 AAM", { --id
 -- Balance the round in line with the 70mm pod rocket.
 ACF_defineGun("AIM-120 AAM", { --id
 	name = "AIM-120 Missile",
-	desc = "The big guy of the skies - you're not getting any closer to a nuclear dogfight than this.",
-	model = "models/missiles/aim120C.mdl",
+	desc = "The big guy of the skies - you're not getting any closer to a nuclear dogfight than this. Even faster than the AIM-9, but also a lot heavier. This long-range missile is sure to deliver one heck of a blast upon impact.",
+	model = "models/missiles/aim120.mdl",
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 1000,
@@ -133,29 +134,30 @@ ACF_defineGun("AIM-120 AAM", { --id
 	year = 1991,
     modeldiameter = 7.1 * 2.54, -- in cm
 	round = {
-		model		= "models/missiles/aim120C.mdl",
-		rackmdl		= "models/missiles/aim120C.mdl",
+		model		= "models/missiles/aim120.mdl",
+		rackmdl		= "models/missiles/aim120.mdl",
 		maxlength	= 40,
 		casing		= 0.4,	        -- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 3,	        -- motor mass - motor casing
-		thrust		= 30000,	    -- average thrust - kg*in/s^2
-		burnrate	= 1000,	        -- cm^3/s at average chamber pressure
+		thrust		= 200000,	    -- average thrust - kg*in/s^2
+		burnrate	= 800,	        -- cm^3/s at average chamber pressure
 		starterpct	= 0.15,          -- percentage of the propellant consumed in the starter motor.
-		minspeed	= 20000,			-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.003,		-- drag coefficient of the missile
+		minspeed	= 25000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.007,		-- drag coefficient while falling
+                dragcoefflight  = 0.07,                 -- drag coefficient during flight
 		finmul		= 0.005			-- fin multiplier (mostly used for unpropelled guidance)
 	},
-    
+
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Radar"},
     fuses       = ACF_GetAllFuseNames(),
-    
+
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-    seekcone    = 10,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 15,   -- getting outside this cone will break the lock.  Divided by 2. 
-    
-    agility     = 2,    -- multiplier for missile turn-rate.
+    seekcone    = 100,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 150,   -- getting outside this cone will break the lock.  Divided by 2.
+
+    agility     = 1.2,    -- multiplier for missile turn-rate.
     armdelay    = 0.6     -- minimum fuse arming delay
 } )
