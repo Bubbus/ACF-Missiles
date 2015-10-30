@@ -1,0 +1,11 @@
+"VertexLitGeneric"
+{
+	"$baseTexture" "models\missiles/aim120c"
+
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .25 .25 .30 ]"
+	$bumpmap		models\missiles/aim120c_bump
+	"$model" 1
+	"$HalfLambert" 1
+}
