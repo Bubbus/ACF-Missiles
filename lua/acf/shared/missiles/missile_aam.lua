@@ -125,7 +125,7 @@ ACF_defineGun("AIM-9 AAM", { --id
 ACF_defineGun("AIM-120 AAM", { --id
 	name = "AIM-120 Missile",
 	desc = "The big guy of the skies - you're not getting any closer to a nuclear dogfight than this. Even faster than the AIM-9, but also a lot heavier. This long-range missile is sure to deliver one heck of a blast upon impact.",
-	model = "models/missiles/aim120.mdl",
+	model = "models/missiles/aim120c.mdl",
 	gunclass = "AAM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 1000,
@@ -134,8 +134,8 @@ ACF_defineGun("AIM-120 AAM", { --id
 	year = 1991,
     modeldiameter = 7.1 * 2.54, -- in cm
 	round = {
-		model		= "models/missiles/aim120.mdl",
-		rackmdl		= "models/missiles/aim120.mdl",
+		model		= "models/missiles/aim120c.mdl",
+		rackmdl		= "models/missiles/aim120c.mdl",
 		maxlength	= 40,
 		casing		= 0.4,	        -- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
