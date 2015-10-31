@@ -3,4 +3,8 @@
 	"$baseTexture" "models\missiles/agm114"
 	$halflambert 			1
 	$blendtintbybasealpha		1
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .25 .25 .30 ]"
+	"$model" 1
 }

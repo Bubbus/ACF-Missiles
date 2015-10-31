@@ -7,5 +7,6 @@
 	"$envmaptint" "[ .25 .25 .30 ]"
 	$bumpmap		models\missiles/aim120c_bump
 	"$model" 1
-	"$HalfLambert" 1
+	$halflambert 			1
+	$blendtintbybasealpha		1
 }
