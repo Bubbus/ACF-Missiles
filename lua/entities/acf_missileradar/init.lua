@@ -268,6 +268,12 @@ function ENT:ScanForMissiles()
 	WireLib.TriggerOutput( self, "Position", posArray )
 	WireLib.TriggerOutput( self, "Velocity", velArray )
 
+	if i > (self.LastMissileCount or 0) then
+		self:EmitSound( self.Sound or ACFM.DefaultRadarSound, 500, 100 )
+	end
+	
+	self.LastMissileCount = i
+	
 end
 
 
