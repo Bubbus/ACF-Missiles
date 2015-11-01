@@ -8,11 +8,11 @@ ACF_DefineRackClass("POD", {
 	sound           = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance   = " ",
 	soundNormal     = " ",
-    
+
     hidemissile     = true,
     protectmissile  = true,
     armour          = 15,
-    
+
     reloadmul       = 8,
 } )
 
@@ -31,11 +31,11 @@ ACF_DefineRack("40mm7xPOD", {
     magsize     = 7,
     armour      = 15,
     caliber     = 4,
-    
+
     hidemissile     = false,
     whitelistonly   = true,
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -63,8 +63,8 @@ ACF_DefineRack("70mm7xPOD", {
 
     hidemissile     = false,
     whitelistonly   = true,
-    
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -92,8 +92,8 @@ ACF_DefineRack("1x BGM-71E", {
 
     whitelistonly   = true,
     hidemissile     = true,
-    
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
@@ -115,8 +115,8 @@ ACF_DefineRack("2x BGM-71E", {
 
     whitelistonly   = true,
     hidemissile     = true,
-    
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
@@ -139,8 +139,8 @@ ACF_DefineRack("4x BGM-71E", {
 
     whitelistonly   = true,
     hidemissile     = true,
-    
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -163,8 +163,8 @@ ACF_DefineRack("380mmRW61", {
 
     hidemissile     = false,
     whitelistonly   = true,
-    
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 	}
@@ -188,8 +188,8 @@ ACF_DefineRack("3xUARRK", {
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
@@ -213,8 +213,8 @@ ACF_DefineRack("1x FIM-92", {
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
@@ -234,12 +234,12 @@ ACF_DefineRack("2x FIM-92", {
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
+	}
 } )
 
 ACF_DefineRack("4x FIM-92", {
@@ -256,14 +256,14 @@ ACF_DefineRack("4x FIM-92", {
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
+	}
 } )
 
 
@@ -281,8 +281,8 @@ ACF_DefineRack("1x Strela-1", {
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
@@ -302,12 +302,12 @@ ACF_DefineRack("2x Strela-1", {
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
+	}
 } )
 
 ACF_DefineRack("4x Strela-1", {
@@ -320,18 +320,18 @@ ACF_DefineRack("4x Strela-1", {
     magsize = 4,
 	armour  = 100,
 	caliber = 8,
-	
+
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
+	}
 } )
 
 ACF_DefineRack("1x Ataka", {
@@ -339,7 +339,7 @@ ACF_DefineRack("1x Ataka", {
 	desc = "An 9M120 rack designed to carry 1 missile.",
 	model		= "models/missiles/9m120_rk1.mdl",
 	gunclass = "POD",
-	weight = 10,
+	weight = 20,
 	year = 1968,
     magsize = 1,
 	armour  = 50,
@@ -348,8 +348,8 @@ ACF_DefineRack("1x Ataka", {
 	protectmissile  = true,
     hidemissile     = true,
     whitelistonly   = true,
-	
-    mountpoints = 
+
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}

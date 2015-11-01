@@ -8,7 +8,7 @@ ACF_DefineRackClass("RK", {
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance = " ",
 	soundNormal = " ",
-    
+
     reloadmul       = 8,
 } )
 
@@ -28,7 +28,7 @@ ACF_DefineRack("1xRK", {
 	armour  = 20,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0, 0, 2),	["scaledir"] = Vector(0, 0, -1)}
 	}
@@ -47,7 +47,7 @@ ACF_DefineRack("1xRK_small", {
 	armour  = 12,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0, 0, 2),	["scaledir"] = Vector(0, 0, -1)}
 	}
@@ -66,7 +66,7 @@ ACF_DefineRack("2xRK", {
 	armour  = 20,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(4, -1.5, -1.7),	["scaledir"] = Vector(0, -1, 0)},
 		["missile2"] = {["offset"] = Vector(4, 1.5, -1.7),	["scaledir"] = Vector(0, 1, 0)}
@@ -84,7 +84,7 @@ ACF_DefineRack("3xRK", {
 	armour  = 20,
     magsize = 3,
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(5.5,0,-4.5), ["scaledir"] = Vector(-0.2,0,-0.3)},
 		["missile2"] = {["offset"] = Vector(5.5,3,0), ["scaledir"] = Vector(-0.2,0.3,-0.1)},
@@ -102,7 +102,7 @@ ACF_DefineRack("4xRK", {
 	armour  = 20,
     magsize = 4,
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,1,0)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,-1,0)},
@@ -122,7 +122,7 @@ ACF_DefineRack("2x AGM-114", {
 	armour  = 24,
 	caliber = 16,
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
@@ -140,7 +140,7 @@ ACF_DefineRack("4x AGM-114", {
 	armour  = 24,
 	caliber = 16,
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,-1)},
@@ -162,7 +162,7 @@ ACF_DefineRack("1xAT3RK", {
 	armour  = 12,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(3.2, 0, 1),	["scaledir"] = Vector(0, 0, -1)}
 	}
@@ -180,7 +180,7 @@ ACF_DefineRack("1xAT3RKS", {
 	armour  = 12,
 	sound = "acf_extra/airfx/rocket_fire2.wav",
 
-    mountpoints = 
+    mountpoints =
 	{
 		["missile1"] = {["offset"] = Vector(21, 0, 6.2),	["scaledir"] = Vector(0, 0, -1)}
 	}

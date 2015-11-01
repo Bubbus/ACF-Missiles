@@ -36,8 +36,9 @@ function this:Configure(missile)
     
     self:super():Configure(missile)
     
-    self.ViewCone = ACF_GetGunValue(missile.BulletData, "seekcone") or this.ViewCone
-    
+    self.ViewCone = ACF_GetGunValue(missile.BulletData, "viewcone") or this.ViewCone
+    self.ViewConeCos = math.cos(math.rad(self.ViewCone))
+
 end
 
 
@@ -46,23 +47,18 @@ end
 function this:GetGuidance(missile)
 
     local posVec = self:GetWireTarget()
-    
-    if not posVec or posVec == Vector() then
-        return {} 
+
+    if not posVec or type(posVec) != "Vector" or posVec == Vector() then
+        return {TargetPos = nil} 
     end
-    
-    
-    local launcher = missile.Launcher
 
-	if IsValid(launcher) then
-
+	if posVec then
 		local mfo       = missile:GetForward()
 		local mdir      = (posVec - missile:GetPos()):GetNormalized()
 		local dot       = mfo.x * mdir.x + mfo.y * mdir.y + mfo.z * mdir.z
-		local maxAng    = math.cos(math.rad(self.ViewCone))
 
-		if dot < maxAng then return {} end
-		
+		if dot < self.ViewConeCos then return {TargetPos = nil} end
+
 		local traceArgs = 
 		{
 			start = missile:GetPos(),
@@ -73,14 +69,12 @@ function this:GetGuidance(missile)
 		
 		local res = util.TraceLine(traceArgs)
 	
-		--debugoverlay.Line( launcher:GetPos(), posVec, 15, Color(res.Hit and 255 or 0, res.Hit and 0 or 255, 0), true )
-	
 		if res.Hit then return {} end
 		
 	end
 	
     self.TargetPos = posVec
-	return {TargetPos = posVec}
+	return {TargetPos = posVec, ViewCone = self.ViewCone}
 	
 end
 

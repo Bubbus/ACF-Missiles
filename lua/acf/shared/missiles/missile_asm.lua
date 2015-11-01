@@ -39,13 +39,13 @@ ACF_defineGun("BGM-71E ASM", { --id
 		casing		= 0.3,				-- thickness of missile casing, cm
 		armour		= 14,				-- effective armour thickness of casing, in mm
 		propweight	= 1.2,				-- motor mass - motor casing
-		thrust		= 15000,				-- average thrust - kg*in/s^2
+		thrust		= 20000,				-- average thrust - kg*in/s^2
 		burnrate	= 200,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 4000,				-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.006,			-- drag coefficient while falling
-                dragcoefflight  = 0.05,                 -- drag coefficient during flight
-		finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
+                dragcoefflight  = 0.06,                 -- drag coefficient during flight
+		finmul		= 0.06,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(8.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
@@ -55,10 +55,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 
     racks       = {["1x BGM-71E"] = true, ["2x BGM-71E"] = true, ["4x BGM-71E"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-    seekcone    = 30,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 40,   -- getting outside this cone will break the lock.  Divided by 2.
-
-    agility     = 0.5,     -- multiplier for missile turn-rate.
+    agility     = 0.2,     -- multiplier for missile turn-rate.
     armdelay    = 0.4     -- minimum fuse arming delay
 } )
 
@@ -82,12 +79,13 @@ ACF_defineGun("AGM-114 ASM", { --id
 		casing		= 0.3,			-- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 1,			-- motor mass - motor casing
-		thrust		= 10000,			-- average thrust - kg*in/s^2
-		burnrate	= 500,			-- cm^3/s at average chamber pressure
+		thrust		= 22000,			-- average thrust - kg*in/s^2
+		burnrate	= 180,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 8000,			-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
+		dragcoef	= 0.003,		-- drag coefficient while falling
+                dragcoefflight  = 0.05,                 -- drag coefficient during flight
+		finmul		= 0.06,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(7)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
@@ -97,10 +95,9 @@ ACF_defineGun("AGM-114 ASM", { --id
 
     racks       = {["2x AGM-114"] = true, ["4x AGM-114"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2.
+    viewcone    = 40,   -- getting outside this cone will break the lock.  Divided by 2.
 
-    agility     = 0.5,		-- multiplier for missile turn-rate.
+    agility     = 0.4,		-- multiplier for missile turn-rate.
     armdelay    = 0.7     -- minimum fuse arming delay
 } )
 
@@ -122,13 +119,13 @@ ACF_defineGun("AT-3 ASM", { --id
 		casing		= 0.3,				-- thickness of missile casing, cm
 		armour		= 16,				-- effective armour thickness of casing, in mm
 		propweight	= 1,				-- motor mass - motor casing
-		thrust		= 8000,				-- average thrust - kg*in/s^2
-		burnrate	= 250,				-- cm^3/s at average chamber pressure
+		thrust		= 7000,				-- average thrust - kg*in/s^2
+		burnrate	= 160,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.15,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 2000,				-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.005,			-- drag coefficient while falling
-                dragcoefflight  = 0.04,                 -- drag coefficient during flight
-		finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
+                dragcoefflight  = 0.05,                 -- drag coefficient during flight
+		finmul		= 0.04,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(8)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
@@ -140,16 +137,13 @@ ACF_defineGun("AT-3 ASM", { --id
 
 	skinindex   = {HEAT = 0, HE = 1},
 
-    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2.
-
-    agility     = 0.6,     -- multiplier for missile turn-rate.
+    agility     = 0.15,     -- multiplier for missile turn-rate.
     armdelay    = 0.8     -- minimum fuse arming delay
 } )
 
 -- The 9M120 Ataka, a laser guided missile with high anti-tank effectiveness.
 ACF_defineGun("Ataka ASM", { --id
-	name = "9m120 Ataka Missile",
+	name = "9M120 Ataka Missile",
 	desc = "The 9M120 Ataka is an anti tank missile used by soviet helicopters and ground vehicles, can be armed with HE and HEAT warheads",
 	model = "models/missiles/9m120.mdl",
 	gunclass = "ASM",
@@ -166,12 +160,13 @@ ACF_defineGun("Ataka ASM", { --id
 		casing		= 0.1,			-- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 1.8,			-- motor mass - motor casing
-		thrust		= 8000,			-- average thrust - kg*in/s^2
-		burnrate	= 600,			-- cm^3/s at average chamber pressure
+		thrust		= 30000,			-- average thrust - kg*in/s^2
+		burnrate	= 280,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
-		minspeed	= 2000,			-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.01,		-- drag coefficient of the missile
-		finmul		= 0.015,			-- fin multiplier (mostly used for unpropelled guidance)
+		minspeed	= 5000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.004,		-- drag coefficient while falling
+                dragcoefflight  = 0.06,                 -- drag coefficient during flight
+		finmul		= 0.06,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
@@ -181,9 +176,8 @@ ACF_defineGun("Ataka ASM", { --id
 
     racks       = {["1x Ataka"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
-    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 28,   -- getting outside this cone will break the lock.  Divided by 2.
 
-    agility     = 0.34,		-- multiplier for missile turn-rate.
+    agility     = 0.12,		-- multiplier for missile turn-rate.
     armdelay    = 0.7     -- minimum fuse arming delay
 } )
