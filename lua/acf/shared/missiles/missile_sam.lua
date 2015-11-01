@@ -59,7 +59,7 @@ ACF_defineGun("FIM-92 SAM", { --id
 } )
 
 -- The 9M31 Strela-1, a lightweight and fast medium-range anti-air missile.
-ACF_defineGun("9M31", { --id
+ACF_defineGun("Strela-1 SAM", { --id
 	name = "9M31 Strela-1",
 	desc = "The 9M31 Strela-1 is a lightweight, infrared homing surface-to-air missile (SAM). Because of its weight, it can also be used from ground vehicles and helicopters.",
 	model = "models/missiles/9m31.mdl",

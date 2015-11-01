@@ -13,6 +13,6 @@ elseif SERVER then
 	
 	-- Should missiles ignore impacts for a duration after they're launched?
 	-- Set to 0 to disable, or set to a number of seconds that missiles should "ghost" through entities.
-	ACFM_GhostPeriod = CreateConVar( "ACFM_GhostPeriod", 0 )
+	ACFM_GhostPeriod = CreateConVar( "ACFM_GhostPeriod", 0.05 )
 	
 end

@@ -58,7 +58,7 @@ ACF_DefineRack("1xRK_small", {
 ACF_DefineRack("2xRK", {
 	name = "Dual Munitions Rack",
 	desc = "A lightweight rack for rockets and bombs which is vulnerable to shots and explosions.",
-	model		= "models/missiles/bomb_3xrk.mdl",
+	model		= "models/missiles/rack_double.mdl",
 	gunclass = "RK",
 	weight = 100,
 	year = 1915,
@@ -68,8 +68,8 @@ ACF_DefineRack("2xRK", {
 
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(5.5,3,0), ["scaledir"] = Vector(-0.2,0.3,-0.1)},
-		["missile2"] = {["offset"] = Vector(5.5,-3,0), ["scaledir"] = Vector(-0.2,-0.3,-0.1)},
+		["missile1"] = {["offset"] = Vector(4, -1.5, -1.7),	["scaledir"] = Vector(0, -1, 0)},
+		["missile2"] = {["offset"] = Vector(4, 1.5, -1.7),	["scaledir"] = Vector(0, 1, 0)}
 	}
 } )
 
@@ -89,24 +89,6 @@ ACF_DefineRack("3xRK", {
 		["missile1"] = {["offset"] = Vector(5.5,0,-4.5), ["scaledir"] = Vector(-0.2,0,-0.3)},
 		["missile2"] = {["offset"] = Vector(5.5,3,0), ["scaledir"] = Vector(-0.2,0.3,-0.1)},
 		["missile3"] = {["offset"] = Vector(5.5,-3,0), ["scaledir"] = Vector(-0.2,-0.3,-0.1)},
-	}
-} )
-
-ACF_DefineRack("3xUARRK", {
-	name = "A-20 3xHVAR Rack",
-	desc = "A lightweight rack for bombs which is vulnerable to shots and explosions.",
-	model		= "models/missiles/rk3uar.mdl",
-	gunclass = "RK",
-	weight = 150,
-	year = 1936,
-	armour  = 20,
-    magsize = 3,
-
-    mountpoints = 
-	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
-		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0.01,0)},
 	}
 } )
 
@@ -168,125 +150,38 @@ ACF_DefineRack("4x AGM-114", {
 } )
 
 
-ACF_DefineRack("1x FIM-92", {
-	name = "Single Munition FIM-92 Rack",
-	desc = "An FIM-92 rack designed to carry 1 missile.",
-	model		= "models/missiles/fim_92_1xrk.mdl",
+ACF_DefineRack("1xAT3RK", {
+	name = "Single AT-3 Missile Rack",
+	desc = "An AT-3 anti tank missile handheld rack",
+	model		= "models/missiles/at3rk.mdl",
 	gunclass = "RK",
-	weight = 10,
-	year = 1984,
+	weight = 40,
+	rofmod = 1.6,
+	year = 1915,
     magsize = 1,
 	armour  = 12,
-	caliber = 5.9,
+	sound = "acf_extra/airfx/rocket_fire2.wav",
 
-	protectmissile 	= true,
-	
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+		["missile1"] = {["offset"] = Vector(3.2, 0, 1),	["scaledir"] = Vector(0, 0, -1)}
 	}
 } )
 
-ACF_DefineRack("2x FIM-92", {
-	name = "Double Munition FIM-92 Rack",
-	desc = "An FIM-92 rack designed to carry 1 missile.",
-	model		= "models/missiles/fim_92_2xrk.mdl",
+ACF_DefineRack("1xAT3RKS", {
+	name = "Single AT-3 Missile Rack designed for AFV",
+	desc = "An AT-3 anti tank missile handheld rack",
+	model		= "models/missiles/at3rs.mdl",
 	gunclass = "RK",
-	weight = 30,
-	year = 1984,
-    magsize = 2,
-	armour  = 16,
-	caliber = 5.9,
-	
-	protectmissile 	= true,
-
-    mountpoints = 
-	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
-} )
-
-ACF_DefineRack("4x FIM-92", {
-	name = "Double Munition FIM-92 Rack",
-	desc = "An FIM-92 rack designed to carry 4 missile.",
-	model		= "models/missiles/fim_92_4xrk.mdl",
-	gunclass = "RK",
-	weight = 30,
-	year = 1984,
-    magsize = 4,
-	armour  = 20,
-	caliber = 5.9,
-
-	protectmissile 	= true,
-	
-    mountpoints = 
-	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
-} )
-
-
-ACF_DefineRack("1x Strela-1", {
-	name = "Single Munition 9M31 Rack",
-	desc = "An 9M31 rack designed to carry 1 missile.",
-	model		= "models/missiles/9m31_rk1.mdl",
-	gunclass = "RK",
-	weight = 10,
-	year = 1984,
+	weight = 40,
+	rofmod = 1.0,
+	year = 1915,
     magsize = 1,
-	armour  = 16,
-	caliber = 8,
+	armour  = 12,
+	sound = "acf_extra/airfx/rocket_fire2.wav",
 
-	protectmissile 	= true,
-	
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+		["missile1"] = {["offset"] = Vector(21, 0, 6.2),	["scaledir"] = Vector(0, 0, -1)}
 	}
-} )
-
-ACF_DefineRack("2x Strela-1", {
-	name = "Double Munition 9M31 Rack",
-	desc = "An 9M31 rack designed to carry 1 missile.",
-	model		= "models/missiles/9m31_rk2.mdl",
-	gunclass = "RK",
-	weight = 30,
-	year = 1984,
-    magsize = 2,
-	armour  = 20,
-	caliber = 8,
-
-	protectmissile 	= true,
-	
-    mountpoints = 
-	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
-} )
-
-ACF_DefineRack("4x Strela-1", {
-	name = "Double Munition 9M31 Rack",
-	desc = "An 9m31 rack designed to carry 4 missile.",
-	model		= "models/missiles/9m31_rk4.mdl",
-	gunclass = "RK",
-	weight = 30,
-	year = 1984,
-    magsize = 4,
-	armour  = 24,
-	caliber = 8,
-
-	protectmissile 	= true,
-	
-    mountpoints = 
-	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
-	} 
 } )
