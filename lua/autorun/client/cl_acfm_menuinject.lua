@@ -73,8 +73,7 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
             acfmenupanel.CData.FuseSelect:SetSize(100, 30)
             
             acfmenupanel.CData.FuseSelect.OnSelect = function( index , value , data )
-                ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseValue, "acfmenu_data8")
-                
+			
                 local gun = {}
                 
                 local gunId = acfmenupanel.CData.CaliberSelect:GetValue()
@@ -93,6 +92,8 @@ function SetMissileGUIEnabled(panel, enabled, gundata)
                 else
                     acfmenupanel:CPanelText("FuseDesc", "Missiles and bombs can be given a fuse to control when they detonate.\n")
                 end
+				
+				ACFMissiles_SetCommand(acfmenupanel.CData.FuseSelect, acfmenupanel.CData.FuseSelect.ControlGroup, "acfmenu_data8")
             end
                 
             acfmenupanel.CustomDisplay:AddItem( acfmenupanel.CData.FuseSelect )

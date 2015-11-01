@@ -26,7 +26,7 @@ ACF_defineGun("FIM-92 SAM", { --id
     rack = "1x FIM-92",  -- Which rack to spawn this missile on?
 	length = 66,
 	caliber = 5.9,
-	weight = 101,--15.1,    -- Don't scale down the weight though!
+	weight = 80,--15.1,    -- Don't scale down the weight though!
     modeldiameter = 5.2 * 1.27, -- in cm
 	year = 1978,
 
@@ -58,3 +58,43 @@ ACF_defineGun("FIM-92 SAM", { --id
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
+-- The 9M31 Strela-1, a lightweight and fast medium-range anti-air missile.
+ACF_defineGun("Strela-1 SAM", { --id
+	name = "9M31 Strela-1",
+	desc = "The 9M31 Strela-1 is a lightweight, infrared homing surface-to-air missile (SAM). Because of its weight, it can also be used from ground vehicles and helicopters.",
+	model = "models/missiles/9m31.mdl",
+	gunclass = "SAM",
+    rack = "1x Strela-1",  -- Which rack to spawn this missile on?
+	length = 60,
+	caliber = 8.0,
+	weight = 150,--15.1,    -- Don't scale down the weight though!
+    modeldiameter = 12, -- in cm
+	year = 1978,
+
+	round = {
+		model		= "models/missiles/9m31.mdl",
+		rackmdl		= "models/missiles/9m31f.mdl",
+		maxlength	= 42,
+		casing		= 0.2,	        -- thickness of missile casing, cm
+		armour		= 8,			-- effective armour thickness of casing, in mm
+		propweight	= 1.4,	        -- motor mass - motor casing
+		thrust		= 16000,	    -- average thrust - kg*in/s^2
+		burnrate	= 700,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.2,         	-- percentage of the propellant consumed in the starter motor.
+		minspeed	= 12000,		-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.009,		-- drag coefficient of the missile
+		finmul		= 0.01			-- fin multiplier (mostly used for unpropelled guidance)
+	},
+    
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = {"Dumb", "Radar"},
+    fuses       = ACF_GetAllFuseNames(),
+    
+	racks       = {["1x Strela-1"] = true,  ["2x Strela-1"] = true,  ["4x Strela-1"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+   
+    seekcone    = 30,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 50,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 1.5,     -- multiplier for missile turn-rate.
+    armdelay    = 0.5     -- minimum fuse arming delay
+} )

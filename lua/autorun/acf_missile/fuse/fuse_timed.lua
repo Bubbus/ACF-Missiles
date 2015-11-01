@@ -46,3 +46,11 @@ function this:GetDetonate(missile, guidance)
 end
 
 
+
+function this:GetDisplayConfig()
+	return 
+	{
+		["Primer"] = tostring(math.Round(self.Primer, 1)) .. " s",
+		["Timer"] = tostring(math.Round(self.Timer, 1)) .. " s"
+	}
+end

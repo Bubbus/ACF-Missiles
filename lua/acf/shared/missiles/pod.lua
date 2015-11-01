@@ -33,6 +33,7 @@ ACF_DefineRack("40mm7xPOD", {
     caliber     = 4,
     
     hidemissile     = false,
+	protectmissile 	= true,
     whitelistonly   = true,
 
     mountpoints = 
@@ -62,6 +63,7 @@ ACF_DefineRack("70mm7xPOD", {
     caliber     = 7,
 
     hidemissile     = false,
+	protectmissile 	= true,
     whitelistonly   = true,
     
     mountpoints = 
@@ -91,6 +93,8 @@ ACF_DefineRack("1x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+	protectmissile 	= true,
+	hidemissile     = true,
     
     mountpoints = 
 	{
@@ -113,6 +117,8 @@ ACF_DefineRack("2x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+	protectmissile 	= true,
+	hidemissile     = true,
     
     mountpoints = 
 	{
@@ -136,6 +142,8 @@ ACF_DefineRack("4x BGM-71E", {
     caliber = 13,
 
     whitelistonly   = true,
+	protectmissile 	= true,
+	hidemissile     = true,
     
     mountpoints = 
 	{
@@ -143,5 +151,212 @@ ACF_DefineRack("4x BGM-71E", {
 		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
 		["missile4"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+-- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
+ACF_DefineRack("380mmRW61", {
+	name        = "1x 380mm Pod",
+	desc        = "A lightweight pod for rockets which is vulnerable to shots and explosions.",
+	model		= "models/launcher/RW61.mdl",
+	gunclass    = "POD",
+	weight      = 40,
+	year        = 1945,
+    magsize     = 1,
+    armour      = 24,
+    caliber     = 38,
+
+    hidemissile     = false,
+    whitelistonly   = true,
+	protectmissile 	= true,
+    
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+	}
+} )
+
+
+
+-- New-old racks became pods:
+
+
+ACF_DefineRack("3xUARRK", {
+	name = "A-20 3xHVAR Rack",
+	desc = "A lightweight rack for bombs which is vulnerable to shots and explosions.",
+	model		= "models/missiles/rk3uar.mdl",
+	gunclass = "POD",
+	weight = 150,
+	year = 1941,
+	armour  = 30,
+    magsize = 3,
+
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+	}
+} )
+
+
+
+ACF_DefineRack("1x FIM-92", {
+	name = "Single Munition FIM-92 Rack",
+	desc = "An FIM-92 rack designed to carry 1 missile.",
+	model		= "models/missiles/fim_92_1xrk.mdl",
+	gunclass = "POD",
+	weight = 10,
+	year = 1984,
+    magsize = 1,
+	armour  = 12,
+	caliber = 5.9,
+
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+ACF_DefineRack("2x FIM-92", {
+	name = "Double Munition FIM-92 Rack",
+	desc = "An FIM-92 rack designed to carry 1 missile.",
+	model		= "models/missiles/fim_92_2xrk.mdl",
+	gunclass = "POD",
+	weight = 30,
+	year = 1984,
+    magsize = 2,
+	armour  = 16,
+	caliber = 5.9,
+
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )
+
+ACF_DefineRack("4x FIM-92", {
+	name = "Double Munition FIM-92 Rack",
+	desc = "An FIM-92 rack designed to carry 4 missile.",
+	model		= "models/missiles/fim_92_4xrk.mdl",
+	gunclass = "POD",
+	weight = 30,
+	year = 1984,
+    magsize = 4,
+	armour  = 20,
+	caliber = 5.9,
+
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )
+
+
+ACF_DefineRack("1x Strela-1", {
+	name = "Single Munition 9M31 Rack",
+	desc = "An 9M31 rack designed to carry 1 missile.",
+	model		= "models/missiles/9m31_rk1.mdl",
+	gunclass = "POD",
+	weight = 10,
+	year = 1968,
+    magsize = 1,
+	armour  = 50,
+	caliber = 8,
+
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+ACF_DefineRack("2x Strela-1", {
+	name = "Double Munition 9M31 Rack",
+	desc = "An 9M31 rack designed to carry 1 missile.",
+	model		= "models/missiles/9m31_rk2.mdl",
+	gunclass = "POD",
+	weight = 30,
+	year = 1968,
+    magsize = 2,
+	armour  = 80,
+	caliber = 8,
+
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )
+
+ACF_DefineRack("4x Strela-1", {
+	name = "Double Munition 9M31 Rack",
+	desc = "An 9m31 rack designed to carry 4 missile.",
+	model		= "models/missiles/9m31_rk4.mdl",
+	gunclass = "POD",
+	weight = 30,
+	year = 1968,
+    magsize = 4,
+	armour  = 100,
+	caliber = 8,
+	
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	} 
+} )
+
+ACF_DefineRack("1x Ataka", {
+	name = "Single Munition 9M120 Rack",
+	desc = "An 9M120 rack designed to carry 1 missile.",
+	model		= "models/missiles/9m120_rk1.mdl",
+	gunclass = "POD",
+	weight = 10,
+	year = 1968,
+    magsize = 1,
+	armour  = 50,
+	caliber = 13,
+
+	protectmissile  = true,
+    hidemissile     = true,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
 } )

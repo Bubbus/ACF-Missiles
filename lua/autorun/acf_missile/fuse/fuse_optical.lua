@@ -61,3 +61,11 @@ function this:GetDetonate(missile, guidance)
 end
 
 
+
+function this:GetDisplayConfig()
+	return 
+	{
+		["Primer"] = math.Round(self.Primer, 1) .. " s",
+		["Distance"] = math.Round(self.Distance / 39.37, 1) .. " m"
+	}
+end

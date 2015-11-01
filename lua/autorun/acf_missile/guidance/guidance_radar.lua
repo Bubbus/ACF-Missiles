@@ -246,9 +246,8 @@ function this:GetWhitelistedEntsInCone(missile)
 
     local missilePos = missile:GetPos()
 	local missileForward = missile:GetForward()
+	
 	local found = ents.FindInCone(missilePos, missileForward, 50000, self.SeekCone)
-    
-    --print("radar found", #found, "ents")
 	
 	local foundAnim = {}
 	local foundAnimIdx = 1
@@ -265,6 +264,27 @@ function this:GetWhitelistedEntsInCone(missile)
     
     return foundAnim
     
+end
+
+
+
+
+function this:HasLOSVisibility(ent, missile)
+
+	local traceArgs = 
+	{
+		start = missile:GetPos(),
+		endpos = ent:GetPos(),
+		mask = MASK_SOLID_BRUSHONLY,
+		filter = {missile, ent}
+	}
+	
+	local res = util.TraceLine(traceArgs)
+	
+	--debugoverlay.Line( missile:GetPos(), ent:GetPos(), 15, Color(res.Hit and 255 or 0, res.Hit and 0 or 255, 0), true )
+	
+	return not res.Hit
+
 end
 
 
@@ -306,17 +326,31 @@ function this:AcquireLock(missile)
     local missilePos = missile:GetPos()
 	local missileForward = missile:GetForward()
     
-	local mostCentralEnt = found[1]
+	local mostCentralEnt 
+	
+	local i = 0
+	while not mostCentralEnt and i < foundCt do
+		i = i + 1
+		local ent = found[i]
+		if self:HasLOSVisibility(ent, missile) then
+			mostCentralEnt = ent
+		end
+	end
+	
+	if not mostCentralEnt then return nil end
+	
 	local mostCentralPos = mostCentralEnt:GetPos()
 	local highestDot = (mostCentralEnt:GetPos() - missilePos):GetNormalized():Dot(missileForward)
 	local currentEnt
 	local currentDot
 	
-	for i=2, foundCt do
+	while i < foundCt do
+		i = i + 1
+		
 		currentEnt = found[i]
 		currentDot = (currentEnt:GetPos() - missilePos):GetNormalized():Dot(missileForward)
 		
-		if currentDot > highestDot then
+		if currentDot > highestDot and self:HasLOSVisibility(currentEnt, missile) then
 			mostCentralEnt = currentEnt
 			highestDot = currentDot
 			
@@ -330,4 +364,14 @@ function this:AcquireLock(missile)
     --print("iterated and found", mostCentralEnt)
     
 	return mostCentralEnt
+end
+
+
+
+function this:GetDisplayConfig()
+	return 
+	{
+		["Seeking"] = math.Round(self.SeekCone * 2, 1) .. " deg",
+		["Tracking"] = math.Round(self.ViewCone * 2, 1) .. " deg"
+	}
 end

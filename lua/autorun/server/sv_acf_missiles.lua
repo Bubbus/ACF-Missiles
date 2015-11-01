@@ -263,3 +263,29 @@ hook.Add( "InitPostEntity", "ACFMissiles_AddLinkable", function()
     -- Need to ensure this is called after InitPostEntity because Adv. Dupe 2 resets its whitelist upon this event.
     timer.Simple(1, function() ACF_E2_LinkTables["acf_rack"] = {AmmoLink = false} end)
 end )
+
+
+hook.Add( "InitPostEntity", "ACFMissiles_AddSoundSupport", function()
+    -- Need to ensure this is called after InitPostEntity because Adv. Dupe 2 resets its whitelist upon this event.
+    timer.Simple(1, function() 
+		ACF.SoundToolSupport["acf_rack"] = 
+		{
+			GetSound = function(ent) return {Sound = ent.Sound} end,
+			
+			SetSound = function(ent, soundData) 
+				ent.Sound = soundData.Sound
+				ent:SetNWString( "Sound", soundData.Sound )
+			end,
+			
+			ResetSound = function(ent)
+				local Class = ent.Class
+				local Classes = list.Get("ACFClasses")
+				
+				local soundData = {Sound = Classes["GunClass"][Class]["sound"]}
+				
+				local setSound = ACF.SoundToolSupport["acf_gun"].SetSound
+				setSound( ent, soundData )
+			end
+		} 
+	end)
+end )

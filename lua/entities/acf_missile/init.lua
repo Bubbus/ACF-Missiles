@@ -66,109 +66,16 @@ function ENT:ParseBulletData(bdata)
     local guidance  = bdata.Data7
     local fuse      = bdata.Data8
     
-    if guidance then        
-        xpcall( -- we're eating arbitrary user input, so let's not fuck up if they fuck up
-                function()
-                    guidance = self:CreateConfigurable(guidance, ACF.Guidance, bdata, "guidance")
-                    if guidance then self:SetGuidance(guidance) end
-                end,
-                
-                ErrorNoHalt
-              )
+    if guidance then
+		guidance = ACFM_CreateConfigurable(guidance, ACF.Guidance, bdata, "guidance")
+		if guidance then self:SetGuidance(guidance) end
     end
     
     if fuse then
-        xpcall( -- we're eating arbitrary user input, so let's not fuck up if they fuck up
-                function()
-                    fuse = self:CreateConfigurable(fuse, ACF.Fuse, bdata, "fuses")
-                    if fuse then self:SetFuse(fuse) end
-                end,
-                
-                ErrorNoHalt
-              )        
+		fuse = ACFM_CreateConfigurable(fuse, ACF.Fuse, bdata, "fuses")
+		if fuse then self:SetFuse(fuse) end
     end
     
-end
-
-
-
-
-local Cast = 
-{
-    number = function(str) return tonumber(str) end,
-    string = function(str) return str end,
-    boolean = function(str) return tobool(str) end
-}
-
---TODO: move to global file.
-function ENT:CreateConfigurable(str, configurables, bdata, wlistPath)
-
-    -- we're parsing a string of the form "NAME:CMD=VAL:CMD=VAL"... potentially.
-    
-    local parts = {}
-    -- split parts delimited by ':'
-    for part in string.gmatch(str, "[^:]+") do parts[#parts+1] = part end
-    
-    if #parts <= 0 then return end
-    
-    
-    local name = table.remove(parts, 1)
-    if name and name ~= "" then
-        
-        -- base table for configurable object
-        local class = configurables[name]
-        if not class then return end
-        
-        
-        if bdata then
-            local allowed = ACF_GetGunValue(bdata, wlistPath)
-            if not table.HasValue(allowed, name) then return nil end
-        end
-        
-        
-        local args = {}
-        
-        for _, arg in pairs(parts) do
-            -- get CMD from 'CMD=VAL'
-            local cmd = string.match(arg, "^[^=]+")
-            if not cmd then continue end
-            
-            -- get VAL from 'CMD=VAL'
-            local val = string.match(arg, "[^=]+$")
-            if not val then continue end
-            
-            args[string.lower(cmd)] = val
-        end
-        
-        
-        -- construct new instance of configurable object
-        local instance = class()
-        if not instance.Configurable then return instance end
-        
-        
-        -- loop through config, match up with args and set values accordingly
-        for _, config in pairs(instance.Configurable) do
-        
-            local cmdName = config.CommandName
-            
-            if not cmdName then continue
-            else cmdName = string.lower(cmdName) end
-            
-            local arg = args[cmdName]
-            if not arg then continue end
-            
-            local type = config.Type
-            
-            if Cast[type] then 
-                instance[config.Name] = Cast[type](arg)
-            end
-        
-        end
-        
-        return instance
-        
-    end
-
 end
 
 
@@ -189,6 +96,9 @@ function ENT:CalcFlight()
 
     local Time = CurTime()
     local DeltaTime = Time - self.LastThink
+	
+	if DeltaTime <= 0 then return end
+	
     self.LastThink = Time
 	Flight = Flight + DeltaTime
 
@@ -277,11 +187,13 @@ function ENT:CalcFlight()
 	end
 
 	--Physics calculations
+
 	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
 	local VelNorm = Vel / Speed
 	local DotSimple = Up.x * VelNorm.x + Up.y * VelNorm.y + Up.z * VelNorm.z
+
 	Vel = Vel - Up * Speed * DotSimple * self.FinMultiplier
 
 	local SpeedSq = Vel:LengthSqr()
@@ -297,11 +209,15 @@ function ENT:CalcFlight()
 	local trace = util.TraceLine(tracedata)
 
 	if trace.Hit then
-		self.HitNorm = trace.HitNormal
-		self:DoFlight(trace.HitPos)
-		self.LastVel = Vel / DeltaTime
-		self:Detonate()
-		return
+	
+		if not (IsValid(trace.Entity) and CurTime() < self.GhostPeriod) then
+			self.HitNorm = trace.HitNormal
+			self:DoFlight(trace.HitPos)
+			self.LastVel = Vel / DeltaTime
+			self:Detonate()
+			return
+		end
+		
 	end
 
 
@@ -334,7 +250,7 @@ function ENT:SetGuidance(guidance)
     
 	self.Guidance = guidance
 	guidance:Configure(self)
-
+	
     return guidance
     
 end
@@ -348,6 +264,50 @@ function ENT:SetFuse(fuse)
     fuse:Configure(self, self.Guidance or self:SetGuidance(ACF.Guidance.Dumb()))
 
     return fuse
+
+end
+
+
+
+
+function ENT:UpdateBodygroups()
+
+	local bodygroups = self:GetBodyGroups()
+	
+	for idx, group in pairs(bodygroups) do
+	
+		if string.lower(group.name) == "guidance" and self.Guidance then
+			
+			self:ApplyBodySubgroup(group, self.Guidance.Name)
+			continue
+			
+		end
+		
+		
+		if string.lower(group.name) == "warhead" and self.BulletData then
+			
+			self:ApplyBodySubgroup(group, self.BulletData.Type)
+			continue
+			
+		end
+	
+	end
+
+end
+
+
+
+
+function ENT:ApplyBodySubgroup(group, targetname)
+
+	local name = string.lower(targetname) .. ".smd"
+	
+	for subId, subName in pairs(group.submodels) do
+		if string.lower(subName) == name then			
+			self:SetBodygroup(group.id, subId)
+			return
+		end
+	end
 
 end
 
@@ -370,6 +330,8 @@ function ENT:Launch()
 	self.Launched = true
 	self.ThinkDelay = 1 / 66
 	self.Filter = self.Filter or {self}
+	
+	self.GhostPeriod = CurTime() + ACFM_GhostPeriod:GetFloat()
     
     self:SetParent(nil)
     
@@ -384,7 +346,7 @@ function ENT:Launch()
 	end
 	
     self:LaunchEffect()
-    
+	
 	ACF_ActiveMissiles[self] = true
 	
 	self:Think()
@@ -434,7 +396,7 @@ function ENT:ConfigureFlight()
     self.Hit = false
 	self.HitNorm = Vector(0,0,0)
 	self.FirstThink = true
-    self.MinArmingDelay = Round.armdelay or 0
+    self.MinArmingDelay = math.max(Round.armdelay or GunData.armdelay, GunData.armdelay)
     
     local Mass = GunData.weight
     local Length = GunData.length
@@ -442,7 +404,30 @@ function ENT:ConfigureFlight()
 	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length)
 	self.TorqueMul = Length * 25
 	self.RotAxis = Vector(0,0,0)
-    
+   
+	self:UpdateBodygroups()
+	self:UpdateSkin()
+   
+end
+
+
+
+
+function ENT:UpdateSkin()
+
+	if self.BulletData then
+	
+		local warhead = self.BulletData.Type
+		
+		local skins = ACF_GetGunValue(self.BulletData, "skinindex")
+		if not skins then return end
+		
+		local skin = skins[warhead] or 0
+		
+		self:SetSkin(skin)
+		
+	end
+
 end
 
 
@@ -501,19 +486,18 @@ end
 
 
 function ENT:Dud()
-    
+
     self.MissileDetonated = true
 
 	ACF_ActiveMissiles[self] = nil
 	
-	local Dud = ents.Create( "debris" )
-	Dud:SetModel( self.Entity:GetModel() )
+	local Dud = self
 	Dud:SetPos( self.CurPos )
 	Dud:SetAngles( self.CurDir:Angle() )
-	Dud:Spawn()
-    self:Remove()
 
 	local Phys = Dud:GetPhysicsObject()
+	Phys:EnableGravity(true)
+	Phys:EnableMotion(true)
 	local Vel = self.LastVel
 
 	if self.HitNorm != Vector(0,0,0) then
@@ -524,6 +508,8 @@ function ENT:Dud()
 	end
 	
 	Phys:SetVelocity(Vel)
+	
+	timer.Simple(30, function() if IsValid(self) then self:Remove() end end)
 end
 
 
@@ -532,7 +518,7 @@ end
 function ENT:Think()
 	local Time = CurTime()
 
-	if self.Launched then
+	if self.Launched and not self.MissileDetonated then
 	
 		if self.Hit then
 			self:Detonate()
@@ -541,9 +527,8 @@ function ENT:Think()
 
 		if self.FirstThink == true then
 			self.FirstThink = false
-			self.LastThink = CurTime()
-			self.LastVel = self.Launcher:GetVelocity() / 66
-
+			self.LastThink = CurTime() - self.ThinkDelay
+			self.LastVel = self.Launcher:GetVelocity() * self.ThinkDelay
 		end
 		self:CalcFlight()
 		
@@ -567,7 +552,14 @@ end
 
 function ENT:PhysicsCollide()
 
-	if self.Launched then self:Detonate() end
+	if self.Launched then 
+	
+		if not self.MissileDetonated then
+			self:Detonate() 
+			return
+		end
+		
+	end
 	
 end
 

@@ -66,7 +66,11 @@ function MakeACF_Explosive(Owner, Pos, Angle, Data1, Data2, Data3, Data4, Data5,
 	Bomb:SetPos(Pos)
 	Bomb:Spawn()
 	Bomb:SetPlayer(Owner)
-	Bomb:SetOwner(Owner)
+	
+	if CPPI then
+		Bomb:CPPISetOwner(Owner)
+	end
+	
 	Bomb.Owner = Owner
 	
 	

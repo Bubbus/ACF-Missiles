@@ -714,10 +714,18 @@ function ENT:AddMissile()
         missile.RackModelApplied = true
     end
     
-    local attach, muzzle = self:GetMuzzle(NextIdx, missile)
     missile:SetParent(self)
-    missile:SetPos(self:WorldToLocal(muzzle.Pos))
-    missile:SetAngles(muzzle.Ang)
+	missile:SetParentPhysNum(0)
+	
+	timer.Simple(0.02,	
+		function() 
+			if IsValid(missile) then 
+				local attach, muzzle = self:GetMuzzle(NextIdx, missile)
+				missile:SetPos(self:WorldToLocal(muzzle.Pos))
+				missile:SetAngles(muzzle.Ang)
+			end 
+		end)
+    
     
     if self.HideMissile then missile:SetNoDraw(true) end
     if self.ProtectMissile then missile.DisableDamage = true end
@@ -839,7 +847,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
     
 	Rack.Muzzleflash        = gundef.muzzleflash or gunclass.muzzleflash or ""
 	Rack.RoFmod             = gunclass["rofmod"]
-	Rack.Sound              = gundef.sound or gunclass.sound or "vo/npc/barney/ba_turret.wav"
+	Rack.Sound              = gundef.sound or gunclass.sound
 	Rack.Inaccuracy         = gunclass["spread"]
     
     Rack.HideMissile        = ACF_GetRackValue(Id, "hidemissile")
@@ -951,6 +959,9 @@ function ENT:FireMissile()
                 phys:SetMass( missile.RoundWeight )
             end 
             
+			if self.Sound and self.Sound ~= "" then
+				missile.BulletData.Sound = self.Sound
+			end
             
             missile:DoFlight(bdata.Pos, ShootVec)
             missile:Launch()

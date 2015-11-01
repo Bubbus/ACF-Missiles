@@ -139,6 +139,9 @@ end
 
 
 function this:GetGuidance(missile)
+    if not self.InputSource:IsValid() then
+        return {}
+    end
     
     local dist = missile:GetPos():Distance(self.InputSource:GetPos())
     
@@ -201,3 +204,8 @@ function this:GetWireTarget()
     
 end
 
+
+
+function this:GetDisplayConfig()
+	return {["Wire Length"] = math.Round(self.WireLength / 39.37, 1) .. " m"}
+end

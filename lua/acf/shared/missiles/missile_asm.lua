@@ -45,7 +45,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 		minspeed	= 7000,				-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.006,			-- drag coefficient of the missile
 		finmul		= 0.012,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(8.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -87,7 +87,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 		minspeed	= 8000,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(7)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -109,7 +109,7 @@ ACF_defineGun("AT-3 ASM", { --id
 	desc = "The AT-3 missile (9M14P) is a wire guided anti-tank munition. It can be used in both air-to-surface and surface-to-surface combat, making it a decent alternative for ground vehicles.",
 	model = "models/missiles/at3.mdl",
 	gunclass = "ASM",
-    rack = "1xRK_small",  -- Which rack to spawn this missile on?
+    rack = "1xAT3RK",  -- Which rack to spawn this missile on?
 	length = 43,		--Used for the physics calculations
 	caliber = 12.5,
 	weight = 12,    -- Don't scale down the weight though!
@@ -120,25 +120,69 @@ ACF_defineGun("AT-3 ASM", { --id
 		maxlength	= 30,
 		casing		= 0.3,				-- thickness of missile casing, cm
 		armour		= 16,				-- effective armour thickness of casing, in mm
-		propweight	= 5,				-- motor mass - motor casing
-		thrust		= 4000,				-- average thrust - kg*in/s^2
-		burnrate	= 200,				-- cm^3/s at average chamber pressure
-		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
+		propweight	= 1,				-- motor mass - motor casing
+		thrust		= 3000,				-- average thrust - kg*in/s^2
+		burnrate	= 150,				-- cm^3/s at average chamber pressure
+		starterpct	= 0.15,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1500,				-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.1006,			-- drag coefficient of the missile
-		finmul		= 0.1012,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+		dragcoef	= 0.0116,			-- drag coefficient of the missile
+		finmul		= 0.0412,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(8)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
     
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Wire"},
     fuses       = {"Contact", "Timed"},
     
-    racks       = {["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    racks       = {["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	
+	skinindex   = {HEAT = 0, HE = 1},
     
     seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 55,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 0.4,     -- multiplier for missile turn-rate.
-    armdelay    = -10.8     -- minimum fuse arming delay
+    armdelay    = 0.8     -- minimum fuse arming delay
 } )
+
+-- The 9M120 Ataka, a laser guided missile with high anti-tank effectiveness.
+ACF_defineGun("Ataka ASM", { --id
+	name = "9m120 Ataka Missile",
+	desc = "The 9M120 Ataka is an anti tank missile used by soviet helicopters and ground vehicles, can be armed with HE and HEAT warheads",
+	model = "models/missiles/9m120.mdl",
+	gunclass = "ASM",
+    rack = "1x Ataka",  -- Which rack to spawn this missile on?
+	length = 85,
+	caliber = 13,
+	weight = 65,    -- Don't scale down the weight though!
+    modeldiameter = 17.2 * 1.27, -- in cm
+	year = 1984,
+	round = {
+		model		= "models/missiles/9m120.mdl",
+		rackmdl		= "models/missiles/9m120.mdl",
+		maxlength	= 50,
+		casing		= 0.1,			-- thickness of missile casing, cm
+		armour		= 10,			-- effective armour thickness of casing, in mm
+		propweight	= 1.8,			-- motor mass - motor casing
+		thrust		= 8000,			-- average thrust - kg*in/s^2
+		burnrate	= 600,			-- cm^3/s at average chamber pressure
+		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
+		minspeed	= 2000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.01,		-- drag coefficient of the missile
+		finmul		= 0.015,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+    
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    guidance    = {"Dumb", "Laser"},
+    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+    
+    racks       = {["1x Ataka"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+    seekcone    = 35,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 28,   -- getting outside this cone will break the lock.  Divided by 2. 
+    
+    agility     = 0.34,		-- multiplier for missile turn-rate.
+    armdelay    = 0.7     -- minimum fuse arming delay
+} )
+
