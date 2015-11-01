@@ -18,18 +18,21 @@ function ENT:Initialize()
 	end
 
 	self.Entity:SetOwner(self.Entity.Owner)
+	self.VelocityOffset = -1
 
-    self.VelocityOffset = -1
-    
 	self.PhysObj = self.Entity:GetPhysicsObject()
+	if !self.PhysObj:IsValid() then
+		self:Remove()	--Prevent duping missiles (to stop errors)
+		return
+	end
 	self.PhysObj:EnableGravity( false )
 	self.PhysObj:EnableMotion( false )
-	
+
 	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
 	self.SpecialHealth = true	--If true needs a special ACF_Activate function
-	
+
 	self:SetNWFloat("LightSize", 0)
-    
+
 end
 
 
@@ -38,44 +41,44 @@ end
 function ENT:SetBulletData(bdata)
 
     self.BaseClass.SetBulletData(self, bdata)
-    
+
     local gun = list.Get("ACFEnts").Guns[bdata.Id]
-    
+
     self:SetModelEasy( gun.round.model or gun.model or "models/missiles/aim9.mdl" )
-    
+
     self:ParseBulletData(bdata)
-	
+
     local roundWeight = ACF_GetGunValue(bdata, "weight") or 10
-    
-    local phys = self.Entity:GetPhysicsObject()  	
-	if (IsValid(phys)) then  		
-		phys:SetMass( roundWeight ) 
-	end 
-    
+
+    local phys = self.Entity:GetPhysicsObject()
+	if (IsValid(phys)) then
+		phys:SetMass( roundWeight )
+	end
+
     self.RoundWeight = roundWeight
-    
+
     self:ConfigureFlight()
-    
+
 end
 
 
 
 
 function ENT:ParseBulletData(bdata)
-    
+
     local guidance  = bdata.Data7
     local fuse      = bdata.Data8
-    
+
     if guidance then
 		guidance = ACFM_CreateConfigurable(guidance, ACF.Guidance, bdata, "guidance")
 		if guidance then self:SetGuidance(guidance) end
     end
-    
+
     if fuse then
 		fuse = ACFM_CreateConfigurable(fuse, ACF.Fuse, bdata, "fuses")
 		if fuse then self:SetFuse(fuse) end
     end
-    
+
 end
 
 
@@ -83,7 +86,7 @@ end
 
 function ENT:CalcFlight()
 
-    if self.MissileDetonated then return end
+	if self.MissileDetonated then return end
 
 	local Ent = self.Entity
 	local Pos = self.CurPos
@@ -94,12 +97,12 @@ function ENT:CalcFlight()
 	local Speed = LastVel:Length()
 	local Flight = self.FlightTime
 
-    local Time = CurTime()
-    local DeltaTime = Time - self.LastThink
-	
+    	local Time = CurTime()
+    	local DeltaTime = Time - self.LastThink
+
 	if DeltaTime <= 0 then return end
-	
-    self.LastThink = Time
+
+	self.LastThink = Time
 	Flight = Flight + DeltaTime
 
 	if Speed == 0 then
@@ -107,63 +110,53 @@ function ENT:CalcFlight()
 		Speed = 1
 	end
 
-
 	--Guidance calculations
 	local Guidance = self.Guidance:GetGuidance(self)
 	local TargetPos = Guidance.TargetPos
 
-	if TargetPos and self.First then
-        
+	if TargetPos then
 		local Dist = Pos:Distance(TargetPos)
-        
-		local TargetVel = (Guidance.TargetVel or Vector(0,0,0)) / DeltaTime * 0.03
-		local DirRaw = TargetPos - Pos
-		local DirRawNorm = DirRaw:GetNormalized()
-		local SpeedMul = math.min((Speed / DeltaTime / self.MinimumSpeed) ^ 3,1)
-		--print(SpeedMul)
+		TargetPos = TargetPos + (Vector(0,0,self.Gravity * Dist / 100000))
+		local LOS = (TargetPos - Pos):GetNormalized()
+		local LastLOS = self.LastLOS
+		local NewDir = Dir
+		local DirDiff = 0
 
-		--Target position projection
-		local LockOffset = (((TargetVel - LastVel) / Speed + Vector(0,0,DeltaTime * self.Gravity / 1000)) * Dist) or NewDir
-		local ProjOffset = LockOffset - LockOffset:Dot(DirRawNorm) * DirRawNorm
-		local DirProj = TargetPos + ProjOffset - Pos
-		local DirProjNorm = DirProj:GetNormalized()
-
-		local VelAxis = LastVel:Cross(DirProj)
-		local VelAxisNorm = VelAxis:GetNormalized()
-        
-		local AngDiff = math.deg( math.asin( math.min(VelAxis:Length() / (Dist * Speed), 0.999999) ) )
-
-		if AngDiff > 0 then
+		if LastLOS then
 			local Agility = self.Agility
+			local SpeedMul = math.min((Speed / DeltaTime / self.MinimumSpeed) ^ 3,1)
 
-			--Target facing
-			local Ang = Dir:Angle()
-			Ang:RotateAroundAxis( VelAxisNorm, math.Clamp(AngDiff * SpeedMul,-1,1) * Agility )
-			local NewDir = Ang:Forward()
+			local LOSDiff = math.deg(math.acos( LastLOS:Dot(LOS) )) * 20
+			local MaxTurn = Agility * SpeedMul * 5
 
-			--Velocity stabilisation
-			local DirAxis = NewDir:Cross(DirRawNorm)
-			local RawDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
-			local RawAng = math.deg(math.acos(RawDotSimple))		--Since both vectors are normalised, calculating the dot product should be faster this way
-			Ang:RotateAroundAxis( DirAxis, math.Clamp(RawAng * SpeedMul,-1,1) * (self.MinimumSpeed / 2000 + self.FinMultiplier * 100) * Agility)
-			NewDir = Ang:Forward()
+			if LOSDiff > 0.01 and MaxTurn > 0.1 then
+				local LOSNormal = LastLOS:Cross(LOS):GetNormalized()
+				local Ang = NewDir:Angle()
+				Ang:RotateAroundAxis(LOSNormal, math.min(LOSDiff, MaxTurn))
+				NewDir = Ang:Forward()
+			end
 
-			--FOV check
-			local TotalDotSimple = NewDir.x * DirRawNorm.x + NewDir.y * DirRawNorm.y + NewDir.z * DirRawNorm.z
-			local TotalAng = math.deg(math.acos(TotalDotSimple))
-
-			if not Guidance.ViewCone or TotalAng <= Guidance.ViewCone then  -- ViewCone is active-seeker specific
-				Dir = NewDir
+			DirDiff = math.deg(math.acos( NewDir:Dot(LOS) ))
+			if DirDiff > 0.01 then
+				local DirNormal = NewDir:Cross(LOS):GetNormalized()
+				local TurnAng = math.min(DirDiff, MaxTurn) / 10
+				local Ang = NewDir:Angle()
+				Ang:RotateAroundAxis(DirNormal, TurnAng)
+				NewDir = Ang:Forward()
+				DirDiff = DirDiff - TurnAng
 			end
 		end
-
+		--FOV check
+		if not Guidance.ViewCone or DirDiff <= Guidance.ViewCone then  -- ViewCone is active-seeker specific
+			Dir = NewDir
+		end
+		self.LastLOS = LOS
 	else
-    
 		local DirAng = Dir:Angle()
-		local VelNorm = LastVel:GetNormalized()
+		local VelNorm = LastVel / Speed
 		local AimDiff = Dir - VelNorm
 		local DiffLength = AimDiff:Length()
-		if DiffLength >= 0.01 then
+		if DiffLength >= 0.001 then
 			local Torque = DiffLength * self.TorqueMul
 			local AngVelDiff = Torque / self.Inertia * DeltaTime
 			local DiffAxis = AimDiff:Cross(Dir):GetNormalized()
@@ -171,23 +164,27 @@ function ENT:CalcFlight()
 		end
 
 		self.RotAxis = self.RotAxis * 0.99
-        DirAng:RotateAroundAxis(self.RotAxis, self.RotAxis:Length())
+        	DirAng:RotateAroundAxis(self.RotAxis, self.RotAxis:Length())
 		Dir = DirAng:Forward()
+
+		self.LastLOS = nil
 	end
-	
-    self.First = true
 
 	--Motor cutout
+	local DragCoef = 0
 	if Time > self.CutoutTime then
+		DragCoef = self.DragCoef
+
 		if self.Motor ~= 0 then
 			self.Entity:StopParticles()
 			self.Motor = 0
 			self:SetNWFloat("LightSize", self.BulletData.Caliber)
 		end
+	else
+		DragCoef = self.DragCoefFlight
 	end
 
 	--Physics calculations
-
 	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
@@ -197,7 +194,7 @@ function ENT:CalcFlight()
 	Vel = Vel - Up * Speed * DotSimple * self.FinMultiplier
 
 	local SpeedSq = Vel:LengthSqr()
-	local Drag = Vel:GetNormalized() * (self.DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
+	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
 	Vel = Vel - Drag
 	local EndPos = Pos + Vel
 
@@ -209,7 +206,7 @@ function ENT:CalcFlight()
 	local trace = util.TraceLine(tracedata)
 
 	if trace.Hit then
-	
+
 		if not (IsValid(trace.Entity) and CurTime() < self.GhostPeriod) then
 			self.HitNorm = trace.HitNormal
 			self:DoFlight(trace.HitPos)
@@ -217,28 +214,26 @@ function ENT:CalcFlight()
 			self:Detonate()
 			return
 		end
-		
+
 	end
 
-
-
 	--print("Vel = "..math.Round(Vel:Length() / DeltaTime))
-    
-    if self.Fuse:GetDetonate(self, self.Guidance) then
+
+	if self.Fuse:GetDetonate(self, self.Guidance) then
 		self.LastVel = Vel / DeltaTime
 		self:Detonate()
 		return
 	end
-    
+
 	self.LastVel = Vel
 	self.LastPos = Pos
 	self.CurPos = EndPos
 	self.CurDir = Dir
 	self.FlightTime = Flight
-	
+
+	--Missile trajectory debugging
 	debugoverlay.Line(EndPos, EndPos + Vel:GetNormalized() * 50, 10, Color(0, 255, 0))
 	debugoverlay.Line(EndPos, EndPos + Dir:GetNormalized()  * 50, 10, Color(0, 0, 255))
-	--debugoverlay.Line(EndPos, EndPos + Up * 50, 10, Color(255, 0, 0))
 
 	self:DoFlight()
 end
@@ -247,12 +242,12 @@ end
 
 
 function ENT:SetGuidance(guidance)
-    
+
 	self.Guidance = guidance
 	guidance:Configure(self)
-	
+
     return guidance
-    
+
 end
 
 
@@ -273,24 +268,24 @@ end
 function ENT:UpdateBodygroups()
 
 	local bodygroups = self:GetBodyGroups()
-	
+
 	for idx, group in pairs(bodygroups) do
-	
+
 		if string.lower(group.name) == "guidance" and self.Guidance then
-			
+
 			self:ApplyBodySubgroup(group, self.Guidance.Name)
 			continue
-			
+
 		end
-		
-		
+
+
 		if string.lower(group.name) == "warhead" and self.BulletData then
-			
+
 			self:ApplyBodySubgroup(group, self.BulletData.Type)
 			continue
-			
+
 		end
-	
+
 	end
 
 end
@@ -301,9 +296,9 @@ end
 function ENT:ApplyBodySubgroup(group, targetname)
 
 	local name = string.lower(targetname) .. ".smd"
-	
+
 	for subId, subName in pairs(group.submodels) do
-		if string.lower(subName) == name then			
+		if string.lower(subName) == name then
 			self:SetBodygroup(group.id, subId)
 			return
 		end
@@ -319,36 +314,36 @@ function ENT:Launch()
 	if not self.Guidance then
 		self:SetGuidance(ACF.Guidance.Dumb())
 	end
-    
+
     if not self.Fuse then
         self:SetFuse(ACF.Fuse.Contact())
     end
 
     self.Guidance:Configure(self)
     self.Fuse:Configure(self, self.Guidance)
-    
+
 	self.Launched = true
 	self.ThinkDelay = 1 / 66
 	self.Filter = self.Filter or {self}
-	
+
 	self.GhostPeriod = CurTime() + ACFM_GhostPeriod:GetFloat()
-    
+
     self:SetParent(nil)
-    
+
     self:ConfigureFlight()
-    
+
 	local phys = self:GetPhysicsObject()
 	phys:EnableMotion(false)
-	
+
 	if self.Motor > 0 or self.MotorLength > 0.1 then
 		self.CacheParticleEffect = CurTime() + 0.01
 		self:SetNWFloat("LightSize", self.BulletData.Caliber)
 	end
-	
+
     self:LaunchEffect()
-	
+
 	ACF_ActiveMissiles[self] = true
-	
+
 	self:Think()
 end
 
@@ -359,13 +354,13 @@ function ENT:LaunchEffect()
 
     local guns = list.Get("ACFEnts").Guns
     local class = guns[self.BulletData.Id]
-    
+
     local sound = self.BulletData.Sound or ACF_GetGunValue(self.BulletData, "sound")
-    
+
     if sound then
         self:EmitSound(sound, 511, 100)
     end
-    
+
 end
 
 
@@ -374,9 +369,9 @@ end
 function ENT:ConfigureFlight()
 
 	local BulletData = self.BulletData
-    
+
 	local GunData = list.Get("ACFEnts").Guns[BulletData.Id]
-    
+
 	local Round = GunData.round
 	local BurnRate = Round.burnrate
 
@@ -384,6 +379,7 @@ function ENT:ConfigureFlight()
 	self.MotorLength = BulletData.PropMass / (Round.burnrate / 1000) * (1 - Round.starterpct)
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = Round.dragcoef
+	self.DragCoefFlight = (Round.dragcoefflight or Round.dragcoef)
 	self.Motor = Round.thrust
 	self.MinimumSpeed = Round.minspeed
 	self.FlightTime = 0
@@ -397,17 +393,17 @@ function ENT:ConfigureFlight()
 	self.HitNorm = Vector(0,0,0)
 	self.FirstThink = true
     self.MinArmingDelay = math.max(Round.armdelay or GunData.armdelay, GunData.armdelay)
-    
+
     local Mass = GunData.weight
     local Length = GunData.length
 	local Width = GunData.caliber
 	self.Inertia = 0.08333 * Mass * (3.1416 * (Width / 2) ^ 2 + Length)
 	self.TorqueMul = Length * 25
 	self.RotAxis = Vector(0,0,0)
-   
+
 	self:UpdateBodygroups()
 	self:UpdateSkin()
-   
+
 end
 
 
@@ -416,16 +412,16 @@ end
 function ENT:UpdateSkin()
 
 	if self.BulletData then
-	
+
 		local warhead = self.BulletData.Type
-		
+
 		local skins = ACF_GetGunValue(self.BulletData, "skinindex")
 		if not skins then return end
-		
+
 		local skin = skins[warhead] or 0
-		
+
 		self:SetSkin(skin)
-		
+
 	end
 
 end
@@ -438,10 +434,10 @@ function ENT:DoFlight(ToPos, ToDir)
 
 	local setPos = ToPos or self.CurPos
 	local setDir = ToDir or self.CurDir
-    
+
 	self:SetPos(setPos)
 	self:SetAngles(setDir:Angle())
-    
+
     self.BulletData.Pos = setPos
     --self.BulletData.Flight = self.LastVel
 end
@@ -450,23 +446,23 @@ end
 
 
 function ENT:Detonate()
- 
+
 	if self.Motor ~= 0 then
         self.Entity:StopParticles()
         self.Motor = 0
 		self:SetNWFloat("LightSize", 0)
-    end 
- 
+    end
+
     if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed()) then
         self:Dud()
         return
     end
-        
+
     self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
     --debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
-      
+
     self:ForceDetonate()
-	
+
 end
 
 
@@ -475,11 +471,11 @@ end
 function ENT:ForceDetonate()
 
 	self.MissileDetonated = true    -- careful not to conflict with base class's self.Detonated
-    
+
 	ACF_ActiveMissiles[self] = nil
-	
+
     self.BaseClass.Detonate(self, self.BulletData)
-	
+
 end
 
 
@@ -490,7 +486,7 @@ function ENT:Dud()
     self.MissileDetonated = true
 
 	ACF_ActiveMissiles[self] = nil
-	
+
 	local Dud = self
 	Dud:SetPos( self.CurPos )
 	Dud:SetAngles( self.CurDir:Angle() )
@@ -506,9 +502,9 @@ function ENT:Dud()
 		local VelMul = (0.8 + Dot * 0.7) * Vel:Length()
 		Vel = NewDir * VelMul
 	end
-	
+
 	Phys:SetVelocity(Vel)
-	
+
 	timer.Simple(30, function() if IsValid(self) then self:Remove() end end)
 end
 
@@ -519,7 +515,7 @@ function ENT:Think()
 	local Time = CurTime()
 
 	if self.Launched and not self.MissileDetonated then
-	
+
 		if self.Hit then
 			self:Detonate()
 			return false
@@ -531,19 +527,19 @@ function ENT:Think()
 			self.LastVel = self.Launcher:GetVelocity() * self.ThinkDelay
 		end
 		self:CalcFlight()
-		
+
         if self.CacheParticleEffect and (self.CacheParticleEffect <= CurTime()) and (CurTime() < self.CutoutTime) then
             local effect = ACF_GetGunValue(self.BulletData, "effect")
-            
+
             if effect then
                 ParticleEffectAttach( effect, PATTACH_POINT_FOLLOW, self, self:LookupAttachment("exhaust") or 0 )
             end
-            
+
             self.CacheParticleEffect = nil
         end
-        
+
 	end
-	
+
 	return self.BaseClass.Think(self)
 end
 
@@ -552,15 +548,15 @@ end
 
 function ENT:PhysicsCollide()
 
-	if self.Launched then 
-	
+	if self.Launched then
+
 		if not self.MissileDetonated then
-			self:Detonate() 
+			self:Detonate()
 			return
 		end
-		
+
 	end
-	
+
 end
 
 
@@ -571,18 +567,18 @@ function ENT:OnRemove()
 	self.BaseClass.OnRemove(self)
 
 	ACF_ActiveMissiles[self] = nil
-	
+
 end
 
 
 
 
 function ENT:ACF_Activate( Recalc )
-	
+
 	local EmptyMass = self.RoundWeight or self.Mass or 10
 
-	self.ACF = self.ACF or {} 
-	
+	self.ACF = self.ACF or {}
+
 	local PhysObj = self:GetPhysicsObject()
 	if not self.ACF.Aera then
 		self.ACF.Aera = PhysObj:GetSurfaceArea() * 6.45
@@ -590,17 +586,17 @@ function ENT:ACF_Activate( Recalc )
 	if not self.ACF.Volume then
 		self.ACF.Volume = PhysObj:GetVolume() * 16.38
 	end
-	
+
 	local ForceArmour = ACF_GetGunValue(self.BulletData, "armour")
-	
+
 	local Armour = ForceArmour or (EmptyMass*1000 / self.ACF.Aera / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
-	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone 
-	local Percent = 1 
-	
+	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone
+	local Percent = 1
+
 	if Recalc and self.ACF.Health and self.ACF.MaxHealth then
 		Percent = self.ACF.Health/self.ACF.MaxHealth
 	end
-	
+
 	self.ACF.Health = Health * Percent
 	self.ACF.MaxHealth = Health
 	self.ACF.Armour = Armour * (0.5 + Percent/2)
@@ -609,7 +605,7 @@ function ENT:ACF_Activate( Recalc )
 	self.ACF.Mass = self.Mass
 	self.ACF.Density = (self:GetPhysicsObject():GetMass()*1000) / self.ACF.Volume
 	self.ACF.Type = "Prop"
-	
+
 end
 
 
@@ -622,32 +618,32 @@ function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This
 	if self.Detonated or self.DisableDamage then return table.Copy(nullhit) end
 
 	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
-	
+
 	-- Detonate if the shot penetrates the casing.
 	HitRes.Kill = HitRes.Kill or HitRes.Overkill > 0
-	
+
 	if HitRes.Kill then
-	
+
 		local CanDo = hook.Run("ACF_AmmoExplode", self, self.BulletData )
 		if CanDo == false then return HitRes end
-		
+
 		self.Exploding = true
-		
+
 		if( Inflictor and Inflictor:IsValid() and Inflictor:IsPlayer() ) then
 			self.Inflictor = Inflictor
 		end
-		
+
 		self:ForceDetonate()
-		
+
 	end
-	
+
 	return HitRes
-	
+
 end
 
 
 
 
-hook.Add("CanDrive", "acf_missile_CanDrive", function(ply, ent) 
+hook.Add("CanDrive", "acf_missile_CanDrive", function(ply, ent)
     if ent:GetClass() == "acf_missile" then return false end
 end)

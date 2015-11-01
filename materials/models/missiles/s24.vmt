@@ -4,5 +4,10 @@
 	$halflambert 			1
 	$blendtintbybasealpha		1
 	$bumpmap		models\missiles/s24_b
-	$surfaceprop	metal
+
+	"$surfaceprop" "metal"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .25 .25 .30 ]"
+	"$model" 1
+	"$HalfLambert" 1
 }

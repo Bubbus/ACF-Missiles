@@ -186,7 +186,7 @@ ACF_defineGun("500kgBOMB", { --id
 
 ACF_defineGun("1000kgBOMB", { --id
 	name = "1000kg Free Falling Bomb",
-	desc = "2000lb bomb, biggest projectile in acf - keep it for some slow big target.",
+	desc = "2000lb bomb, perfect weapon for people who cry that there is no nuke here.",
 	model = "models/bombs/an_m66.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?

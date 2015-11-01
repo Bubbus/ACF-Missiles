@@ -18,10 +18,11 @@ this.Name = ClassName
 this.InputSource = nil
 
 -- Length of the guidance wire
-this.WireLength = 10000
+this.WireLength = 15000			-- about 380 meters, or half of gm_flatgrass' diagonal
 
 -- Disables guidance when true
 this.WireSnapped = false
+
 
 
 this.desc = "This guidance package is controlled by the launcher, which reads a target-position and steers the munition towards it."
@@ -139,25 +140,34 @@ end
 
 
 function this:GetGuidance(missile)
-    if not self.InputSource:IsValid() then
+
+	local launcher = self.InputSource
+
+    if not IsValid(launcher) then
         return {}
     end
-    
-    local dist = missile:GetPos():Distance(self.InputSource:GetPos())
-    
-    if dist > self.WireLength then 
+
+	local launcherPos = launcher:GetPos()
+    local distMsl = missile:GetPos():DistToSqr(launcherPos)		-- We're using squared distance to optimise
+
+    if distMsl > self.WireLength ^ 2 then
         self.WireSnapped = true
-        return {}
+        return {TargetPos = nil}
     end
-    
-    
-    local posVec = self:GetWireTarget()
-    
-    if not posVec or posVec == Vector() then
-        return {} 
+
+	
+    local posVec = self:GetWireTarget()    
+
+    if not posVec or type(posVec) != "Vector" or posVec == Vector() then
+        return {TargetPos = nil} 
+	else
+		local distTrgt = posVec:DistToSqr(launcherPos)
+		if distMsl > distTrgt then
+			return {TargetPos = nil} 
+		end
     end
-    
-    
+
+
     self.TargetPos = posVec
 	return {TargetPos = posVec}
 	
