@@ -30,14 +30,24 @@ end
 function ENT:GetOverlayText()
 	
 	local cone 	 = self:GetNWFloat("ConeDegs", 0)
+	local range	 = self:GetNWFloat("Range", 0)
 	local id 	 = self:GetNWString("Id", "")
 	local status = self:GetNWString("Status", "")
 	
 	local ret = {}
 	ret[#ret+1] = id
-	ret[#ret+1] = "\nScanning angle: "
-	ret[#ret+1] = math.Round(cone * 2, 2)
-	ret[#ret+1] = " deg"
+	
+	if cone > 0 then
+		ret[#ret+1] = "\nScanning angle: "
+		ret[#ret+1] = math.Round(cone * 2, 2)
+		ret[#ret+1] = " deg"
+	end
+	
+	if range > 0 then
+		ret[#ret+1] = "\nDetection range: "
+		ret[#ret+1] = math.Round(range / 39.37 , 2)
+		ret[#ret+1] = " m"
+	end
 	
 	if status ~= "" then
 		ret[#ret+1] = "\n("
@@ -65,8 +75,8 @@ function ACFRadarGUICreate( Table )
 	
 	acfmenupanel:CPanelText("ClassDesc", ACF.Classes.Radar[Table.class].desc)	
 	acfmenupanel:CPanelText("GunDesc", Table.desc)
-	acfmenupanel:CPanelText("ViewCone", "View cone : "..(Table.viewcone * 2).." degs")
-	acfmenupanel:CPanelText("ViewRange", "View range : ".. (Table.range and (Table.range / 39.37 .. " m") or "unlimited"))
+	acfmenupanel:CPanelText("ViewCone", "View cone : "..((Table.viewcone or 180) * 2).." degs")
+	acfmenupanel:CPanelText("ViewRange", "View range : ".. (Table.range and (math.Round(Table.range / 39.37, 1) .. " m") or "unlimited"))
 	acfmenupanel:CPanelText("Weight", "Weight : "..Table.weight.." kg")
 	
 	if Table.canparent then

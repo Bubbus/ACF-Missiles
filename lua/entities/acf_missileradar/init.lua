@@ -3,6 +3,7 @@ AddCSLuaFile( "cl_init.lua" )
 AddCSLuaFile( "shared.lua" )
 
 include('shared.lua')
+include('radar_types_support.lua')
 
 CreateConVar('sbox_max_acf_missileradar', 6)
 
@@ -14,9 +15,9 @@ function ENT:Initialize()
 	self.BaseClass.Initialize(self)
 	
 	self.Inputs = WireLib.CreateInputs( self, { "Active" } )
-	self.Outputs = WireLib.CreateOutputs( self, {"Detected", "Position [ARRAY]", "Velocity [ARRAY]"} )
+	self.Outputs = WireLib.CreateOutputs( self, {"Detected", "ClosestDistance", "Entities [ARRAY]", "Position [ARRAY]", "Velocity [ARRAY]"} )
 	
-	self.ThinkDelay = 0.05
+	self.ThinkDelay = 0.1
 	self.StatusUpdateDelay = 0.5
 	self.LastStatusUpdate = CurTime()
 	
@@ -28,6 +29,21 @@ function ENT:Initialize()
 	
 	self:EnableClientInfo(true)
 	
+	self:ConfigureForClass()
+	
+end
+
+
+
+
+function ENT:ConfigureForClass()
+
+	local behaviour = ACFM.RadarBehaviour[self.Class]
+	
+	if not behaviour then return end
+	
+	self.GetDetectedEnts = behaviour.GetDetectedEnts
+
 end
 
 
@@ -57,11 +73,13 @@ function MakeACF_MissileRadar(Owner, Pos, Angle, Id)
 	Radar:SetAngles(Angle)
 	Radar:SetPos(Pos)
 	
-	Radar.Model = radar.model
-	Radar.Weight = radar.weight
-	Radar.ACFName = radar.name
-	Radar.ConeDegs = radar.viewcone
-	Radar.Id = Id
+	Radar.Model 	= radar.model
+	Radar.Weight 	= radar.weight
+	Radar.ACFName 	= radar.name
+	Radar.ConeDegs 	= radar.viewcone
+	Radar.Range 	= radar.range
+	Radar.Id 		= Id
+	Radar.Class 	= radar.class
 	
 	Radar:Spawn()
 	Radar:SetPlayer(Owner)
@@ -101,6 +119,7 @@ end
 function ENT:RefreshClientInfo()
 
 	self:SetNWFloat("ConeDegs", self.ConeDegs)
+	self:SetNWFloat("Range", self.Range)
 	self:SetNWString("Id", self.Id)
 	self:SetNWString("Name", self.ACFName)
 
@@ -199,26 +218,53 @@ end
 
 
 
+
+function ENT:GetDetectedEnts()
+
+	print("reached base GetDetectedEnts")
+
+end
+
+
+
+
+
 function ENT:ScanForMissiles()
 
-	local missiles = ACFM_GetMissilesInCone(self:GetPos(), self:GetForward(), self.ConeDegs)
+	local missiles = self:GetDetectedEnts() or {}
 	
+	local entArray = {}
 	local posArray = {}
 	local velArray = {}
 	
 	local i = 0
 	
+	local closest
+	local closestSqr = 999999
+	
+	local thisPos = self:GetPos()
+	
 	for k, missile in pairs(missiles) do
 	
-		--print("got missile", missile)
 		i = i + 1
 	
+		entArray[i] = missile
 		posArray[i] = missile.CurPos
 		velArray[i] = missile.LastVel
+		
+		local curSqr = thisPos:DistToSqr(missile.CurPos)
+		if curSqr < closestSqr then
+			closest = missile.CurPos
+			closestSqr = curSqr
+		end
 	
 	end
 	
+	if not closest then closestSqr = 0 end
+	
 	WireLib.TriggerOutput( self, "Detected", i )
+	WireLib.TriggerOutput( self, "ClosestDistance", math.sqrt(closestSqr) )
+	WireLib.TriggerOutput( self, "Entities", entArray )
 	WireLib.TriggerOutput( self, "Position", posArray )
 	WireLib.TriggerOutput( self, "Velocity", velArray )
 
@@ -229,8 +275,13 @@ end
 
 function ENT:ClearOutputs()
 
+	if #self.Outputs.Entities.Value > 0 then
+		WireLib.TriggerOutput( self, "Entities", {} )
+	end
+
 	if #self.Outputs.Position.Value > 0 then
 		WireLib.TriggerOutput( self, "Position", {} )
+		WireLib.TriggerOutput( self, "ClosestDistance", 0 )
 	end
 	
 	if #self.Outputs.Velocity.Value > 0 then

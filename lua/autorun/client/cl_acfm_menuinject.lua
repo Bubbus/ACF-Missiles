@@ -324,26 +324,24 @@ function AddDetectionNode(panel)
 		end
 	
 		
-		for id, Class in pairs(radarClasses) do
 			
-			for Type, Ent in pairs(radars) do	
+		for Type, Ent in pairs(radars) do	
+			
+			local curNode = nodes[Ent.class]
+			
+			if curNode then
+				local EndNode = curNode:AddNode( Ent.name or "No Name" )
+				EndNode.mytable = Ent
 				
-				local curNode = nodes[Ent.class]
-				
-				if curNode then
-					local EndNode = curNode:AddNode( Ent.name or "No Name" )
-					EndNode.mytable = Ent
-					
-					function EndNode:DoClick()
-						RunConsoleCommand( "acfmenu_type", self.mytable.type )
-						acfmenupanel:UpdateDisplay( self.mytable )
-					end
-					
-					EndNode.Icon:SetImage( "icon16/newspaper.png" )
+				function EndNode:DoClick()
+					RunConsoleCommand( "acfmenu_type", self.mytable.type )
+					acfmenupanel:UpdateDisplay( self.mytable )
 				end
+				
+				EndNode.Icon:SetImage( "icon16/newspaper.png" )
 			end
-			
 		end
+			
 		
 	end
 
