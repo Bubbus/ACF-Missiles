@@ -1,12 +1,16 @@
 "VertexLitGeneric"
 {
 	"$baseTexture" "models\missiles/ataka_wh"
-	$halflambert 			1
+	"$halflambert" 			1
 	$blendtintbybasealpha		1
 	$surfaceprop	metal
+	$phongexponenttexture "models\missiles/ataka_wh_sm"
 	"$phong" "1"
 	"$phongexponent" "40"
 	"$phongboost" "2"
 	"$phongfresnelranges" "[.05 .5 1]"
-	"$halflambert" "1"
+	"$envmap" "env_cubemap"
+	"$envmaptint" "[ .25 .25 .30 ]"
+	$envmapmask "models\missiles/ataka_wh_sm"
+	
 }
