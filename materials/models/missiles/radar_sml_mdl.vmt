@@ -5,10 +5,16 @@
 	$blendtintbybasealpha		1
 	$surfaceprop	metal
 	$bumpmap "models\missiles/radar_sml_mdl_nm"
-	"$phong" "1"
-	"$phongexponent" "40"
-	"$phongboost" "2"
-	"$phongfresnelranges" "[.05 .5 1]"
+	
+		
+	$phong 1
+	$phongboost	5
+	$phongfresnelranges	"[0.05 0.5 1]"
+	$phongexponenttexture models\missiles/radar_sml_mdl
+
+
 	"$envmap" "env_cubemap"
-	"$envmaptint" "[ .25 .25 .30 ]"
+	$normalmapalphaenvmapmask 1
+	$envmaptint "[0.2 0.2 0.2]"
+	$envmapanisotropy 1
 }

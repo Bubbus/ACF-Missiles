@@ -5,4 +5,9 @@
 	$blendtintbybasealpha		1
 	$bumpmap		models\missiles/jellypod_b
 	$surfaceprop	metal
+			
+	$phong 1
+	$phongboost	5
+	$phongfresnelranges	"[0.05 0.5 1]"
+
 }
