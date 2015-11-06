@@ -12,7 +12,7 @@ ACF_defineGunClass("GBU", {
     
     reloadmul       = 2,
     
-    ammoBlacklist   = {"AP", "FL"} -- Including FL would mean changing the way round classes work.
+    ammoBlacklist   = {"AP", "FL", "HEAT"} -- Including FL would mean changing the way round classes work.
 } )
 
 
@@ -68,7 +68,6 @@ ACF_defineGun("227kgGBU", { --id
 	caliber = 12.5,
 	weight = 250,    -- Don't scale down the weight though!
 	year = 1976,
-	ammoBlacklist   = {"AP", "FL", "HEAT"}
     modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/bombs/gbu12.mdl",
@@ -110,7 +109,6 @@ ACF_defineGun("454kgGBU", { --id
 	caliber = 30.0,
 	weight = 500,    -- Don't scale down the weight though!
 	year = 1976,
-	ammoBlacklist   = {"AP", "FL", "HEAT"}
     modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
 		model		= "models/bombs/gbu16.mdl",
@@ -151,7 +149,6 @@ ACF_defineGun("909kgGBU", { --id
 	caliber = 30.0,
 	weight = 1000,    -- Don't scale down the weight though! 
 	year = 1976,
-	ammoBlacklist   = {"AP", "FL", "HEAT"}
     modeldiameter = 16.3 * 4.5, -- in cm
 	round = {
 		model		= "models/bombs/gbu/gbu10_fold.mdl",
