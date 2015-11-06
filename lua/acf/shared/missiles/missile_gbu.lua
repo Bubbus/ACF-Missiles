@@ -21,7 +21,7 @@ ACF_defineGunClass("GBU", {
 ACF_defineGun("116kgGBU", { --id
 	name = "116kg AGM-62 Walleye",
 	desc = "The first of a family of precision-guided munitions. This “smart bomb” had no propulsion system, but it could be maneuvered via a television assisted guidance system during its glide from an aircraft to the target.",
-	model = "models/bombs/agm62.mdl",
+	model = "models/bombs/gbu/agm62.mdl",
 	gunclass = "GBU",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 50,
@@ -30,8 +30,8 @@ ACF_defineGun("116kgGBU", { --id
 	year = 1939,
     modeldiameter = 21.2 * 1.4, -- in cm
 	round = {
-		model		= "models/bombs/agm62.mdl",
-		rackmdl		= "models/bombs/agm62.mdl",
+		model		= "models/bombs/gbu/agm62.mdl",
+		rackmdl		= "models/bombs/gbu/agm62.mdl",
 		maxlength	= 75,
 		casing		= 0.7,	        -- thickness of missile casing, cm
 		armour		= 16,			-- effective armour thickness of casing, in mm
@@ -61,7 +61,7 @@ ACF_defineGun("116kgGBU", { --id
 ACF_defineGun("227kgGBU", { --id
 	name = "227kg GBU-12 Paveway II",
 	desc = "Based on the Mk 82 500-pound general-purpose bomb, but with the addition of a nose-mounted laser seeker and fins for guidance. ",
-	model = "models/bombs/gbu12.mdl",
+	model = "models/bombs/gbu/gbu12.mdl",
 	gunclass = "GBU",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 5000,
@@ -70,8 +70,8 @@ ACF_defineGun("227kgGBU", { --id
 	year = 1976,
     modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
-		model		= "models/bombs/gbu12.mdl",
-		rackmdl		= "models/bombs/gbu12.mdl",
+		model		= "models/bombs/gbu/gbu12.mdl",
+		rackmdl		= "models/bombs/gbu/gbu12.mdl",
 		maxlength	= 100,
 		casing		= 1.5,	        -- thickness of missile casing, cm
 		armour		= 20,			-- effective armour thickness of casing, in mm
@@ -102,7 +102,7 @@ ACF_defineGun("227kgGBU", { --id
 ACF_defineGun("454kgGBU", { --id
 	name = "454kg GBU-16 Paveway II",
 	desc = "Based on the Mk 83 general-purpose bomb, but with laser seeker and wings for guidance.",
-	model = "models/bombs/gbu16.mdl",
+	model = "models/bombs/gbu/gbu16.mdl",
 	gunclass = "GBU",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 15000,
@@ -111,8 +111,8 @@ ACF_defineGun("454kgGBU", { --id
 	year = 1976,
     modeldiameter = 16.3 * 1.9, -- in cm
 	round = {
-		model		= "models/bombs/gbu16.mdl",
-		rackmdl		= "models/bombs/gbu16.mdl",
+		model		= "models/bombs/gbu/gbu16.mdl",
+		rackmdl		= "models/bombs/gbu/gbu16.mdl",
 		maxlength	= 200,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		armour		= 24,			-- effective armour thickness of casing, in mm
