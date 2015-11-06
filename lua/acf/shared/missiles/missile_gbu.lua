@@ -19,7 +19,7 @@ ACF_defineGunClass("GBU", {
 
 -- Balance the round in line with the 40mm pod rocket.
 ACF_defineGun("116kgGBU", { --id
-	name = "116kg AGM-62 Walleye",
+	name = "116kg Guided Weapon Mk 1 Walleye",
 	desc = "The first of a family of precision-guided munitions. This “smart bomb” had no propulsion system, but it could be maneuvered via a television assisted guidance system during its glide from an aircraft to the target.",
 	model = "models/bombs/gbu/agm62.mdl",
 	gunclass = "GBU",
