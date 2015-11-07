@@ -4,7 +4,7 @@ ACF_defineGunClass("BOMB", {
     type            = "missile",  -- i know i know
 	spread          = 1,
 	name            = "Bomb",
-	desc            = "Free-falling bombs.  These are slower than missiles, but are more powerful and more manouverable when guided.",
+	desc            = "Free-falling bombs.  These just falling down. - very powerfull and destructive after it hit target",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 0.1,
 	sound           = "acf_extra/tankfx/clunk.wav",

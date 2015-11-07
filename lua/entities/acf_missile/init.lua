@@ -128,10 +128,7 @@ function ENT:CalcFlight()
 
 			local LOSDiff = math.deg(math.acos( LastLOS:Dot(LOS) )) * 20
 			local MaxTurn = Agility * SpeedMul * 5
-			--print("MaxTurn: "..MaxTurn)
 
-			--print("Turning "..LOSDiff.." deg")
-			--Ang:RotateAroundAxis(LOSNormal, math.min( LOSDiff * math.min(Dist / 100, 10), Agility * SpeedMul ))
 			if LOSDiff > 0.01 and MaxTurn > 0.1 then
 				local LOSNormal = LastLOS:Cross(LOS):GetNormalized()
 				local Ang = NewDir:Angle()
@@ -219,6 +216,8 @@ function ENT:CalcFlight()
 		end
 
 	end
+
+	--print("Vel = "..math.Round(Vel:Length() / DeltaTime))
 
 	if self.Fuse:GetDetonate(self, self.Guidance) then
 		self.LastVel = Vel / DeltaTime
