@@ -178,7 +178,7 @@ function ENT:CalcFlight()
 		if self.Motor ~= 0 then
 			self.Entity:StopParticles()
 			self.Motor = 0
-			self:SetNWFloat("LightSize", self.BulletData.Caliber)
+			self:SetNWFloat("LightSize", 0)
 		end
 	else
 		DragCoef = self.DragCoefFlight
@@ -376,11 +376,21 @@ function ENT:ConfigureFlight()
 	local BurnRate = Round.burnrate
 
     local Time = CurTime()
-	self.MotorLength = BulletData.PropMass / (Round.burnrate / 1000) * (1 - Round.starterpct)
+	local noThrust = ACF_GetGunValue(self.BulletData, "nothrust")
+	
+	print("noThrust", noThrust)
+	
+	if noThrust then
+		self.MotorLength = 0
+		self.Motor = 0
+	else
+		self.MotorLength = BulletData.PropMass / (Round.burnrate / 1000) * (1 - Round.starterpct)
+		self.Motor = Round.thrust
+	end
+	
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = Round.dragcoef
 	self.DragCoefFlight = (Round.dragcoefflight or Round.dragcoef)
-	self.Motor = Round.thrust
 	self.MinimumSpeed = Round.minspeed
 	self.FlightTime = 0
 	self.FinMultiplier = Round.finmul
@@ -447,11 +457,9 @@ end
 
 function ENT:Detonate()
 
-	if self.Motor ~= 0 then
-        self.Entity:StopParticles()
-        self.Motor = 0
-		self:SetNWFloat("LightSize", 0)
-    end
+	self.Entity:StopParticles()
+	self.Motor = 0
+	self:SetNWFloat("LightSize", 0)
 
     if self.Fuse and (CurTime() - self.Fuse.TimeStarted < self.MinArmingDelay or not self.Fuse:IsArmed()) then
         self:Dud()

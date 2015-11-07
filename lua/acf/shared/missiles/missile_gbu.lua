@@ -9,6 +9,7 @@ ACF_defineGunClass("GBU", {
 	sound           = "acf_extra/tankfx/clunk.wav",
 	soundDistance   = " ",
 	soundNormal     = " ",
+	nothrust		= true,
     
     reloadmul       = 2,
     
