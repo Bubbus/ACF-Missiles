@@ -5,9 +5,6 @@ ACF_DefineRackClass("RK", {
 	desc = "A lightweight rack for rockets and bombs which is vulnerable to shots and explosions.",
 	muzzleflash = "40mm_muzzleflash_noscale",
 	rofmod = 1,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
-	soundDistance = " ",
-	soundNormal = " ",
 
     reloadmul       = 8,
 } )
@@ -26,7 +23,6 @@ ACF_DefineRack("1xRK", {
 	year = 1915,
     magsize = 1,
 	armour  = 20,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints =
 	{
@@ -45,7 +41,6 @@ ACF_DefineRack("1xRK_small", {
 	year = 1915,
     magsize = 1,
 	armour  = 12,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints =
 	{
@@ -64,7 +59,6 @@ ACF_DefineRack("2xRK", {
 	year = 1915,
     magsize = 2,
 	armour  = 20,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints =
 	{
@@ -160,7 +154,6 @@ ACF_DefineRack("1xAT3RK", {
 	year = 1915,
     magsize = 1,
 	armour  = 12,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints =
 	{
@@ -178,7 +171,6 @@ ACF_DefineRack("1xAT3RKS", {
 	year = 1915,
     magsize = 1,
 	armour  = 12,
-	sound = "acf_extra/airfx/rocket_fire2.wav",
 
     mountpoints =
 	{

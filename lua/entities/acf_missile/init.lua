@@ -378,8 +378,6 @@ function ENT:ConfigureFlight()
     local Time = CurTime()
 	local noThrust = ACF_GetGunValue(self.BulletData, "nothrust")
 	
-	print("noThrust", noThrust)
-	
 	if noThrust then
 		self.MotorLength = 0
 		self.Motor = 0
