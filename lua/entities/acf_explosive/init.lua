@@ -234,7 +234,7 @@ function ENT:Detonate(overrideBData)
 	local phyvel = 	phys and phys:GetVelocity() or Vector(0, 0, 1000)
 	bdata.Flight = 	bdata.Flight or phyvel
 	bdata.Owner = 	bdata.Owner or self.Owner
-	bdata.Pos = 	pos + bdata.Flight:GetNormalized() * (self.VelocityOffset or 0)
+	bdata.Pos = 	pos + (self.DetonateOffset or bdata.Flight:GetNormalized())
 	bdata.NoOcc = 	self
     bdata.Gun =     self
     

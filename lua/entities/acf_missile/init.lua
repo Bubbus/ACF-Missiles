@@ -18,7 +18,7 @@ function ENT:Initialize()
 	end
 
 	self.Entity:SetOwner(self.Entity.Owner)
-	self.VelocityOffset = -1
+	self.DetonateOffset = nil
 
 	self.PhysObj = self.Entity:GetPhysicsObject()
 	if !self.PhysObj:IsValid() then
@@ -220,8 +220,6 @@ function ENT:CalcFlight()
 
 	end
 
-	print("Vel = "..math.Round(Vel:Length() / DeltaTime))
-
 	if self.Fuse:GetDetonate(self, self.Guidance) then
 		self.LastVel = Vel / DeltaTime
 		self:Detonate()
@@ -235,8 +233,8 @@ function ENT:CalcFlight()
 	self.FlightTime = Flight
 
 	--Missile trajectory debugging
-	debugoverlay.Line(EndPos, EndPos + Vel:GetNormalized() * 50, 10, Color(0, 255, 0))
-	debugoverlay.Line(EndPos, EndPos + Dir:GetNormalized()  * 50, 10, Color(0, 0, 255))
+	debugoverlay.Line(Pos, EndPos, 10, Color(0, 255, 0))
+	--debugoverlay.Line(EndPos, EndPos + Dir:GetNormalized()  * 50, 10, Color(0, 0, 255))
 
 	self:DoFlight()
 end
@@ -477,6 +475,8 @@ function ENT:ForceDetonate()
 
 	ACF_ActiveMissiles[self] = nil
 
+	self.DetonateOffset = self.LastVel:GetNormalized() * -1
+	
     self.BaseClass.Detonate(self, self.BulletData)
 
 end
