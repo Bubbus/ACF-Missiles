@@ -66,7 +66,7 @@ ACF_defineGun("50kgBOMB", { --id
 -- Balance the round in line with the 40mm pod rocket.
 ACF_defineGun("100kgBOMB", { --id
 	name = "100kg Free Falling Bomb",
-	desc = "Old WW2 250lb bomb used by Soviet bombers to destroy enemies of the Motherland.",
+	desc = "An old 250lb WW2 bomb, as used by Soviet bombers to destroy enemies of the Motherland.",
 	model = "models/bombs/fab100.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
@@ -106,7 +106,7 @@ ACF_defineGun("100kgBOMB", { --id
 
 ACF_defineGun("250kgBOMB", { --id
 	name = "250kg Free Falling Bomb",
-	desc = "Heavy WW2 500lb bomb widely used as a tank buster.",
+	desc = "A heavy 500lb bomb, widely used as a tank buster on various WW2 aircraft.",
 	model = "models/bombs/fab250.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
@@ -147,7 +147,7 @@ ACF_defineGun("250kgBOMB", { --id
 
 ACF_defineGun("500kgBOMB", { --id
 	name = "500kg Free Falling Bomb",
-	desc = "1000lb bomb, found in the late heavy bombers of WW2.",
+	desc = "A 1000lb bomb, as found in the heavy bombers of late WW2. Best used against fortifications or immobile targets.",
 	model = "models/bombs/fab500.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
@@ -187,7 +187,7 @@ ACF_defineGun("500kgBOMB", { --id
 
 ACF_defineGun("1000kgBOMB", { --id
 	name = "1000kg Free Falling Bomb",
-	desc = "2000lb bomb, perfect weapon for people who cry that there is no nuke here.",
+	desc = "A 2000lb bomb. The ACF-equivalent of the MOAB, this munition will turn everything it touches to ashes. Handle with care.",
 	model = "models/bombs/an_m66.mdl",
 	gunclass = "BOMB",
     rack = "1xRK",  -- Which rack to spawn this missile on?
