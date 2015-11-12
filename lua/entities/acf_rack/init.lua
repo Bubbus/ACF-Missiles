@@ -708,7 +708,7 @@ function ENT:AddMissile()
     BulletData.Owner = ply
     missile:SetBulletData(BulletData)
     
-    local rackmodel = ACF_GetGunValue(BulletData.Id, "rackmdl")
+    local rackmodel = ACF_GetRackValue(self.Id, "rackmdl") or ACF_GetGunValue(BulletData.Id, "rackmdl")
     if rackmodel then 
         missile:SetModelEasy( rackmodel ) 
         missile.RackModelApplied = true
