@@ -2,8 +2,8 @@
 {
 
 	"$baseTexture" "models\bombs\gbu/mk82_body"
-	$bumpmap "models\bombs\gbu/mk82_body_nm"
-	$normalmap "models\bombs\gbu/mk82_body_nm"
+	$bumpmap "models\bombs\gbu/gbu12_body_b"
+	$normalmap "models\bombs\gbu/gbu12_body_b"
 	
 	
 	"$model" "1"
