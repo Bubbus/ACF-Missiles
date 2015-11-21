@@ -2,7 +2,7 @@
 ACF_defineGunClass("GBU", {
     type            = "missile",  -- i know i know
 	spread          = 1,
-	name            = "gbu",
+	name            = "Guided Bomb Unit",
 	desc            = "Guided Bomb Unit.  Same as general purpose bombs but you can control them.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 0.1,
