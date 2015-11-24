@@ -75,7 +75,7 @@ ACF_defineGun("HVAR ASR", { --id
 	round		=
 	{
 		model		= "models/missiles/hvar.mdl",
-		rackmdl		= "models/missiles/hvar_folded.mdl",
+		rackmdl		= "models/missiles/hvar.mdl",
 		maxlength	= 25,
 		casing		= 0.2,			-- thickness of missile casing, cm
 		armour		= 12,			-- effective armour thickness of casing, in mm

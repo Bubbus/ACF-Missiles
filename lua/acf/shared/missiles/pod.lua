@@ -178,6 +178,7 @@ ACF_DefineRack("3xUARRK", {
 	name = "A-20 3xHVAR Rack",
 	desc = "A lightweight rack for bombs which is vulnerable to shots and explosions.",
 	model		= "models/missiles/rk3uar.mdl",
+	rackmdl		= "models/missiles/hvar_folded.mdl",
 	gunclass = "POD",
 	weight = 150,
 	year = 1941,
