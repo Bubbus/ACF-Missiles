@@ -136,6 +136,7 @@ ACF_defineGun("S-24 ASR", { --id
 
     racks       = {["1xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
+	skinindex   = {HEAT = 0, HE = 1},
     armdelay    = 0.3     -- minimum fuse arming delay
 } )
 

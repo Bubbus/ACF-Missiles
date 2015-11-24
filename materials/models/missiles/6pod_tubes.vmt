@@ -1,8 +1,8 @@
 "VertexLitGeneric"
 {
 	"$baseTexture" "models\missiles/6pod_tubes"
-	$bumpmap "models\acfgeneric/bumbmap_mid"
-	$normalmap "models\acfgeneric/bumbmap_mid"
+	$bumpmap "models\acfgeneric/bumbmap_low"
+	$normalmap "models\acfgeneric/bumbmap_low"
 	
 	
 	"$model" "1"
