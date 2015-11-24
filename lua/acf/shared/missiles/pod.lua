@@ -200,8 +200,8 @@ ACF_DefineRack("3xUARRK", {
 ACF_DefineRack("6xUARRK", {
 	name = "M27 6xS24 Rack",
 	desc = "6-pack of death",
-	model		= "models/missiles/pod6_rk.mdl",
-	rackmdl		= "models/missiles/s24.mdl",
+	model		= "models/missiles/6pod_rk.mdl",
+	rackmdl		= "models/missiles/6pod_cover.mdl",
 	gunclass = "POD",
 	weight = 150,
 	year = 1980,
