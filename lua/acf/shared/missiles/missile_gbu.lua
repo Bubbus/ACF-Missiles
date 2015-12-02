@@ -18,46 +18,46 @@ ACF_defineGunClass("GBU", {
 
 
 
--- Balance the round in line with the 40mm pod rocket.
-ACF_defineGun("116kgGBU", { --id
-	name = "116kg Guided Weapon Mk 1 Walleye",
-	desc = "The first of a family of precision-guided munitions. This “smart bomb” had no propulsion system, but it could be maneuvered via a television assisted guidance system during its glide from an aircraft to the target.",
-	model = "models/bombs/gbu/agm62.mdl",
-	gunclass = "GBU",
-    rack = "1xRK",  -- Which rack to spawn this missile on?
-	length = 50,
-	caliber = 10.0,
-	weight = 100,    -- Don't scale down the weight though!
-	year = 1939,
-    modeldiameter = 21.2 * 1.4, -- in cm
-	round = {
-		model		= "models/bombs/gbu/agm62.mdl",
-		rackmdl		= "models/bombs/gbu/agm62.mdl",
-		maxlength	= 75,
-		casing		= 0.7,	        -- thickness of missile casing, cm
-		armour		= 16,			-- effective armour thickness of casing, in mm
-		propweight	= 0,	        -- motor mass - motor casing
-		thrust		= 1,	    	-- average thrust - kg*in/s^2
-		burnrate	= 1,	        -- cm^3/s at average chamber pressure
-		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
-		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
-		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
-	},
+Balance the round in line with the 40mm pod rocket.
+-- ACF_defineGun("116kgGBU", { --id
+	-- name = "116kg Guided Weapon Mk 1 Walleye",
+	-- desc = "The first of a family of precision-guided munitions. This “smart bomb” had no propulsion system, but it could be maneuvered via a television assisted guidance system during its glide from an aircraft to the target.",
+	-- model = "models/bombs/gbu/agm62.mdl",
+	-- gunclass = "GBU",
+    -- rack = "1xRK",  -- Which rack to spawn this missile on?
+	-- length = 50,
+	-- caliber = 10.0,
+	-- weight = 100,    -- Don't scale down the weight though!
+	-- year = 1939,
+    -- modeldiameter = 21.2 * 1.4, -- in cm
+	-- round = {
+		-- model		= "models/bombs/gbu/agm62.mdl",
+		-- rackmdl		= "models/bombs/gbu/agm62.mdl",
+		-- maxlength	= 75,
+		-- casing		= 0.7,	        -- thickness of missile casing, cm
+		-- armour		= 16,			-- effective armour thickness of casing, in mm
+		-- propweight	= 0,	        -- motor mass - motor casing
+		-- thrust		= 1,	    	-- average thrust - kg*in/s^2
+		-- burnrate	= 1,	        -- cm^3/s at average chamber pressure
+		-- starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
+		-- minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
+		-- dragcoef	= 0.002,		-- drag coefficient of the missile
+		-- finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
+        -- penmul      = math.sqrt(0.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	-- },
    
-    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Laser"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+    -- ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+    -- guidance    = {"Dumb", "Laser"},
+    -- fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
     
-	racks       = {["1xRK_small"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	-- racks       = {["1xRK_small"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
  
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+    -- seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    -- viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
     
-    agility     = 1,     -- multiplier for missile turn-rate.
-    armdelay    = 1     -- minimum fuse arming delay
-} )
+    -- agility     = 1,     -- multiplier for missile turn-rate.
+    -- armdelay    = 1     -- minimum fuse arming delay
+-- } )
 
 ACF_defineGun("227kgGBU", { --id
 	name = "227kg GBU-12 Paveway II",
