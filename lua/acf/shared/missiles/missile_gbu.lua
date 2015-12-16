@@ -18,7 +18,7 @@ ACF_defineGunClass("GBU", {
 
 
 
-Balance the round in line with the 40mm pod rocket.
+-- Balance the round in line with the 40mm pod rocket.
 -- 116kg removed for now - looking for candidate to replace
 
 -- ACF_defineGun("116kgGBU", { --id

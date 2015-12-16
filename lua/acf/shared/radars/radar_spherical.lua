@@ -11,7 +11,7 @@ ACF_DefineRadar("SmallOMNI", {
 	name 		= "Small Spherical Radar",
 	ent			= "acf_missileradar",
 	desc 		= "A lightweight omni-directional radar with a smaller range.",
-	model		= "models/radar/radar_small.mdl",
+	model		= "models/radar/radar_mid.mdl",
 	class 		= "OMNI",
 	weight 		= 450,
 	range 		= 9000 -- range in inches.
@@ -22,7 +22,7 @@ ACF_DefineRadar("MediumOMNI", {
 	name 		= "Medium Spherical Radar",
 	ent			= "acf_missileradar",
 	desc 		= "A omni-directional radar with a regular range.",
-	model		= "models/radar/radar_mid.mdl", -- medium one is for now scalled big one - will be changed
+	model		= "models/radar/radar_sml.mdl", -- medium one is for now scalled big one - will be changed
 	class 		= "OMNI",
 	weight 		= 900,
 	range 		= 12000 -- range in inches.
