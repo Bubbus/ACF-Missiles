@@ -19,6 +19,8 @@ ACF_defineGunClass("GBU", {
 
 
 Balance the round in line with the 40mm pod rocket.
+-- 116kg removed for now - looking for candidate to replace
+
 -- ACF_defineGun("116kgGBU", { --id
 	-- name = "116kg Guided Weapon Mk 1 Walleye",
 	-- desc = "The first of a family of precision-guided munitions. This “smart bomb” had no propulsion system, but it could be maneuvered via a television assisted guidance system during its glide from an aircraft to the target.",
@@ -66,7 +68,7 @@ ACF_defineGun("227kgGBU", { --id
 	gunclass = "GBU",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 5000,
-	caliber = 12.5,
+	caliber = 10.5,
 	weight = 250,    -- Don't scale down the weight though!
 	year = 1976,
     modeldiameter = 16.3 * 1.9, -- in cm
@@ -93,8 +95,8 @@ ACF_defineGun("227kgGBU", { --id
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
  
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+    seekcone    = 60,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 80,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1,     -- multiplier for missile turn-rate.
     armdelay    = 1     -- minimum fuse arming delay
@@ -107,7 +109,7 @@ ACF_defineGun("454kgGBU", { --id
 	gunclass = "GBU",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 15000,
-	caliber = 30.0,
+	caliber = 17.0,
 	weight = 500,    -- Don't scale down the weight though!
 	year = 1976,
     modeldiameter = 16.3 * 1.9, -- in cm
@@ -133,8 +135,8 @@ ACF_defineGun("454kgGBU", { --id
  
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
  
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+    seekcone    = 60,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 80,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1,     -- multiplier for missile turn-rate.
     armdelay    = 1     -- minimum fuse arming delay
@@ -147,7 +149,7 @@ ACF_defineGun("909kgGBU", { --id
 	gunclass = "GBU",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 30000,
-	caliber = 30.0,
+	caliber = 20.0,
 	weight = 1000,    -- Don't scale down the weight though! 
 	year = 1976,
     modeldiameter = 16.3 * 4.5, -- in cm
@@ -173,8 +175,8 @@ ACF_defineGun("909kgGBU", { --id
  
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
  
-    seekcone    = 40,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
-    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2. 
+    seekcone    = 60,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
+    viewcone    = 80,   -- getting outside this cone will break the lock.  Divided by 2. 
     
     agility     = 1,     -- multiplier for missile turn-rate.
     armdelay    = 1     -- minimum fuse arming delay
