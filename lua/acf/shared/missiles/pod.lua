@@ -203,7 +203,32 @@ ACF_DefineRack("3xUARRK", {
 	}
 } )
 
+ACF_DefineRack("6xUARRK", {
+	name = "M27 6xS24 Rack",
+	desc = "6-pack of death",
+	model		= "models/missiles/6pod_rk.mdl",
+	rackmdl		= "models/missiles/6pod_cover.mdl",
+	gunclass = "POD",
+	weight = 150,
+	year = 1980,
+	armour  = 45,
+    magsize = 6,
 
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+
+    mountpoints =
+	{
+		["missile1"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(-3.075,-.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile4"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile5"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile6"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+	}
+} )
 
 ACF_DefineRack("1x FIM-92", {
 	name = "Single Munition FIM-92 Rack",
