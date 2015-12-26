@@ -149,7 +149,7 @@ function this:GetGuidance(missile)
 		self.Target = nil
 		self.TargetVel = Vector()
 		self.LastTargetPos = Vector()
-		return {}
+		return {}f
 	else
         self.TargetPos = targetPos
 		local targetVel = targetPos - self.LastTargetPos
@@ -250,15 +250,12 @@ function this:GetWhitelistedEntsInCone(missile)
 	local found = ents.FindInCone(missilePos, missileForward, 50000, self.SeekCone)
 	
 	local foundAnim = {}
-	local foundAnimIdx = 1
 	local foundEnt
 	
     local filter = self.Filter
-	for i=1, #found do
-		foundEnt = found[i]
+	for i, foundEnt in pairs(found) do
 		if IsValid(foundEnt) and self.Filter[foundEnt:GetClass()] then
-			foundAnim[foundAnimIdx] = foundEnt
-			foundAnimIdx = foundAnimIdx + 1
+			table.insert(foundAnim, foundEnt)
 		end
 	end
     
