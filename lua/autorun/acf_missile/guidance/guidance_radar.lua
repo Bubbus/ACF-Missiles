@@ -149,7 +149,7 @@ function this:GetGuidance(missile)
 		self.Target = nil
 		self.TargetVel = Vector()
 		self.LastTargetPos = Vector()
-		return {}f
+		return {}
 	else
         self.TargetPos = targetPos
 		local targetVel = targetPos - self.LastTargetPos
