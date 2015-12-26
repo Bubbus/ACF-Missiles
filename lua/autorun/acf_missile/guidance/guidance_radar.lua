@@ -230,7 +230,7 @@ function this:GetWireTarget(missile)
         
         local val = outTbl.Value
         
-        if type(val) == "Entity" and IsValid(val) then 
+        if IsEntity(val) and IsValid(val) then 
             return val
         end
         
