@@ -4,7 +4,7 @@ print("radar type support loaded")
 ACFM.RadarBehaviour = ACFM.RadarBehaviour or {}
 ACFM.DefaultRadarSound = ACFM.DefaultRadarSound or "buttons/button16.wav"
 
-ACFM.RadarBehaviour["DIR"] = 
+ACFM.RadarBehaviour["DIR-AM"] = 
 {
 	GetDetectedEnts = function(self)
 		return ACFM_GetMissilesInCone(self:GetPos(), self:GetForward(), self.ConeDegs)
@@ -12,7 +12,7 @@ ACFM.RadarBehaviour["DIR"] =
 }
 
 
-ACFM.RadarBehaviour["OMNI"] = 
+ACFM.RadarBehaviour["OMNI-AM"] = 
 {
 	GetDetectedEnts = function(self)
 		return ACFM_GetMissilesInSphere(self:GetPos(), self.Range)
