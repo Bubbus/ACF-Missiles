@@ -31,6 +31,8 @@ function ENT:Initialize()
 	
 	self:ConfigureForClass()
 	
+	self:SetActive(false)
+	
 end
 
 
@@ -51,8 +53,27 @@ end
 
 function ENT:TriggerInput( inp, value )
 	if inp == "Active" then
-		self.Active = (value ~= 0)
+		self:SetActive(value ~= 0)
 	end
+end
+
+
+
+
+function ENT:SetActive(active)
+
+	self.Active = active
+	
+	if active then
+		local sequence = self:LookupSequence("active") or 0
+		self:ResetSequence(sequence)
+		self.AutomaticFrameAdvance = true
+	else
+		local sequence = self:LookupSequence("idle") or 0
+		self:ResetSequence(sequence)
+		self.AutomaticFrameAdvance = false
+	end
+
 end
 
 

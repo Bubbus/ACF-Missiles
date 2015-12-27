@@ -1,40 +1,40 @@
 
-ACF_DefineRadarClass("OMNI", {
-	name = "Spherical Radar",
-	desc = "A missile radar with full 360-degree detection but a limited range.",
+ACF_DefineRadarClass("OMNI-AM", {
+	name = "Spherical Anti-missile Radar",
+	desc = "A missile radar with full 360-degree detection but a limited range.  Only detects launched missiles.",
 } )
 
--- TODO all models change here into spherical radars
 
 
-ACF_DefineRadar("SmallOMNI", {
+
+ACF_DefineRadar("SmallOMNI-AM", {
 	name 		= "Small Spherical Radar",
 	ent			= "acf_missileradar",
 	desc 		= "A lightweight omni-directional radar with a smaller range.",
 	model		= "models/radar/radar_sp_sml.mdl",
-	class 		= "OMNI",
+	class 		= "OMNI-AM",
 	weight 		= 450,
-	range 		= 9000 -- range in inches.
+	range 		= 7000 -- range in inches.
 } )
 
 
-ACF_DefineRadar("MediumOMNI", {
+ACF_DefineRadar("MediumOMNI-AM", {
 	name 		= "Medium Spherical Radar",
 	ent			= "acf_missileradar",
 	desc 		= "A omni-directional radar with a regular range.",
 	model		= "models/radar/radar_sp_mid.mdl", -- medium one is for now scalled big one - will be changed
-	class 		= "OMNI",
+	class 		= "OMNI-AM",
 	weight 		= 900,
-	range 		= 12000 -- range in inches.
+	range 		= 10000 -- range in inches.
 } )
 
 
-ACF_DefineRadar("LargeOMNI", {
+ACF_DefineRadar("LargeOMNI-AM", {
 	name 		= "Large Spherical Radar",
 	ent			= "acf_missileradar",
 	desc 		= "A heavy omni-directional radar with a large range.",
 	model		= "models/radar/radar_sp_big.mdl",
-	class 		= "OMNI",
-	weight 		= 1200,
+	class 		= "OMNI-AM",
+	weight 		= 1500,
 	range 		= 15000 -- range in inches.
 } )
