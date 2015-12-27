@@ -61,7 +61,6 @@ end
 function ACFM_GetFlaresInCone(pos, dir, degs)
 
 	local ret = {}
-	local minDot = math.cos( math.rad(degs) )
 	local bullets = ACF.Bullet
 	
 	for idx, uid in pairs(ACFM_Flares) do
@@ -85,7 +84,6 @@ end
 
 function ACFM_GetAnyFlareInCone(pos, dir, degs)
 
-	local minDot = math.cos( math.rad(degs) )
 	local bullets = ACF.Bullet
 	
 	for idx, uid in pairs(ACFM_Flares) do
@@ -99,6 +97,50 @@ function ACFM_GetAnyFlareInCone(pos, dir, degs)
 		end
 		
 	end
+	
+end
+
+
+
+
+function ACFM_GetMissilesInCone(pos, dir, degs)
+
+	local ret = {}
+	
+	for missile, _ in pairs(ACF_ActiveMissiles) do
+		
+		if not IsValid(missile) then continue end
+		
+		if ACFM_ConeContainsPos(pos, dir, degs, missile:GetPos()) then
+			ret[#ret+1] = missile
+		end
+		
+	end
+
+	return ret
+	
+end
+
+
+
+
+function ACFM_GetMissilesInSphere(pos, radius)
+
+	local ret = {}
+	
+	local radSqr = radius * radius
+	
+	for missile, _ in pairs(ACF_ActiveMissiles) do
+		
+		if not IsValid(missile) then continue end
+		
+		if pos:DistToSqr(missile:GetPos()) <= radSqr then
+			ret[#ret+1] = missile
+		end
+		
+	end
+
+	return ret
 	
 end
 

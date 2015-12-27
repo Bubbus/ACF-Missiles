@@ -17,10 +17,10 @@ this.Name = ClassName
 this.Target = nil
 
 -- Cone to acquire targets within.
-this.SeekCone = 15
+this.SeekCone = 20
 
 -- Cone to retain targets within.
-this.ViewCone = 20
+this.ViewCone = 25
 
 -- Targets this close to the front are good enough.
 this.SeekTolerance = math.cos( math.rad( 2 ) )
@@ -74,6 +74,7 @@ function this:Configure(missile)
     self:super():Configure(missile)
     
     self.ViewCone = ACF_GetGunValue(missile.BulletData, "viewcone") or this.ViewCone
+	self.ViewConeCos = math.cos(math.rad(self.ViewCone))
     self.SeekCone = ACF_GetGunValue(missile.BulletData, "seekcone") or this.SeekCone
     
 end
@@ -132,7 +133,7 @@ function this:GetGuidance(missile)
 	if ret then return ret end
 	
 	if not IsValid(self.Target) then 
-		return {} 
+		return {TargetPos = nil} 
 	end
 
 	local missilePos = missile:GetPos()
@@ -143,21 +144,17 @@ function this:GetGuidance(missile)
 		targetPos = util.LocalToWorld( self.Target, targetPhysObj:GetMassCenter(), nil )
 	end
 
-	local angleFrom = math.deg(math.acos((targetPos - missilePos):GetNormalized():Dot(missileForward)))
+	local mfo       = missile:GetForward()
+	local mdir      = (targetPos - missilePos):GetNormalized()
+	local dot       = mfo.x * mdir.x + mfo.y * mdir.y + mfo.z * mdir.z
 	
-	if angleFrom > this.ViewCone then
+
+	if dot < self.ViewConeCos then
 		self.Target = nil
-		self.TargetVel = Vector()
-		self.LastTargetPos = Vector()
-		return {}
+		return {TargetPos = nil}
 	else
         self.TargetPos = targetPos
-		local targetVel = targetPos - self.LastTargetPos
-		self.LastTargetPos = targetPos
-
-		if self.LastTargetPos == Vector() then targetVel = Vector() end
-
-		return {TargetPos = targetPos, TargetVel = targetVel, ViewCone = self.ViewCone}
+		return {TargetPos = targetPos, ViewCone = self.ViewCone}
 	end
 	
 end
@@ -173,6 +170,7 @@ function this:ApplyOverride(missile)
 		
 		if ret then		
 			ret.ViewCone = self.ViewCone
+			ret.ViewConeRad = math.rad(self.ViewCone)
 			return ret
 		end
 		
@@ -187,17 +185,9 @@ function this:CheckTarget(missile)
 
 	if not (self.Target or self.Override) then	
 		local target = self:AcquireLock(missile)
-		
+
 		if IsValid(target) then 
-			while IsValid( target ) do
-				local parent = target:GetParent()
-				if IsValid(parent) then target = parent
-				else break end
-			end
 			self.Target = target
-			
-			self.TargetVel = Vector()
-			self.LastTargetPos = Vector()
 		end
 	end
 	

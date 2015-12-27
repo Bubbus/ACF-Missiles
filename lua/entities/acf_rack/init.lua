@@ -708,7 +708,7 @@ function ENT:AddMissile()
     BulletData.Owner = ply
     missile:SetBulletData(BulletData)
     
-    local rackmodel = ACF_GetGunValue(BulletData.Id, "rackmdl")
+    local rackmodel = ACF_GetRackValue(self.Id, "rackmdl") or ACF_GetGunValue(BulletData.Id, "rackmdl")
     if rackmodel then 
         missile:SetModelEasy( rackmodel ) 
         missile.RackModelApplied = true
@@ -848,6 +848,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	Rack.Muzzleflash        = gundef.muzzleflash or gunclass.muzzleflash or ""
 	Rack.RoFmod             = gunclass["rofmod"]
 	Rack.Sound              = gundef.sound or gunclass.sound
+	print("rack sound", Rack.Sound)
 	Rack.Inaccuracy         = gunclass["spread"]
     
     Rack.HideMissile        = ACF_GetRackValue(Id, "hidemissile")
