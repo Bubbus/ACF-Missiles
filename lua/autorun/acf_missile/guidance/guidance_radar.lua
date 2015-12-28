@@ -220,7 +220,7 @@ function this:GetWireTarget(missile)
         
         local val = outTbl.Value
         
-        if type(val) == "Entity" and IsValid(val) then 
+        if IsEntity(val) and IsValid(val) then 
             return val
         end
         
@@ -240,15 +240,12 @@ function this:GetWhitelistedEntsInCone(missile)
 	local found = ents.FindInCone(missilePos, missileForward, 50000, self.SeekCone)
 	
 	local foundAnim = {}
-	local foundAnimIdx = 1
 	local foundEnt
 	
     local filter = self.Filter
-	for i=1, #found do
-		foundEnt = found[i]
+	for i, foundEnt in pairs(found) do
 		if IsValid(foundEnt) and self.Filter[foundEnt:GetClass()] then
-			foundAnim[foundAnimIdx] = foundEnt
-			foundAnimIdx = foundAnimIdx + 1
+			table.insert(foundAnim, foundEnt)
 		end
 	end
     
