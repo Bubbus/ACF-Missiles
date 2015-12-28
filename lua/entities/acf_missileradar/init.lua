@@ -125,10 +125,10 @@ duplicator.RegisterEntityClass("acf_missileradar", MakeACF_MissileRadar, "Pos", 
 
 
 
-function ENT:CreateRadar(Id, ConeDegs)
+function ENT:CreateRadar(ACFName, ConeDegs)
 	
 	self.ConeDegs = ConeDegs
-	self.Id = Id
+	self.ACFName = ACFName
 	
 	self:RefreshClientInfo()
 	
@@ -141,7 +141,7 @@ function ENT:RefreshClientInfo()
 
 	self:SetNWFloat("ConeDegs", self.ConeDegs)
 	self:SetNWFloat("Range", self.Range)
-	self:SetNWString("Id", self.Id)
+	self:SetNWString("Id", self.ACFName)
 	self:SetNWString("Name", self.ACFName)
 
 end
