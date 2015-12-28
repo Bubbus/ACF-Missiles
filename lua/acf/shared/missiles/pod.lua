@@ -342,11 +342,11 @@ ACF_DefineRack("2x Strela-1", {
 } )
 
 ACF_DefineRack("4x Strela-1", {
-	name = "Double Munition 9M31 Rack",
+	name = "Quad Munition 9M31 Rack",
 	desc = "An 9m31 rack designed to carry 4 missile.",
 	model		= "models/missiles/9m31_rk4.mdl",
 	gunclass = "POD",
-	weight = 30,
+	weight = 50,
 	year = 1968,
     magsize = 4,
 	armour  = 100,
@@ -358,10 +358,10 @@ ACF_DefineRack("4x Strela-1", {
 	
     mountpoints = 
 	{
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)},
-		["missile2"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+		["missile1"] = {["offset"] = Vector(0.5,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(0.5,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(0.5,0,0), ["scaledir"] = Vector(0,0,0)},
+		["missile4"] = {["offset"] = Vector(0.5,0,0), ["scaledir"] = Vector(0,0,0)}
 	} 
 } )
 
