@@ -14,7 +14,7 @@ ACF_DefineRadar("SmallDIR-AM", {
 	model		= "models/radar/radar_sml.mdl",
 	class 		= "DIR-AM",
 	weight 		= 300,
-	viewcone 	= 30 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
+	viewcone 	= 25 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )
 
 
@@ -25,7 +25,7 @@ ACF_DefineRadar("MediumDIR-AM", {
 	model		= "models/radar/radar_mid.mdl", -- medium one is for now scalled big one - will be changed
 	class 		= "DIR-AM",
 	weight 		= 600,
-	viewcone 	= 45 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
+	viewcone 	= 40 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )
 
 
@@ -36,5 +36,5 @@ ACF_DefineRadar("LargeDIR-AM", {
 	model		= "models/radar/radar_big.mdl",
 	class 		= "DIR-AM",
 	weight 		= 900,
-	viewcone 	= 60 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
+	viewcone 	= 50 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )
