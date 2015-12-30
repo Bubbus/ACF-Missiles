@@ -13,8 +13,8 @@ ACF_DefineRadar("SmallOMNI-AM", {
 	desc 		= "A lightweight omni-directional radar with a smaller range.",
 	model		= "models/radar/radar_sp_sml.mdl",
 	class 		= "OMNI-AM",
-	weight 		= 450,
-	range 		= 7000 -- range in inches.
+	weight 		= 600,
+	range 		= 4000 -- range in inches.
 } )
 
 
@@ -24,8 +24,8 @@ ACF_DefineRadar("MediumOMNI-AM", {
 	desc 		= "A omni-directional radar with a regular range.",
 	model		= "models/radar/radar_sp_mid.mdl", -- medium one is for now scalled big one - will be changed
 	class 		= "OMNI-AM",
-	weight 		= 900,
-	range 		= 10000 -- range in inches.
+	weight 		= 1000,
+	range 		= 7000 -- range in inches.
 } )
 
 
@@ -35,6 +35,6 @@ ACF_DefineRadar("LargeOMNI-AM", {
 	desc 		= "A heavy omni-directional radar with a large range.",
 	model		= "models/radar/radar_sp_big.mdl",
 	class 		= "OMNI-AM",
-	weight 		= 1500,
+	weight 		= 2000,
 	range 		= 15000 -- range in inches.
 } )
