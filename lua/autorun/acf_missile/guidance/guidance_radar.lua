@@ -65,7 +65,8 @@ this.desc = "This guidance package detects a target-position infront of itself, 
 
 function this:Init()
 	self.LastSeek = CurTime() - self.SeekDelay - 0.000001
-    self.Filter = self.DefaultFilter
+    --self.Filter = self.DefaultFilter
+	self.Filter = table.Copy(self.DefaultFilter)
 	self.LastTargetPos = Vector()
 end
 
@@ -233,6 +234,24 @@ end
 
 
 
+--ents.findincone not working? weird.
+function JankCone (init, forward, range, cone)
+	local allents = ents.GetAll()
+	local tblout = {}
+	
+	for k, v in pairs (allents) do
+		if not IsValid(v) then continue end
+		local dist = (v:GetPos() - init):Length()
+		local ang = math.deg(math.acos(math.Clamp(((v:GetPos() - init):GetNormalized()):Dot(forward), -1, 1)))
+		if (dist > range) then continue end
+		if (ang > cone) then continue end
+		
+		table.insert(tblout, v)
+	end
+	return tblout
+end
+
+
 
 
 function this:GetWhitelistedEntsInCone(missile)
@@ -241,7 +260,8 @@ function this:GetWhitelistedEntsInCone(missile)
 	local missileForward = missile:GetForward()
 	local minDot = math.cos(math.rad(self.SeekCone))
 	
-	local found = ents.FindInCone(missilePos, missileForward, 50000, self.SeekCone)
+	--local found = ents.FindInCone(missilePos, missileForward, 50000, self.SeekCone)
+	local found = JankCone(missilePos, missileForward, 50000, self.SeekCone)
 	
 	local foundAnim = {}
 	local foundEnt
@@ -250,7 +270,8 @@ function this:GetWhitelistedEntsInCone(missile)
     local filter = self.Filter
 	for i, foundEnt in pairs(found) do
 	
-		if not (IsValid(foundEnt) and self.Filter[foundEnt:GetClass()]) then continue end
+		--if not (IsValid(foundEnt) and self.Filter[foundEnt:GetClass()]) then continue end
+		if (not IsValid(foundEnt)) or (not self.Filter[foundEnt:GetClass()]) then	continue end
 		local foundLocalPos = foundEnt:GetPos() - missilePos
 		
 		local foundDistSqr = foundLocalPos:LengthSqr()
@@ -315,8 +336,7 @@ function this:AcquireLock(missile)
 
 	-- Part 1: get all whitelisted entities in seek-cone.
 	local found = self:GetWhitelistedEntsInCone(missile)
-    
-	
+    	
 	-- Part 2: get a good seek target
 	local foundCt = table.Count(found)
 	if foundCt < 2 then 
