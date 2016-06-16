@@ -31,7 +31,7 @@ include("acf/shared/sh_acfm_getters.lua")
 function ACFM_BulletLaunch(BData)
 
     ACF.CurBulletIndex = ACF.CurBulletIndex + 1        --Increment the index
-    if ACF.CurBulletIndex > ACF.BulletIndexLimt then
+    if ACF.CurBulletIndex > ACF.BulletIndexLimit then
         ACF.CurBulletIndex = 1
     end
 
