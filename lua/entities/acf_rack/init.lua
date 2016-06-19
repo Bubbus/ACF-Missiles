@@ -903,7 +903,7 @@ end
 
 function ENT:FireMissile()
     
-	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and not self:GetParent():IsValid() and (self.PostReloadWait < CurTime()) then
+	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and (self.PostReloadWait < CurTime()) then
         
         local nextMsl = self:PeekMissile()
     
