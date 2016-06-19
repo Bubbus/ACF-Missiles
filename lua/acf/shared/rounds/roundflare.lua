@@ -15,7 +15,7 @@ function Round.create( Gun, BulletData )
 	
 	ACF_CreateBullet( BulletData )
 	
-	local bdata = ACF.Bullet[BulletData.Index]
+	local bdata = ACF.Bullet[ACF.CurBulletIndex]
 	
 	bdata.CreateTime = SysTime()
 	
