@@ -48,7 +48,7 @@ function this:GetGuidance(missile)
 
     local posVec = self:GetWireTarget()
 
-    if not posVec or type(posVec) != "Vector" or posVec == Vector() then
+    if not posVec or type(posVec) ~= "Vector" or posVec == Vector() then
         return {TargetPos = nil} 
     end
 
