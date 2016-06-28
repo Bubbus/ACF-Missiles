@@ -75,7 +75,7 @@ end
 
 function this:Configure(missile)
     
-    self:super():Configure(missile)
+    self:super().Configure(self, missile)
     
     self.ViewCone = ACF_GetGunValue(missile.BulletData, "viewcone") or this.ViewCone
 	self.ViewConeCos = math.cos(math.rad(self.ViewCone))
