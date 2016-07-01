@@ -116,7 +116,7 @@ ACF_defineGun("454kgGBU", { --id
 	round = {
 		model		= "models/bombs/gbu/gbu16.mdl",
 		rackmdl		= "models/bombs/gbu/gbu16.mdl",
-		maxlength	= 200,
+		maxlength	= 180,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		armour		= 24,			-- effective armour thickness of casing, in mm
 		propweight	= 0,	        -- motor mass - motor casing
@@ -156,7 +156,7 @@ ACF_defineGun("909kgGBU", { --id
 	round = {
 		model		= "models/bombs/gbu/gbu10_fold.mdl",
 		rackmdl		= "models/bombs/gbu/gbu10.mdl",
-		maxlength	= 400,
+		maxlength	= 350,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		armour		= 20,			-- effective armour thickness of casing, in mm
 		propweight	= 0,	        -- motor mass - motor casing

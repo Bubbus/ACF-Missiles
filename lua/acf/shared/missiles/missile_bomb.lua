@@ -44,7 +44,7 @@ ACF_defineGun("50kgBOMB", { --id
 		starterpct	= 0.01,         -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.008,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(0.6),  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
@@ -78,7 +78,7 @@ ACF_defineGun("100kgBOMB", { --id
 	round = {
 		model		= "models/bombs/fab100.mdl",
 		rackmdl		= "models/bombs/fab100.mdl",
-		maxlength	= 75,
+		maxlength	= 80,
 		casing		= 0.7,	        -- thickness of missile casing, cm
 		armour		= 16,			-- effective armour thickness of casing, in mm
 		propweight	= 0,	        -- motor mass - motor casing
@@ -87,7 +87,7 @@ ACF_defineGun("100kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.03,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.007,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(0.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
@@ -118,7 +118,7 @@ ACF_defineGun("250kgBOMB", { --id
 	round = {
 		model		= "models/bombs/fab250.mdl",
 		rackmdl		= "models/bombs/fab250.mdl",
-		maxlength	= 125,
+		maxlength	= 115,
 		casing		= 1.5,	        -- thickness of missile casing, cm
 		armour		= 20,			-- effective armour thickness of casing, in mm
 		propweight	= 0,	        -- motor mass - motor casing
@@ -127,7 +127,7 @@ ACF_defineGun("250kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.02,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(0.4)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
@@ -159,7 +159,7 @@ ACF_defineGun("500kgBOMB", { --id
 	round = {
 		model		= "models/bombs/fab500.mdl",
 		rackmdl		= "models/bombs/fab500.mdl",
-		maxlength	= 250,
+		maxlength	= 200,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		armour		= 24,			-- effective armour thickness of casing, in mm
 		propweight	= 0,	        -- motor mass - motor casing
@@ -168,7 +168,7 @@ ACF_defineGun("500kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.02,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.004,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(0.3)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
@@ -199,7 +199,7 @@ ACF_defineGun("1000kgBOMB", { --id
 	round = {
 		model		= "models/bombs/an_m66.mdl",
 		rackmdl		= "models/bombs/an_m66.mdl",
-		maxlength	= 500,
+		maxlength	= 375,
 		casing		= 2.0,	        -- thickness of missile casing, cm
 		armour		= 40,			-- effective armour thickness of casing, in mm
 		propweight	= 0,	        -- motor mass - motor casing
@@ -208,7 +208,7 @@ ACF_defineGun("1000kgBOMB", { --id
 		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
-		finmul		= 0.01,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.004,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(0.2)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
