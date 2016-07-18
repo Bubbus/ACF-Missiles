@@ -15,7 +15,11 @@ AddCSLuaFile("autorun/client/cl_acfm_effectsoverride.lua")
 AddCSLuaFile("autorun/printbyname.lua")
 AddCSLuaFile("acf/client/cl_acfmenu_missileui.lua")
 
-include("gitrc.lua")
+if SERVER then
+
+  include("gitrc.lua")
+
+end
 
 AddCSLuaFile("includes/modules/markdown.lua")
 AddCSLuaFile("acf/client/cl_missilewiki.lua")
