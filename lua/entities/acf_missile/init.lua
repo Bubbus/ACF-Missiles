@@ -358,7 +358,11 @@ function ENT:LaunchEffect()
     local sound = self.BulletData.Sound or ACF_GetGunValue(self.BulletData, "sound")
 
     if sound then
+			if( ACF_SOUND_EXT ) then
+				hook.Call( "ACF_SOUND_MISSILE", nil, self, sound )
+			else
         self:EmitSound(sound, 511, 100)
+			end
     end
 
 end
@@ -377,7 +381,7 @@ function ENT:ConfigureFlight()
 
     local Time = CurTime()
 	local noThrust = ACF_GetGunValue(self.BulletData, "nothrust")
-	
+
 	if noThrust then
 		self.MotorLength = 0
 		self.Motor = 0
@@ -385,7 +389,7 @@ function ENT:ConfigureFlight()
 		self.MotorLength = BulletData.PropMass / (Round.burnrate / 1000) * (1 - Round.starterpct)
 		self.Motor = Round.thrust
 	end
-	
+
 	self.Gravity = GetConVar("sv_gravity"):GetFloat()
 	self.DragCoef = Round.dragcoef
 	self.DragCoefFlight = (Round.dragcoefflight or Round.dragcoef)
@@ -481,7 +485,7 @@ function ENT:ForceDetonate()
 	ACF_ActiveMissiles[self] = nil
 
 	self.DetonateOffset = self.LastVel:GetNormalized() * -1
-	
+
     self.BaseClass.Detonate(self, self.BulletData)
 
 end
