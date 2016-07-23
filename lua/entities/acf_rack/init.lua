@@ -946,7 +946,7 @@ function ENT:FireMissile()
             local bdata = missile.BulletData
             
             bdata.Pos = MuzzlePos
-            bdata.Flight = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
+            bdata.Velocity = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
             
             
             if missile.RackModelApplied then 

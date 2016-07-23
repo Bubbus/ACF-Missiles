@@ -232,13 +232,13 @@ function ENT:Detonate(overrideBData)
 	local pos = self:GetPos()
 	
 	local phyvel = 	phys and phys:GetVelocity() or Vector(0, 0, 1000)
-	bdata.Flight = 	bdata.Flight or phyvel
+	bdata.Velocity = 	bdata.Velocity or phyvel
 	bdata.Owner = 	bdata.Owner or self.Owner
-	bdata.Pos = 	pos + (self.DetonateOffset or bdata.Flight:GetNormalized())
+	bdata.Pos = 	pos + (self.DetonateOffset or bdata.Velocity:GetNormalized())
 	bdata.NoOcc = 	self
     bdata.Gun =     self
     
-    debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Flight, 10, Color(255, 128, 0))
+    debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Velocity, 10, Color(255, 128, 0))
     
     if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
     else bdata.Filter = {self} end
@@ -267,7 +267,7 @@ end
 
 function ENT:DoReplicatedPropHit(Bullet)
 
-	local FlightRes = { Entity = self, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = HITGROUP_GENERIC }
+	local FlightRes = { Entity = self, HitNormal = Bullet.Velocity, HitPos = Bullet.Pos, HitGroup = HITGROUP_GENERIC }
 	local Index = Bullet.Index
 	
 	ACF_BulletPropImpact = ACF.RoundTypes[Bullet.Type]["propimpact"]		

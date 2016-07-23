@@ -395,7 +395,7 @@ function ENT:ConfigureFlight()
 	self.Agility = GunData.agility or 1
 	self.CutoutTime = Time + self.MotorLength
 	self.CurPos = BulletData.Pos
-	self.CurDir = BulletData.Flight:GetNormalized()
+	self.CurDir = BulletData.Velocity:GetNormalized()
 	self.LastPos = self.CurPos
     self.Hit = false
 	self.HitNorm = Vector(0,0,0)
@@ -447,7 +447,7 @@ function ENT:DoFlight(ToPos, ToDir)
 	self:SetAngles(setDir:Angle())
 
     self.BulletData.Pos = setPos
-    --self.BulletData.Flight = self.LastVel
+    --self.BulletData.Velocity = self.LastVel
 end
 
 
@@ -464,8 +464,8 @@ function ENT:Detonate()
         return
     end
 
-    self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
-    --debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
+    self.BulletData.Velocity = self:GetForward() * (self.BulletData.MuzzleVel or 10)
+    --debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Velocity, 10, Color(255, 0, 0))
 
     self:ForceDetonate()
 
