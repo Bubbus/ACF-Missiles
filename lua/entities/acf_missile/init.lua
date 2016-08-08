@@ -185,7 +185,7 @@ function ENT:CalcFlight()
 	end
 
 	--Physics calculations
-	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
+	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
 	local VelNorm = Vel / Speed
@@ -194,7 +194,7 @@ function ENT:CalcFlight()
 	Vel = Vel - Up * Speed * DotSimple * self.FinMultiplier
 
 	local SpeedSq = Vel:LengthSqr()
-	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
+	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv
 	Vel = Vel - Drag
 	local EndPos = Pos + Vel
 
@@ -232,7 +232,7 @@ function ENT:CalcFlight()
 	self.FlightTime = Flight
 
 	--Missile trajectory debugging
-	debugoverlay.Line(Pos, EndPos, 10, Color(0, 255, 0))
+	--debugoverlay.Line(Pos, EndPos, 10, Color(0, 255, 0))
 	--debugoverlay.Line(EndPos, EndPos + Dir:GetNormalized()  * 50, 10, Color(0, 0, 255))
 
 	self:DoFlight()

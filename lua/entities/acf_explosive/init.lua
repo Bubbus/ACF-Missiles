@@ -238,7 +238,7 @@ function ENT:Detonate(overrideBData)
 	bdata.NoOcc = 	self
     bdata.Gun =     self
     
-    debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Velocity, 10, Color(255, 128, 0))
+    --debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Velocity, 10, Color(255, 128, 0))
     
     if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
     else bdata.Filter = {self} end
