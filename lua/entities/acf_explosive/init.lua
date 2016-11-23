@@ -27,9 +27,9 @@ end
 
 
 local nullhit = {Damage = 0, Overkill = 1, Loss = 0, Kill = false}
-function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )
+function ENT:ACF_OnDamage( Entity , Energy , FrArea , Angle , Inflictor )
 	self.ACF.Armour = 0.1
-	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
+	local HitRes = ACF_PropDamage( Entity , Energy , FrArea , Angle , Inflictor )	--Calling the standard damage prop function
 	if self.Detonated or self.DisableDamage then return table.Copy(nullhit) end
 	
 	local CanDo = hook.Run("ACF_AmmoExplode", self, self.BulletData )
