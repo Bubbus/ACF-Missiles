@@ -112,8 +112,8 @@ function ENT:ACF_Activate( Recalc )
 	self.ACF = self.ACF or {} 
 	
 	local PhysObj = self:GetPhysicsObject()
-	if not self.ACF.Aera then
-		self.ACF.Aera = PhysObj:GetSurfaceArea() * 6.45
+	if not self.ACF.Area then
+		self.ACF.Area = PhysObj:GetSurfaceArea() * 6.45
 	end
 	if not self.ACF.Volume then
 		self.ACF.Volume = PhysObj:GetVolume() * 16.38
@@ -121,7 +121,7 @@ function ENT:ACF_Activate( Recalc )
 	
 	local ForceArmour = self.CustomArmour
 	
-	local Armour = ForceArmour or (EmptyMass*1000 / self.ACF.Aera / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
+	local Armour = ForceArmour or (EmptyMass*1000 / self.ACF.Area / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
 	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone 
 	local Percent = 1 
 	
@@ -143,9 +143,9 @@ end
 
 
 //* TODO
-function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This function needs to return HitRes
+function ENT:ACF_OnDamage( Entity , Energy , FrArea , Angle , Inflictor )	--This function needs to return HitRes
 
-	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
+	local HitRes = ACF_PropDamage( Entity , Energy , FrArea , Angle , Inflictor )	--Calling the standard damage prop function
 	
 	local curammo = table.Count(self.Missiles)
 	
