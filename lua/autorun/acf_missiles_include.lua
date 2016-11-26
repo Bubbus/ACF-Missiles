@@ -30,3 +30,6 @@ include("autorun/sh_acfm_cvars.lua")
 
 game.AddParticles( "particles/flares_fx.pcf" )
 PrecacheParticleSystem( "ACFM_Flare" )
+
+AddCSLuaFile("wire/beam_netvars.lua")
+include("wire/beam_netvars.lua")
