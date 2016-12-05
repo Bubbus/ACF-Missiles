@@ -15,7 +15,10 @@ function Round.create( Gun, BulletData )
 	
 	ACF_CreateBullet( BulletData )
 	
-	local bdata = ACF.Bullet[BulletData.Index]
+	local Idx = ACF.CurBulletIndex
+	ACF.Bullet[ACF.CurBulletIndex].Index = Idx
+	
+	local bdata = ACF.Bullet[Idx]
 	
 	bdata.CreateTime = SysTime()
 	
@@ -42,7 +45,7 @@ function Round.convert( Crate, PlayerData )
 	Data.MuzzleVel = ACF_MuzzleVelocity( Data.PropMass, Data.ProjMass, Data.Caliber )
 	local Energy = ACF_Kinetic( Data.MuzzleVel*39.37 , Data.ProjMass, Data.LimitVel )
 		
-	local MaxVol = ACF_RoundShellCapacity( Energy.Momentum, Data.FrAera, Data.Caliber, Data.ProjLength )
+	local MaxVol = ACF_RoundShellCapacity( Energy.Momentum, Data.FrArea, Data.Caliber, Data.ProjLength )
 	GUIData.MinFillerVol = 0
 	GUIData.MaxFillerVol = math.min(GUIData.ProjVolume,MaxVol*0.9)
 	GUIData.FillerVol = math.min(PlayerData.Data5,GUIData.MaxFillerVol)
@@ -53,14 +56,14 @@ function Round.convert( Crate, PlayerData )
 	
 	--Random bullshit left
 	Data.ShovePower = 0.1
-	Data.PenAera = Data.FrAera^ACF.PenAreaMod
-	Data.DragCoef = ((Data.FrAera/375)/Data.ProjMass)
+	Data.PenArea = Data.FrArea^ACF.PenAreaMod
+	Data.DragCoef = ((Data.FrArea/375)/Data.ProjMass)
 	Data.LimitVel = 700										--Most efficient penetration speed in m/s
 	Data.KETransfert = 0.1									--Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet = 75										--Base ricochet angle
 	
-	Data.BurnRate = Data.FrAera * ACFM.FlareBurnMultiplier
-	Data.DistractChance = (2 / math.pi) * math.atan(Data.FrAera * ACFM.FlareDistractMultiplier)
+	Data.BurnRate = Data.FrArea * ACFM.FlareBurnMultiplier
+	Data.DistractChance = (2 / math.pi) * math.atan(Data.FrArea * ACFM.FlareDistractMultiplier)
 	Data.BurnTime = Data.FillerMass / Data.BurnRate
 	
 	Data.BoomPower = Data.PropMass + Data.FillerMass
@@ -249,7 +252,7 @@ function Round.guiupdate( Panel, Table )
 
 	acfmenupanel:CPanelText("Desc", ACF.RoundTypes[PlayerData.Type].desc)	--Description (Name, Desc)
 	acfmenupanel:CPanelText("LengthDisplay", "Round Length : "..(math.floor((Data.PropLength+Data.ProjLength+Data.Tracer)*100)/100).."/"..(Data.MaxTotalLength).." cm")	--Total round length (Name, Desc)
-	acfmenupanel:CPanelText("VelocityDisplay", "Muzzle Velocity : "..math.floor(Data.MuzzleVel*ACF.VelScale).." m/s")	--Proj muzzle velocity (Name, Desc)	
+	acfmenupanel:CPanelText("VelocityDisplay", "Muzzle Velocity : "..math.floor(Data.MuzzleVel).." m/s")	--Proj muzzle velocity (Name, Desc)	
 	
 	acfmenupanel:CPanelText("BurnRateDisplay", "Burn Rate : " .. math.Round(Data.BurnRate, 1) .. " kg/s")
 	acfmenupanel:CPanelText("BurnDurationDisplay", "Burn Duration : " .. math.Round(Data.BurnTime, 1) .. " s")

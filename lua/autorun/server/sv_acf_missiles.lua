@@ -31,7 +31,7 @@ include("acf/shared/sh_acfm_getters.lua")
 function ACFM_BulletLaunch(BData)
 
     ACF.CurBulletIndex = ACF.CurBulletIndex + 1        --Increment the index
-    if ACF.CurBulletIndex > ACF.BulletIndexLimt then
+    if ACF.CurBulletIndex > ACF.BulletIndexLimit then
         ACF.CurBulletIndex = 1
     end
 
@@ -48,7 +48,7 @@ function ACFM_BulletLaunch(BData)
     
     if not BData.TraceBackComp then                                            --Check the Gun's velocity and add a modifier to the flighttime so the traceback system doesn't hit the originating contraption if it's moving along the shell path
         if IsValid(BData.Gun) then
-            BData["TraceBackComp"] = BData.Gun:GetPhysicsObject():GetVelocity():Dot(BData.Flight:GetNormalized())
+            BData["TraceBackComp"] = BData.Gun:GetPhysicsObject():GetVelocity():Dot(BData.Velocity:GetNormalized())
         else
             BData["TraceBackComp"] = 0
         end
@@ -98,7 +98,7 @@ function ACFM_ExpandBulletData(bullet)
     local ret = conversion( nil, toconvert )
     
     ret.Pos = bullet.Pos or Vector(0,0,0)
-    ret.Flight = bullet.Flight or Vector(0,0,0)
+    ret.Velocity = bullet.Velocity or Vector(0,0,0)
     ret.Type = ret.Type or bullet.Type
     
     local cvarGrav = GetConVar("sv_gravity")
@@ -206,9 +206,9 @@ function ResetVelocity.AP(bdata)
     
     if not bdata.MuzzleVel then return end
 
-    bdata.Flight:Normalize()
+    bdata.Velocity:Normalize()
     
-    bdata.Flight = bdata.Flight * (bdata.MuzzleVel * 39.37)
+    bdata.Velocity = bdata.Velocity * (bdata.MuzzleVel * 39.37)
     
 end
             
@@ -224,11 +224,11 @@ function ResetVelocity.HEAT(bdata)
     
     if not (bdata.MuzzleVel and bdata.SlugMV) then return end
     
-    bdata.Flight:Normalize()
+    bdata.Velocity:Normalize()
     
     local penmul = bdata.penmul or ACF_GetGunValue(bdata, "penmul") or 1
     
-    bdata.Flight = bdata.Flight * (bdata.SlugMV * penmul) * 39.37 
+    bdata.Velocity = bdata.Velocity * (bdata.SlugMV * penmul) * 39.37 
     bdata.NotFirstPen = false
     
 end    

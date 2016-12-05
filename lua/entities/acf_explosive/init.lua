@@ -27,9 +27,9 @@ end
 
 
 local nullhit = {Damage = 0, Overkill = 1, Loss = 0, Kill = false}
-function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )
+function ENT:ACF_OnDamage( Entity , Energy , FrArea , Angle , Inflictor )
 	self.ACF.Armour = 0.1
-	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
+	local HitRes = ACF_PropDamage( Entity , Energy , FrArea , Angle , Inflictor )	--Calling the standard damage prop function
 	if self.Detonated or self.DisableDamage then return table.Copy(nullhit) end
 	
 	local CanDo = hook.Run("ACF_AmmoExplode", self, self.BulletData )
@@ -232,13 +232,13 @@ function ENT:Detonate(overrideBData)
 	local pos = self:GetPos()
 	
 	local phyvel = 	phys and phys:GetVelocity() or Vector(0, 0, 1000)
-	bdata.Flight = 	bdata.Flight or phyvel
+	bdata.Velocity = 	bdata.Velocity or phyvel
 	bdata.Owner = 	bdata.Owner or self.Owner
-	bdata.Pos = 	pos + (self.DetonateOffset or bdata.Flight:GetNormalized())
+	bdata.Pos = 	pos + (self.DetonateOffset or bdata.Velocity:GetNormalized())
 	bdata.NoOcc = 	self
     bdata.Gun =     self
     
-    debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Flight, 10, Color(255, 128, 0))
+    --debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Velocity, 10, Color(255, 128, 0))
     
     if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
     else bdata.Filter = {self} end
@@ -267,7 +267,7 @@ end
 
 function ENT:DoReplicatedPropHit(Bullet)
 
-	local FlightRes = { Entity = self, HitNormal = Bullet.Flight, HitPos = Bullet.Pos, HitGroup = HITGROUP_GENERIC }
+	local FlightRes = { Entity = self, HitNormal = Bullet.Velocity, HitPos = Bullet.Pos, HitGroup = HITGROUP_GENERIC }
 	local Index = Bullet.Index
 	
 	ACF_BulletPropImpact = ACF.RoundTypes[Bullet.Type]["propimpact"]		

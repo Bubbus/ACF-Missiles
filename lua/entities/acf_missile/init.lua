@@ -185,7 +185,7 @@ function ENT:CalcFlight()
 	end
 
 	--Physics calculations
-	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * ACF.VelScale * DeltaTime ^ 2
+	local Vel = LastVel + (Dir * self.Motor - Vector(0,0,self.Gravity)) * DeltaTime ^ 2
 	local Up = Dir:Cross(Vel):Cross(Dir):GetNormalized()
 	local Speed = Vel:Length()
 	local VelNorm = Vel / Speed
@@ -194,7 +194,7 @@ function ENT:CalcFlight()
 	Vel = Vel - Up * Speed * DotSimple * self.FinMultiplier
 
 	local SpeedSq = Vel:LengthSqr()
-	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv * ACF.VelScale
+	local Drag = Vel:GetNormalized() * (DragCoef * SpeedSq) / ACF.DragDiv
 	Vel = Vel - Drag
 	local EndPos = Pos + Vel
 
@@ -232,7 +232,7 @@ function ENT:CalcFlight()
 	self.FlightTime = Flight
 
 	--Missile trajectory debugging
-	debugoverlay.Line(Pos, EndPos, 10, Color(0, 255, 0))
+	--debugoverlay.Line(Pos, EndPos, 10, Color(0, 255, 0))
 	--debugoverlay.Line(EndPos, EndPos + Dir:GetNormalized()  * 50, 10, Color(0, 0, 255))
 
 	self:DoFlight()
@@ -399,7 +399,7 @@ function ENT:ConfigureFlight()
 	self.Agility = GunData.agility or 1
 	self.CutoutTime = Time + self.MotorLength
 	self.CurPos = BulletData.Pos
-	self.CurDir = BulletData.Flight:GetNormalized()
+	self.CurDir = BulletData.Velocity:GetNormalized()
 	self.LastPos = self.CurPos
     self.Hit = false
 	self.HitNorm = Vector(0,0,0)
@@ -451,7 +451,7 @@ function ENT:DoFlight(ToPos, ToDir)
 	self:SetAngles(setDir:Angle())
 
     self.BulletData.Pos = setPos
-    --self.BulletData.Flight = self.LastVel
+    --self.BulletData.Velocity = self.LastVel
 end
 
 
@@ -468,8 +468,8 @@ function ENT:Detonate()
         return
     end
 
-    self.BulletData.Flight = self:GetForward() * (self.BulletData.MuzzleVel or 10)
-    --debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Flight, 10, Color(255, 0, 0))
+    self.BulletData.Velocity = self:GetForward() * (self.BulletData.MuzzleVel or 10)
+    --debugoverlay.Line(self.BulletData.Pos, self.BulletData.Pos + self.BulletData.Velocity, 10, Color(255, 0, 0))
 
     self:ForceDetonate()
 
@@ -508,7 +508,7 @@ function ENT:Dud()
 	Phys:EnableMotion(true)
 	local Vel = self.LastVel
 
-	if self.HitNorm != Vector(0,0,0) then
+	if self.HitNorm ~= Vector(0,0,0) then
 		local Dot = self.CurDir:Dot(self.HitNorm)
 		local NewDir = self.CurDir - 2 * Dot * self.HitNorm
 		local VelMul = (0.8 + Dot * 0.7) * Vel:Length()
@@ -536,7 +536,7 @@ function ENT:Think()
 		if self.FirstThink == true then
 			self.FirstThink = false
 			self.LastThink = CurTime() - self.ThinkDelay
-			self.LastVel = self.Launcher:GetVelocity() * self.ThinkDelay
+			self.LastVel = ACF_GetAncestor(self.Launcher):GetVelocity() * self.ThinkDelay
 		end
 		self:CalcFlight()
 
@@ -592,8 +592,8 @@ function ENT:ACF_Activate( Recalc )
 	self.ACF = self.ACF or {}
 
 	local PhysObj = self:GetPhysicsObject()
-	if not self.ACF.Aera then
-		self.ACF.Aera = PhysObj:GetSurfaceArea() * 6.45
+	if not self.ACF.Area then
+		self.ACF.Area = PhysObj:GetSurfaceArea() * 6.45
 	end
 	if not self.ACF.Volume then
 		self.ACF.Volume = PhysObj:GetVolume() * 16.38
@@ -601,7 +601,7 @@ function ENT:ACF_Activate( Recalc )
 
 	local ForceArmour = ACF_GetGunValue(self.BulletData, "armour")
 
-	local Armour = ForceArmour or (EmptyMass*1000 / self.ACF.Aera / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
+	local Armour = ForceArmour or (EmptyMass*1000 / self.ACF.Area / 0.78) --So we get the equivalent thickness of that prop in mm if all it's weight was a steel plate
 	local Health = self.ACF.Volume/ACF.Threshold							--Setting the threshold of the prop aera gone
 	local Percent = 1
 
@@ -625,11 +625,11 @@ end
 
 local nullhit = {Damage = 0, Overkill = 1, Loss = 0, Kill = false}
 
-function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This function needs to return HitRes
+function ENT:ACF_OnDamage( Entity , Energy , FrArea , Angle , Inflictor )	--This function needs to return HitRes
 
 	if self.Detonated or self.DisableDamage then return table.Copy(nullhit) end
 
-	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
+	local HitRes = ACF_PropDamage( Entity , Energy , FrArea , Angle , Inflictor )	--Calling the standard damage prop function
 
 	-- Detonate if the shot penetrates the casing.
 	HitRes.Kill = HitRes.Kill or HitRes.Overkill > 0
