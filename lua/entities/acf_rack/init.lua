@@ -848,7 +848,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	Rack.Muzzleflash        = gundef.muzzleflash or gunclass.muzzleflash or ""
 	Rack.RoFmod             = gunclass["rofmod"]
 	Rack.Sound              = gundef.sound or gunclass.sound
-	print("rack sound", Rack.Sound)
+	//print("rack sound", Rack.Sound)
 	Rack.Inaccuracy         = gunclass["spread"]
     
     Rack.HideMissile        = ACF_GetRackValue(Id, "hidemissile")
