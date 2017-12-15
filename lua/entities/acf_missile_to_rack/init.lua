@@ -71,7 +71,7 @@ function MakeACF_MissileToRack(owner, pos, ang, id, rackid)
 	if not converter:IsValid() then return false end
 	converter:SetAngles(ang)
 	converter:SetPos(pos)
-    
+
     converter.Id = id
     converter.Owner = owner
     converter.RackID = rackid

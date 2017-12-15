@@ -14,7 +14,7 @@
 
 
 
-if not ACF then error("ACF is not installed - ACF Missiles require it!") end
+if not ACF then error("ACF is not installed - ACF Missiles requires it!") end
 
 
 

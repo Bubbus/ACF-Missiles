@@ -154,13 +154,13 @@ ACF_DefineRack("4x BGM-71E", {
 	}
 } )
 
--- MAKE SURE THE CALIBER MATCHES THE ROCKETS YOU WANT TO LOAD!
+-- MAKE SURE THE CALIBER MATCHES THE yeah yeah I know I can read the code mate whitelist only mmkay?
 ACF_DefineRack("380mmRW61", {
 	name        = "1x 380mm Pod",
-	desc        = "A lightweight pod for rockets which is vulnerable to shots and explosions.",
+	desc        = "A lightweight pod for rocket-asisted mortars which is vulnerable to shots and explosions.",
 	model		= "models/launcher/RW61.mdl",
 	gunclass    = "POD",
-	weight      = 40,
+	weight      = 600,
 	year        = 1945,
     magsize     = 1,
     armour      = 24,
@@ -203,32 +203,32 @@ ACF_DefineRack("3xUARRK", {
 	}
 } )
 
--- ACF_DefineRack("6xUARRK", {
-	-- name = "M27 6xS24 Rack",
-	-- desc = "6-pack of death",
-	-- model		= "models/missiles/6pod_rk.mdl",
-	-- rackmdl		= "models/missiles/6pod_cover.mdl",
-	-- gunclass = "POD",
-	-- weight = 150,
-	-- year = 1980,
-	-- armour  = 45,
-    -- magsize = 6,
+ACF_DefineRack("6xUARRK", {
+	name = "M27 6xS24 Rack",
+	desc = "6-pack of death, used to efficiently carry artillery rockets",
+	model		= "models/missiles/6pod_rk.mdl",
+	rackmdl		= "models/missiles/6pod_cover.mdl",
+	gunclass = "POD",
+	weight = 600,
+	year = 1980,
+	armour  = 45,
+    magsize = 6,
 
-	-- protectmissile  = true,
-    -- hidemissile     = false,
-    -- whitelistonly   = true,
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
 
-    -- mountpoints =
-	-- {
-		-- ["missile1"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
-		-- ["missile2"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
-		-- ["missile3"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
-		-- ["missile3"] = {["offset"] = Vector(-3.075,-.1,0), ["scaledir"] = Vector(0,0,0)},
-		-- ["missile4"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
-		-- ["missile5"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
-		-- ["missile6"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
-	-- }
--- } )
+    mountpoints =
+	{
+		["missile1"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(-3.075,-.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile4"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile5"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+		["missile6"] = {["offset"] = Vector(-3.075,0.1,0), ["scaledir"] = Vector(0,0,0)},
+	}
+} )
 
 ACF_DefineRack("1x FIM-92", {
 	name = "Single Munition FIM-92 Rack",
@@ -239,8 +239,7 @@ ACF_DefineRack("1x FIM-92", {
 	year = 1984,
     magsize = 1,
 	armour  = 12,
-	caliber = 5.9,
-
+	caliber = 5.9, 
 	protectmissile  = true,
     hidemissile     = false,
     whitelistonly   = true,
@@ -253,7 +252,7 @@ ACF_DefineRack("1x FIM-92", {
 
 ACF_DefineRack("2x FIM-92", {
 	name = "Double Munition FIM-92 Rack",
-	desc = "An FIM-92 rack designed to carry 1 missile.",
+	desc = "An FIM-92 rack designed to carry 2 missiles.",
 	model		= "models/missiles/fim_92_2xrk.mdl",
 	gunclass = "POD",
 	weight = 30,
@@ -261,6 +260,7 @@ ACF_DefineRack("2x FIM-92", {
     magsize = 2,
 	armour  = 16,
 	caliber = 5.9,
+	rofmod = 3,
 
 	protectmissile  = true,
     hidemissile     = false,
@@ -385,3 +385,71 @@ ACF_DefineRack("1x Ataka", {
 		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
 	}
 } )
+
+ACF_DefineRack("1x Ataka", {
+	name = "Single Munition 9M120 Rack",
+	desc = "An 9M120 rack designed to carry 1 missile.",
+	model		= "models/missiles/9m120_rk1.mdl",
+	gunclass = "POD",
+	weight = 10,
+	year = 1968,
+    magsize = 1,
+	armour  = 50,
+	caliber = 13,
+
+	protectmissile  = true,
+    hidemissile     = true,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+ACF_DefineRack("1x SPG9", {
+	name = "SPG-9 Launch Tube",
+	desc = "Launch tube for SPG-9 recoilless rocket.",
+	model		= "models/spg9/spg9.mdl",
+	gunclass = "POD",
+	weight = 90,
+	year = 1968,
+    magsize = 1,
+	armour  = 30,
+	caliber = 7.3,
+
+	protectmissile  = true,
+    hidemissile     = true,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+
+--Zuni pod
+ACF_DefineRack("127mm4xPOD", {
+	name = "5.0 Inch Zuni Pod",
+	desc = "LAU-10/A Pod for the Zuni rocket.",
+	model	= "models/ghosteh/lau10.mdl",
+	gunclass = "POD",
+	weight = 100,
+	year = 1957,
+    magsize = 4,
+	armour  = 40,
+	caliber = 12.7,
+
+	protectmissile  = true,
+    hidemissile     = false,
+    whitelistonly   = true,
+	
+    mountpoints = 
+	{
+		["missile1"] = {["offset"] = Vector(5.2,2.75,2.65), ["scaledir"] = Vector(0,0,0)},
+		["missile2"] = {["offset"] = Vector(5.2,-2.75,2.65), ["scaledir"] = Vector(0,0,0)},
+		["missile3"] = {["offset"] = Vector(5.2,2.75,-2.83), ["scaledir"] = Vector(0,0,0)},
+		["missile4"] = {["offset"] = Vector(5.2,-2.75,-2.83), ["scaledir"] = Vector(0,0,0)}
+	}
+} )
+

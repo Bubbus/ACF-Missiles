@@ -9,10 +9,10 @@ elseif SERVER then
 
 	-- Should flares light players and NPCs on fire?  Does not affect godded players.
 	-- Set to 1 to enable, set to 0 to disable.
-	ACFM_FlaresIgnite = CreateConVar( "ACFM_FlaresIgnite", 0 )
+	ACFM_FlaresIgnite = CreateConVar( "ACFM_FlaresIgnite", 1 )
 	
 	-- Should missiles ignore impacts for a duration after they're launched?
 	-- Set to 0 to disable, or set to a number of seconds that missiles should "ghost" through entities.
-	ACFM_GhostPeriod = CreateConVar( "ACFM_GhostPeriod", 0.05 )
+	ACFM_GhostPeriod = CreateConVar( "ACFM_GhostPeriod", 0.1 )
 	
 end

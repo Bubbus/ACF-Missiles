@@ -231,7 +231,7 @@ function ENT:AllowedToScan()
 
 	local phys = self.Entity:GetPhysicsObject()  	
 	if not IsValid(phys) then print("invalid phys") return false end
-	
+	--TODO: replace self:getParent with a function check on if weldparent valid.
 	return ( phys:GetMass() == self.LegalMass ) and ( not IsValid(self:GetParent()) )
 
 end

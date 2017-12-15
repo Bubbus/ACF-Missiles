@@ -60,7 +60,7 @@ function Round.convert( Crate, PlayerData )
 	Data.Ricochet = 75										--Base ricochet angle
 	
 	Data.BurnRate = Data.FrAera * ACFM.FlareBurnMultiplier
-	Data.DistractChance = (2 / math.pi) * math.atan(Data.FrAera * ACFM.FlareDistractMultiplier)
+	Data.DistractChance = (2 / math.pi) * math.atan(Data.FrAera * ACFM.FlareDistractMultiplier)	* 0.5	--reduced effectiveness 50%--red
 	Data.BurnTime = Data.FillerMass / Data.BurnRate
 	
 	Data.BoomPower = Data.PropMass + Data.FillerMass

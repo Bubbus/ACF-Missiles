@@ -32,7 +32,7 @@ this.SeekDelay = 100000 -- The re-seek cycle is expensive, let's disable it unti
 this.WireSeekDelay = 0.1
 
 -- Minimum distance for a target to be considered
-this.MinimumDistance = 512
+this.MinimumDistance = 393.7	--10m
 
 -- Entity class whitelist
 -- thanks to Sestze for the listing.
@@ -55,7 +55,8 @@ this.DefaultFilter =
     acf_engine                  = true,
     acf_ammo                    = true,
     acf_gun                     = true,
-    acf_gearbox                 = true
+    acf_gearbox                 = true,
+    gmod_wire_hologram		= false	--let's see if this works.  rockets shouldn't home on holos
 }
 
 
