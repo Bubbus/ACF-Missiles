@@ -13,7 +13,7 @@ ACF_DefineRadar("SmallDIR-AM", {
 	desc 		= "A lightweight directional radar with a smaller view cone.",
 	model		= "models/radar/radar_sml.mdl",
 	class 		= "DIR-AM",
-	weight 		= 300,
+	weight 		= 200,
 	viewcone 	= 25 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )
 
@@ -24,7 +24,7 @@ ACF_DefineRadar("MediumDIR-AM", {
 	desc 		= "A directional radar with a regular view cone.",
 	model		= "models/radar/radar_mid.mdl", -- medium one is for now scalled big one - will be changed
 	class 		= "DIR-AM",
-	weight 		= 600,
+	weight 		= 400,
 	viewcone 	= 40 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )
 
@@ -35,6 +35,6 @@ ACF_DefineRadar("LargeDIR-AM", {
 	desc 		= "A heavy directional radar with a large view cone.",
 	model		= "models/radar/radar_big.mdl",
 	class 		= "DIR-AM",
-	weight 		= 900,
+	weight 		= 600,
 	viewcone 	= 50 -- half of the total cone.  'viewcone = 30' means 60 degs total viewcone.
 } )

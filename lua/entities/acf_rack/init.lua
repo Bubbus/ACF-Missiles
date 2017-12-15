@@ -62,7 +62,7 @@ function ENT:Initialize()
     self.BaseClass.Initialize(self)
 
 	self.SpecialHealth = true	--If true needs a special ACF_Activate function
-	self.SpecialDamage = true	--If true needs a special ACF_OnDamage function
+	self.SpecialDamage = true   	--If true needs a special ACF_OnDamage function --NOTE: you can't "fix" missiles with setting this to false, it acts like a prop!!!!
 	self.ReloadTime = 1
 	self.Ready = true
 	self.Firing = nil
@@ -140,9 +140,7 @@ function ENT:ACF_Activate( Recalc )
 	
 end
 
-
-
-//* TODO
+--Thanks sestze
 function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This function needs to return HitRes
 
 	local HitRes = ACF_PropDamage( Entity , Energy , FrAera , Angle , Inflictor )	--Calling the standard damage prop function
@@ -152,7 +150,7 @@ function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This
 	// Detonate rack if damage causes ammo rupture, or a penetrating shot hits some ammo.
 	if not HitRes.Kill then
 		local Ratio = (HitRes.Damage * (self.ACF.MaxHealth - self.ACF.Health) / self.ACF.MaxHealth)^0.2
-		local ammoRatio = self.MagSize / curammo
+		local ammoRatio = curammo / self.MagSize	--Thanks, eagle-eyed sestze!
 		local chance = math.Rand(0,1)
 		//print(Ratio, ammoRatio, chance, ( Ratio * ammoRatio ) > chance, HitRes.Overkill > 0 and chance > (1 - ammoRatio))
 		if ( Ratio * ammoRatio ) > chance or HitRes.Overkill > 0 and chance > (1 - ammoRatio) then  
@@ -177,8 +175,6 @@ function ENT:ACF_OnDamage( Entity , Energy , FrAera , Angle , Inflictor )	--This
 	
 	return HitRes --This function needs to return HitRes
 end
-//*/
-
 
 
 function ENT:DetonateAmmo(inflictor)
@@ -848,7 +844,7 @@ function MakeACF_Rack (Owner, Pos, Angle, Id, UpdateRack)
 	Rack.Muzzleflash        = gundef.muzzleflash or gunclass.muzzleflash or ""
 	Rack.RoFmod             = gunclass["rofmod"]
 	Rack.Sound              = gundef.sound or gunclass.sound
-	//print("rack sound", Rack.Sound)
+	print("rack sound", Rack.Sound)
 	Rack.Inaccuracy         = gunclass["spread"]
     
     Rack.HideMissile        = ACF_GetRackValue(Id, "hidemissile")
@@ -898,11 +894,36 @@ function ENT:GetInaccuracy()
     return self.Inaccuracy * ACF.GunInaccuracyScale
 end
 
+--[[
+--Doesn't work yet.  Racks spawn missiles at the center of parent, and I have no idea why.
+--
+function ENT:CheckLegal()
 
+	--make sure it's not invisible to traces
+	if not self:IsSolid() then return false end
+	
+	-- make sure weight is not below stock
+	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
+	
+	-- if it's not parented we're fine
+	if not IsValid( self:GetParent() ) then return true end
+	
+	local rootparent = ACF_GetPhysicalParent(self)
+
+	--make sure it's welded to root parent
+	for k, v in pairs( constraint.FindConstraints( self, "Weld" ) ) do
+		if v.Ent1 == rootparent or v.Ent2 == rootparent then return true end
+	end
+	
+	return false
+	
+end
+]]--
 
 
 function ENT:FireMissile()
     
+	--if self.Ready and self:CheckLegal() and (self.PostReloadWait < CurTime()) then
 	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and not self:GetParent():IsValid() and (self.PostReloadWait < CurTime()) then
         
         local nextMsl = self:PeekMissile()

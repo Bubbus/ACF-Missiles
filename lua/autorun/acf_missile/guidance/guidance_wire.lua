@@ -18,7 +18,7 @@ this.Name = ClassName
 this.InputSource = nil
 
 -- Length of the guidance wire
-this.WireLength = 15000			-- about 380 meters, or half of gm_flatgrass' diagonal
+this.WireLength = 15748			-- about 400m
 
 -- Disables guidance when true
 this.WireSnapped = false

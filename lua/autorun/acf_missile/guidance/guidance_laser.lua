@@ -57,7 +57,9 @@ function this:GetGuidance(missile)
 		local mdir      = (posVec - missile:GetPos()):GetNormalized()
 		local dot       = mfo.x * mdir.x + mfo.y * mdir.y + mfo.z * mdir.z
 
-		if dot < self.ViewConeCos then return {TargetPos = nil} end
+		if dot < self.ViewConeCos then
+        	return {TargetPos = nil}
+		end
 
 		local traceArgs = 
 		{
@@ -69,7 +71,9 @@ function this:GetGuidance(missile)
 		
 		local res = util.TraceLine(traceArgs)
 	
-		if res.Hit then return {} end
+		if res.Hit then
+			return {}
+		end
 		
 	end
 	
