@@ -101,7 +101,7 @@ ACF_defineGun("AIM-9 AAM", { --id
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Radar"},
-    fuses       = ACF_GetAllFuseNames(),
+    fuses       = {"Contact", "Radio"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["1xRK_small"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -142,8 +142,8 @@ ACF_defineGun("AIM-120 AAM", { --id
 	},
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Radar"},
-    fuses       = ACF_GetAllFuseNames(),
+	guidance    = {"Dumb", "Radar"},
+    fuses       = {"Contact", "Radio"},
 
 	racks       = {["1xRK"] = true, ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -175,7 +175,7 @@ ACF_defineGun("AIM-54 AAM", { --id
 		casing		= 0.2,	        -- thickness of missile casing, cm
 		armour		= 5,			-- effective armour thickness of casing, in mm
 		propweight	= 5,	        -- motor mass - motor casing
-		thrust		= 7500,	    -- average thrust - kg*in/s^2		--was 200000
+		thrust		= 10000,	    -- average thrust - kg*in/s^2		--was 200000
 		burnrate	= 150,	        -- cm^3/s at average chamber pressure	--was 800
 		starterpct	= 0.1,          -- percentage of the propellant consumed in the starter motor.
 		minspeed	= 1000,			-- minimum speed beyond which the fins work at 100% efficiency
@@ -185,8 +185,8 @@ ACF_defineGun("AIM-54 AAM", { --id
 	},
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Radar"},
-    fuses       = ACF_GetAllFuseNames(),
+	guidance    = {"Dumb", "Radar"},
+    fuses       = {"Contact", "Radio"},
 
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 

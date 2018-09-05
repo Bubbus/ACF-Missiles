@@ -88,7 +88,14 @@ function ENT:GetMunitionAngPos(missile, attach, attachname)
     if not rack then return angpos end
     
 	mountpoint = rack.mountpoints[attachname] or {["offset"] = Vector(0,0,0), ["scaledir"] = Vector(0, 0, -1)}
-	angpos.Pos = angpos.Pos + (self:LocalToWorld(mountpoint.offset) - self:GetPos()) + (self:LocalToWorld(mountpoint.scaledir) - self:GetPos()) * offset
 	
+	if !IsValid(self:GetParent()) then
+	angpos.Pos = angpos.Pos + (self:LocalToWorld(mountpoint.offset) - self:GetPos()) + (self:LocalToWorld(mountpoint.scaledir) - self:GetPos()) * offset
+	else
+
+	if table.Count(self:GetAttachments())!= 1 then offset = gun.modeldiameter or gun.caliber*2 end
+	angpos.Pos =  Vector(0,0,0) + (mountpoint.offset - Vector(0,0,0)) + (mountpoint.scaledir - Vector(0,0,0)) * offset
+
+	end
 	return angpos
 end

@@ -221,48 +221,166 @@ end
 
 
 function ENT:Detonate(overrideBData)
-	
+
 	if self.Detonated then return end
 	
 	self.Detonated = true
 	
 	local bdata = overrideBData or self.BulletData
-    
 	local phys = self:GetPhysicsObject()
 	local pos = self:GetPos()
-	
+		
 	local phyvel = 	phys and phys:GetVelocity() or Vector(0, 0, 1000)
 	bdata.Flight = 	bdata.Flight or phyvel
-	bdata.Owner = 	bdata.Owner or self.Owner
-	bdata.Pos = 	pos + (self.DetonateOffset or bdata.Flight:GetNormalized())
-	bdata.NoOcc = 	self
-    bdata.Gun =     self
-    
-    debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Flight, 10, Color(255, 128, 0))
-    
-    if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
-    else bdata.Filter = {self} end
 	
-	bdata.RoundMass = bdata.RoundMass or bdata.ProjMass
-	bdata.ProjMass = bdata.ProjMass or bdata.RoundMass 
+	timer.Simple(3, function() if IsValid(self) then if IsValid(self.FakeCrate) then self.FakeCrate:Remove() end self:Remove() end end)
 	
-	bdata.HandlesOwnIteration = nil
+	if overrideBData.Entity.Fuse.Cluster == nil then
+		
+		bdata.Owner = 	bdata.Owner or self.Owner
+		bdata.Pos = 	pos + (self.DetonateOffset or bdata.Flight:GetNormalized())
+		bdata.NoOcc = 	self
+		bdata.Gun =     self
+		
+		debugoverlay.Line(bdata.Pos, bdata.Pos + bdata.Flight, 10, Color(255, 128, 0))
+		
+		if bdata.Filter then bdata.Filter[#bdata.Filter+1] = self
+		else bdata.Filter = {self} end
+		
+		bdata.RoundMass = bdata.RoundMass or bdata.ProjMass
+		bdata.ProjMass = bdata.ProjMass or bdata.RoundMass 
+		
+		bdata.HandlesOwnIteration = nil
 
-	
-	ACFM_BulletLaunch(bdata)
-	timer.Simple(1, function() if IsValid(self) then self:Remove() end end)
-	
+		ACFM_BulletLaunch(bdata)
+		
+		
 
-	self:SetSolid(SOLID_NONE)
-	phys:EnableMotion(false)
-	
-	self:DoReplicatedPropHit(bdata)
-	
-    self:SetNoDraw(true)
-
+		self:SetSolid(SOLID_NONE)
+		phys:EnableMotion(false)
+		
+		self:DoReplicatedPropHit(bdata)
+		
+		self:SetNoDraw(true)
+	else
+		self:SetNoDraw(true)
+		--self:ClusterBomb(ACFM_CompactBulletData(bdata),bdata.Flight or phyvel)
+		--overrideBData.Entity:Remove()
+		self:ClusterNew(bdata)
+	end
 end
 
 
+function ENT:ClusterNew(bdata)
+	local Bomblets = math.Clamp(math.Round(bdata.FillerMass/2),3,30)
+	local MuzzlePos = self:LocalToWorld(Vector(10,0,0))
+	local MuzzleVec = self:GetForward()
+
+
+	if bdata.Type == "HEAT" then
+		Bomblets = math.Clamp(Bomblets,3,25)
+	end
+			
+			
+	
+			
+		
+	self.BulletData = {}
+	
+	self.BulletData["Accel"]			= Vector(0,0,-600)
+	self.BulletData["BoomPower"]		= bdata.BoomPower
+	self.BulletData["Caliber"]			= math.Clamp(bdata.Caliber/Bomblets*10,0.05,bdata.Caliber*0.8)
+	self.BulletData["Crate"]			= bdata.Crate
+	self.BulletData["DragCoef"]			= bdata.DragCoef/Bomblets/2
+	self.BulletData["FillerMass"]		= bdata.FillerMass/Bomblets/2
+	self.BulletData["Filter"]			= self
+	self.BulletData["Flight"]			= bdata.Flight
+	self.BulletData["FlightTime"]		= 0
+	self.BulletData["FrAera"]			= bdata.FrAera
+	self.BulletData["FuseLength"]		= 0
+	self.BulletData["Gun"]				= self
+	self.BulletData["Id"]				= bdata.Id
+	--self.BulletData["Index"]			= 
+	self.BulletData["KETransfert"]		= bdata.KETransfert
+	self.BulletData["LimitVel"]			= 700
+	self.BulletData["MuzzleVel"]		= bdata.MuzzleVel*20
+	self.BulletData["Owner"]			= bdata.Owner
+	self.BulletData["PenAera"]			= bdata.PenAera
+	self.BulletData["Pos"]				= bdata.Pos
+	self.BulletData["ProjLength"]		= bdata.ProjLength/Bomblets/2
+	self.BulletData["ProjMass"]			= bdata.ProjMass/Bomblets/2
+	self.BulletData["PropLength"]		= bdata.PropLength
+	self.BulletData["PropMass"]			= bdata.PropMass
+	self.BulletData["Ricochet"]			= bdata.Ricochet
+	self.BulletData["RoundVolume"]		= bdata.RoundVolume
+	self.BulletData["ShovePower"]		= bdata.ShovePower
+	self.BulletData["Tracer"]			= 0
+	if bdata.Type != "HEAT" and bdata.Type != "AP" and bdata.Type != "SM" and bdata.Type != "HE" and bdata.Type != "APHE" then
+	self.BulletData["Type"]				= "AP" 
+	else
+	self.BulletData["Type"]				= bdata.Type
+	end
+	
+
+	if(self.BulletData.Type == "HEAT") then
+	self.BulletData["SlugMass"]			= bdata.SlugMass/(Bomblets/4)
+	self.BulletData["SlugCaliber"]		= bdata.SlugCaliber/(Bomblets/4)
+	self.BulletData["SlugDragCoef"]		= bdata.SlugDragCoef/(Bomblets/4)
+	self.BulletData["SlugMV"]			= bdata.SlugMV/(Bomblets/4)
+	self.BulletData["SlugPenAera"]		= bdata.SlugPenAera/(Bomblets/4)
+	self.BulletData["SlugRicochet"]		= bdata.SlugRicochet/(Bomblets/4)
+	self.BulletData["ConeVol"] = bdata.SlugMass*1000/7.9/(Bomblets/4)
+	self.BulletData["CasingMass"] = self.BulletData.ProjMass + self.BulletData.FillerMass + (self.BulletData.ConeVol*1000/7.9)
+	self.BulletData["BoomFillerMass"] = self.BulletData.FillerMass/3
+	
+	--local SlugEnergy = ACF_Kinetic( self.BulletData.MuzzleVel*39.37 + self.BulletData.SlugMV*39.37 , self.BulletData.SlugMass, 999999 )
+	--local  MaxPen = (SlugEnergy.Penetration/self.BulletData.SlugPenAera)*ACF.KEtoRHA
+
+	
+	end
+
+
+		self.FakeCrate = ents.Create("acf_fakecrate2")
+
+
+		self.FakeCrate:RegisterTo(self.BulletData)
+		
+		self.BulletData["Crate"] = self.FakeCrate:EntIndex()
+		local BaseInaccuracy = math.tan(math.rad(Bomblets))
+		local AddInaccuracy = math.tan(math.rad(30)) --0.577
+		MuzzleVec = self:GetForward()
+
+	
+	
+	
+	local Radius = (self.BulletData.FillerMass)^0.33*8*39.37*2
+	local Flash = EffectData()
+	Flash:SetOrigin( self:GetPos() )
+	Flash:SetNormal( self:GetForward() )
+	Flash:SetRadius( math.max( Radius, 1 ) )
+	util.Effect( "ACF_Scaled_Explosion", Flash )
+	
+	
+	for I=1,Bomblets do
+		
+		timer.Simple(0.01*I,function()
+		if(IsValid(self)) then
+			Spread = ((self:GetUp() * (2 * math.random() - 1)) + (self:GetRight() * (2 * math.math.random() - 1))):GetNormalized()
+			self.BulletData["Flight"] = (MuzzleVec+(Spread * 2)):GetNormalized() * self.BulletData["MuzzleVel"] * 39.37 + bdata.Flight
+			
+			local MuzzlePos = self:LocalToWorld(Vector(100-(I*20),((Bomblets/2)-I)*2,0)*0.5)
+			self.BulletData.Pos = MuzzlePos
+			self.CreateShell = ACF.RoundTypes[self.BulletData.Type].create
+			self:CreateShell( self.BulletData )
+			
+			end
+		end)
+	end
+end
+
+function ENT:CreateShell()
+	--You overwrite this with your own function, defined in the ammo definition file
+end
 
 
 function ENT:DoReplicatedPropHit(Bullet)

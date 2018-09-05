@@ -386,16 +386,16 @@ ACF_DefineRack("1x Ataka", {
 	}
 } )
 
-ACF_DefineRack("1x Ataka", {
-	name = "Single Munition 9M120 Rack",
-	desc = "An 9M120 rack designed to carry 1 missile.",
-	model		= "models/missiles/9m120_rk1.mdl",
+ACF_DefineRack("1x SPG9", {
+	name = "SPG-9 Launch Tube",
+	desc = "Launch tube for SPG-9 recoilless rocket.",
+	model		= "models/spg9/spg9.mdl",
 	gunclass = "POD",
-	weight = 10,
+	weight = 90,
 	year = 1968,
     magsize = 1,
-	armour  = 50,
-	caliber = 13,
+	armour  = 30,
+	caliber = 7.3,
 
 	protectmissile  = true,
     hidemissile     = true,
@@ -407,16 +407,17 @@ ACF_DefineRack("1x Ataka", {
 	}
 } )
 
-ACF_DefineRack("1x SPG9", {
-	name = "SPG-9 Launch Tube",
-	desc = "Launch tube for SPG-9 recoilless rocket.",
-	model		= "models/spg9/spg9.mdl",
+--Kornet tube
+ACF_DefineRack("1x Kornet", {
+	name = "Kornet Launch Tube",
+	desc = "Launch tube for Kornet antitank missile.",
+	model = "models/kali/weapons/kornet/parts/9m133 kornet tube.mdl",
 	gunclass = "POD",
-	weight = 90,
-	year = 1968,
+	weight = 30,
+	year = 1994,
     magsize = 1,
-	armour  = 30,
-	caliber = 7.3,
+	armour  = 20,
+	caliber = 15.2,
 
 	protectmissile  = true,
     hidemissile     = true,

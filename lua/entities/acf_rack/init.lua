@@ -717,8 +717,15 @@ function ENT:AddMissile()
 		function() 
 			if IsValid(missile) then 
 				local attach, muzzle = self:GetMuzzle(NextIdx, missile)
-				missile:SetPos(self:WorldToLocal(muzzle.Pos))
-				missile:SetAngles(muzzle.Ang)
+			
+				if(IsValid(self:GetParent())) then
+							
+					missile:SetPos(muzzle.Pos)
+					missile:SetAngles(self:GetAngles())
+				else
+					missile:SetPos(self:WorldToLocal(muzzle.Pos))
+					missile:SetAngles(muzzle.Ang)
+				end
 			end 
 		end)
     
@@ -894,11 +901,9 @@ function ENT:GetInaccuracy()
     return self.Inaccuracy * ACF.GunInaccuracyScale
 end
 
---[[
---Doesn't work yet.  Racks spawn missiles at the center of parent, and I have no idea why.
---
-function ENT:CheckLegal()
 
+function ENT:CheckLegal()
+    --RW 61 holoparent or riot!!
 	--make sure it's not invisible to traces
 	if not self:IsSolid() then return false end
 	
@@ -918,13 +923,13 @@ function ENT:CheckLegal()
 	return false
 	
 end
-]]--
+
 
 
 function ENT:FireMissile()
     
 	--if self.Ready and self:CheckLegal() and (self.PostReloadWait < CurTime()) then
-	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and not self:GetParent():IsValid() and (self.PostReloadWait < CurTime()) then
+	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and (!self:GetParent():IsValid() or self:CheckLegal())and (self.PostReloadWait < CurTime()) then
         
         local nextMsl = self:PeekMissile()
     
@@ -966,8 +971,13 @@ function ENT:FireMissile()
             --missile:SetAngles(ShootVec:Angle())
             local bdata = missile.BulletData
             
-            bdata.Pos = MuzzlePos
-            bdata.Flight = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
+            if !IsValid(self:GetParent()) then
+				bdata.Pos = MuzzlePos
+				bdata.Flight = ShootVec * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
+            else
+				bdata.Pos = self:LocalToWorld(MuzzlePos)
+				bdata.Flight = (self:GetAngles():Forward()+spread ):GetNormalized() * (bdata.MuzzleVel or missile.MinimumSpeed or 1)
+			end
             
             
             if missile.RackModelApplied then 

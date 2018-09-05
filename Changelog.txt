@@ -1,0 +1,32 @@
+-rev 409
+Red & poly's update
+CLUSTER BOMBS
+	-optical fused cluster bombs now under fuses
+NEW KORNET MISSILE
+	-long range, high speed heavy antitank missile
+	-powerful warhead, 650mm pen and large diameter
+	-heavier than ataka, but not quite as quick (similar to hellfire but with more speed/range instead of maneuverability)
+	-as a stopgap uses an unused but incorrect in-flight model (waiting on a fix for flight model)
+ATAKA CHANGES
+	-less maneuverability
+	-very slightly more speed
+	-more reliable performance due to physics model changes
+	-reduced penetration slightly to compensate
+AT-2 CHANGES
+	-slightly increased thrust
+	-slight warhead increase in pen
+TOW CHANGES
+	-slightly buffed speed
+RADAR CHANGES
+	-Radars are now able to be parented directly to what they are welded to
+RACK CHANGES
+	-Racks now (hopefully) weldparentable
+AAM CHANGES
+	-Increased Phoenix speed a bit, to make it slightly more practical
+BOMB CHANGES
+	-readded HEAT to bombs, removed APHE (lol wtf why was it there?)
+MISC CHANGES
+	-fixed some fuses that made no sense
+	-added optical fuse to a few dumbfire things
+	-reworked some fuses to not use getallfusenames because they'd get cluster fuse too (cluster SAMs is a very bad idea!)
+	

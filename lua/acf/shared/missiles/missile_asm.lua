@@ -36,7 +36,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 		casing		= 0.1,				-- thickness of missile casing, cm
 		armour		= 6,				-- effective armour thickness of casing, in mm
 		propweight	= 1.2,				-- motor mass - motor casing
-		thrust		= 10000,				-- average thrust - kg*in/s^2
+		thrust		= 12000,				-- average thrust - kg*in/s^2
 		burnrate	= 200,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 2000,				-- minimum speed beyond which the fins work at 100% efficiency
@@ -48,7 +48,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Wire"},
-    fuses       = {"Contact", "Timed"},
+    fuses       = {"Contact", "Optical"},
 
     racks       = {["1x BGM-71E"] = true, ["2x BGM-71E"] = true, ["4x BGM-71E"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -88,7 +88,7 @@ ACF_defineGun("AGM-114 ASM", { --id
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Laser"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+    fuses       = {"Contact", "Optical"},
 
     racks       = {["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -97,6 +97,48 @@ ACF_defineGun("AGM-114 ASM", { --id
     agility     = 0.4,		-- multiplier for missile turn-rate.
     armdelay    = 0.7     -- minimum fuse arming delay
 } )
+
+ACF_defineGun("9M113 ASM", { --id
+	name = "9M113 Missile",
+	desc = "The Kornet is a modern antitank missile, with good range and a very powerful warhead, but somewhat limited maneuverability.",
+	model = "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
+	gunclass = "ASM",
+    rack = "1x Kornet",  -- Which rack to spawn this missile on?
+	length = 66,
+	caliber = 15.2,
+	weight = 100,    -- Don't scale down the weight though!
+    modeldiameter = 15.2, -- in cm
+	year = 1994,
+	round = {
+		model		= "models/missiles/glatgm/9m112f.mdl", --shhh, don't look directly at the hacks, the attachments on the proper model are fucked up.
+		rackmdl		= "models/kali/weapons/kornet/parts/9m133 kornet missile.mdl",
+		maxlength	= 45,
+		casing		= 0.2,			-- thickness of missile casing, cm
+		armour		= 5,			-- effective armour thickness of casing, in mm
+		propweight	= 1,			-- motor mass - motor casing
+		thrust		= 12000,			-- average thrust - kg*in/s^2
+		burnrate	= 150,			-- cm^3/s at average chamber pressure
+		starterpct	= 0.50,			-- percentage of the propellant consumed in the starter motor.
+		minspeed	= 4000,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.001,		-- drag coefficient while falling
+                dragcoefflight  = 0.01,                 -- drag coefficient during flight
+		finmul		= 0.01,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	guidance    = {"Dumb", "Laser"},
+    fuses       = {"Contact", "Optical"},
+
+    racks       = {["1x Kornet"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+
+    viewcone    = 60,   -- getting outside this cone will break the lock.  Divided by 2.
+
+    agility     = 0.05,		-- multiplier for missile turn-rate.
+    armdelay    = 0.1     -- minimum fuse arming delay
+} )
+
+
 
 -- The AT-3, a short-range wire-guided missile with better anti-tank effectiveness than the BGM-71E but much slower.
 ACF_defineGun("AT-3 ASM", { --id
@@ -129,9 +171,9 @@ ACF_defineGun("AT-3 ASM", { --id
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Wire"},
-    fuses       = {"Contact", "Timed"},
+    fuses       = {"Contact", "Optical"},
 
-    racks       = {["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["3xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+	racks       = {["1xAT3RKS"] = true, ["1xAT3RK"] = true, ["1xRK_small"] = true, ["3xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
 	skinindex   = {HEAT = 0, HE = 1},
 
@@ -142,7 +184,7 @@ ACF_defineGun("AT-3 ASM", { --id
 -- The 9M120 Ataka, a laser guided missile with high anti-tank effectiveness.
 ACF_defineGun("Ataka ASM", { --id
 	name = "9M120 Ataka Missile",
-	desc = "The 9M120 Ataka is a high-speed anti tank missile used by soviet helicopters and ground vehicles, can be armed with HE and HEAT warheads",
+	desc = "The 9M120 Ataka is a high-speed anti tank missile used by soviet helicopters and ground vehicles.  It has very limited maneuverability but excellent range and speed, and can be armed with HE and HEAT warheads",
 	model = "models/missiles/9m120.mdl",
 	gunclass = "ASM",
     rack = "1x Ataka",  -- Which rack to spawn this missile on?
@@ -162,23 +204,23 @@ ACF_defineGun("Ataka ASM", { --id
 		thrust		= 30000,			-- average thrust - kg*in/s^2
 		burnrate	= 250,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.25,			-- percentage of the propellant consumed in the starter motor.
-		minspeed	= 5000,			-- minimum speed beyond which the fins work at 100% efficiency
+		minspeed	= 7500,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.003,		-- drag coefficient while falling
-                dragcoefflight  = 0.05,                 -- drag coefficient during flight
+                dragcoefflight  = 0.01,                 -- drag coefficient during flight
 		finmul		= 0.05,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(6.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Laser"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+	guidance    = {"Dumb", "Laser"},
+    fuses       = {"Contact", "Optical"},
 
     racks       = {["1x Ataka"] = true, ["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
     viewcone    = 30,   -- getting outside this cone will break the lock.  Divided by 2.
 
-    agility     = 0.15,		-- multiplier for missile turn-rate.
-    armdelay    = 0.5     -- minimum fuse arming delay
+    agility     = 0.025,		-- multiplier for missile turn-rate.
+    armdelay    = 0.3     -- minimum fuse arming delay
 } )
 
 -- The AGM-45 shrike, a vietnam war-era antiradiation missile built off the AIM-7 airframe.
@@ -246,7 +288,7 @@ ACF_defineGun("AGM-122 ASM", { --id
 		thrust		= 4500,	    -- average thrust - kg*in/s^2		--was 100000
 		burnrate	= 1400,	        -- cm^3/s at average chamber pressure	--was 350
 		starterpct	= 0.4,          -- percentage of the propellant consumed in the starter motor.	--was 0.2
-		minspeed	= 6000,		-- minimum speed beyond which the fins work at 100% efficiency
+		minspeed	= 5000,		-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.001,		-- drag coefficient while falling
                 dragcoefflight  = 0.001,                 -- drag coefficient during flight
 		finmul		= 0.03			-- fin multiplier (mostly used for unpropelled guidance)
@@ -254,7 +296,7 @@ ACF_defineGun("AGM-122 ASM", { --id
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Radar"},
-    fuses       = {"Contact"},
+    fuses       = {"Contact", "Optical"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -284,7 +326,7 @@ ACF_defineGun("AT-2 ASM", { --id
 		casing		= 0.1,				-- thickness of missile casing, cm
 		armour		= 5,				-- effective armour thickness of casing, in mm
 		propweight	= 1,				-- motor mass - motor casing
-		thrust		= 1100,				-- average thrust - kg*in/s^2
+		thrust		= 1500,				-- average thrust - kg*in/s^2
 		burnrate	= 50,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 500,				-- minimum speed beyond which the fins work at 100% efficiency
@@ -296,7 +338,7 @@ ACF_defineGun("AT-2 ASM", { --id
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Laser", "Wire"},
-    fuses       = {"Contact", "Timed"},
+    fuses       = {"Contact", "Optical"},
 	viewcone    = 90,   -- getting outside this cone will break the lock.  Divided by 2.
     racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     agility     = 0.2,     -- multiplier for missile turn-rate.
