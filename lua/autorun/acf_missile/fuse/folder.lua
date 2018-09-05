@@ -9,3 +9,7 @@ include("autorun/acf_missile/fuse/fuse_optical.lua")
 
 AddCSLuaFile("autorun/acf_missile/fuse/fuse_timed.lua")
 include("autorun/acf_missile/fuse/fuse_timed.lua")
+
+
+AddCSLuaFile("autorun/acf_missile/fuse/fuse_cluster.lua")
+include("autorun/acf_missile/fuse/fuse_cluster.lua")

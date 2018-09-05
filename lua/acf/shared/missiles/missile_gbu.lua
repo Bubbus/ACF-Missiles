@@ -11,9 +11,9 @@ ACF_defineGunClass("GBU", {
 	soundNormal     = " ",
 	nothrust		= true,
     
-    reloadmul       = 2,
-    
-    ammoBlacklist   = {"AP", "FL", "HEAT"} -- Including FL would mean changing the way round classes work.
+	reloadmul       = 2,
+
+	ammoBlacklist   = {"AP", "APHE", "FL"} -- Including FL would mean changing the way round classes work.
 } )
 
 
@@ -51,7 +51,7 @@ ACF_defineGun("WalleyeGBU", { --id
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Laser"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+    fuses       = {"Contact", "Timed", "Optical"},
 	racks       = {["1xRK"] = true,  ["2xRK"] = true,  ["3xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
     seekcone    = 90,   -- getting inside this cone will get you locked.  Divided by 2 ('seekcone = 40' means 80 degrees total.)
     viewcone    = 120,   -- getting outside this cone will break the lock.  Divided by 2. 
@@ -88,8 +88,9 @@ ACF_defineGun("227kgGBU", { --id
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Laser"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+	guidance    = {"Dumb", "Laser"},
+
+    fuses       = {"Contact", "Timed", "Optical", "Cluster"},
  
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -129,8 +130,8 @@ ACF_defineGun("454kgGBU", { --id
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Laser"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+	guidance    = {"Dumb", "Laser"},
+    fuses       = {"Contact", "Timed", "Optical", "Cluster"},
  
 	racks       = {["1xRK"] = true,  ["2xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
  
@@ -169,8 +170,8 @@ ACF_defineGun("909kgGBU", { --id
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Laser"},
-    fuses       = ACF_GetAllFuseNamesExcept( {"Radio"} ),
+	guidance    = {"Dumb", "Laser"},
+    fuses       = {"Contact", "Timed", "Optical", "Cluster"},
  
 	racks       = {["1xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
  

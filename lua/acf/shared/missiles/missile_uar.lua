@@ -120,19 +120,19 @@ ACF_defineGun("SPG-9 ASR", { --id
 		casing		= 0.08,			-- thickness of missile casing, cm
 		armour		= 10,			-- effective armour thickness of casing, in mm
 		propweight	= 0.5,			-- motor mass - motor casing
-		thrust		= 150000,		-- average thrust - kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
+		thrust		= 120000,		-- average thrust - kg*in/s^2 very high but only burns a brief moment, most of which is in the tube
 		burnrate	= 1200,			-- cm^3/s at average chamber pressure
 		starterpct	= 0.72,
         minspeed	= 900,			-- minimum speed beyond which the fins work at 100% efficiency
         dragcoefflight  = 0.05,                 -- drag coefficient during flight
         dragcoef	= 0.001,		-- drag coefficient while falling
-		finmul		= 0.014,			-- fin multiplier (mostly used for unpropelled guidance)
+		finmul		= 0.02,			-- fin multiplier (mostly used for unpropelled guidance)
         penmul      = math.sqrt(4.1)  	-- 215.9 HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb"},
-    fuses       = {"Contact"},
+    fuses       = {"Contact", "Optical"},
 
     racks       = {["1x SPG9"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 
@@ -211,7 +211,7 @@ ACF_defineGun("Zuni ASR", { --id
 	},
 	ent			= "acf_missile_to_rack",
 	guidance	= {"Dumb"},
-	fuses		= {"Contact", "Timed", "Optical"},
+	fuses		= {"Contact", "Timed", "Optical", "Radio"},
 	racks		= {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["127mm4xPOD"] = true},
 	armdelay	= 0.1
 
@@ -250,7 +250,7 @@ ACF_defineGun("RW61 ASR", { --id
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb"},
-    fuses       = {"Contact"},
+    fuses       = {"Contact", "Optical"},
 
     racks       = {["380mmRW61"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
 

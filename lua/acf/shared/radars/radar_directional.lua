@@ -1,7 +1,7 @@
 
 ACF_DefineRadarClass("DIR-AM", {
 	name = "Directional Anti-missile Radar",
-	desc = "A radar with unlimited range but a limited view cone.  Only detects launched missiles.",
+	desc = "A radar with unlimited range but a limited view cone.  Only detects launched missiles.\nThese can be parented to what they are welded to.",
 } )
 
 

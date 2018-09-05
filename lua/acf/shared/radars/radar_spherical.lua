@@ -1,7 +1,7 @@
 
 ACF_DefineRadarClass("OMNI-AM", {
 	name = "Spherical Anti-missile Radar",
-	desc = "A missile radar with full 360-degree detection but a limited range.  Only detects launched missiles.",
+	desc = "A missile radar with full 360-degree detection but a limited range.  Only detects launched missiles.\nThese may be parented to what they are welded to.",
 } )
 
 
