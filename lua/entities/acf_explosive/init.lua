@@ -365,7 +365,7 @@ function ENT:ClusterNew(bdata)
 		
 		timer.Simple(0.01*I,function()
 		if(IsValid(self)) then
-			Spread = ((self:GetUp() * (2 * math.random() - 1)) + (self:GetRight() * (2 * math.math.random() - 1))):GetNormalized()
+			Spread = ((self:GetUp() * (2 * math.random() - 1)) + (self:GetRight() * (2 * math.random() - 1)))*Bomblets/100
 			self.BulletData["Flight"] = (MuzzleVec+(Spread * 2)):GetNormalized() * self.BulletData["MuzzleVel"] * 39.37 + bdata.Flight
 			
 			local MuzzlePos = self:LocalToWorld(Vector(100-(I*20),((Bomblets/2)-I)*2,0)*0.5)
