@@ -58,10 +58,10 @@ function ENT:Think()
 				self:Detonate()
 			end
 			local TimeNew = CurTime()
-			self:SetPos(self:LocalToWorld(Vector((4000)*(TimeNew - self.Time),0.01,0)))
+			
 			local d = Vector(0,0,0)
 			local dir = AngleRand()*0.01
-			Dist = 300
+			local Dist = 100/10000
 			if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos())<self.Distance then
 				local di = self.Guidance:WorldToLocalAngles((self:GetPos() - self.Guidance:GetPos()):Angle())
 				if di.p<15 and di.p>-15 and di.y<15 and di.y>-15 then
@@ -70,14 +70,15 @@ function ENT:Think()
 						glpos = self.Guidance:GetAttachment(1).Pos+self.Guidance:GetForward()*20
 					end
 
-					local tr = util.QuickTrace( glpos, self.Guidance:GetForward()*99999, {self.Guidance,self}) 
-					d = (self:GetPos() - tr.HitPos)
+					local tr = util.QuickTrace( glpos, self.Guidance:GetForward()*99999, {self.Guidance,self,self.Entity}) 
+					d = ( tr.HitPos - self:GetPos())
 					dir = self:WorldToLocalAngles(d:Angle())*0.01
+					 Dist = self.Guidance:GetPos():Distance(self:GetPos())/39.37/10000
 				end
 			end
-			local Dist = d:Length()/39.37
-	
-			self:SetAngles(self:LocalToWorldAngles(-dir+Angle(0,0,5)+((AngleRand()*Dist)*0.00001)))
+			local Inacc = math.random(-1,1)*Dist
+			self:SetAngles(self:LocalToWorldAngles(dir+Angle(Inacc,-Inacc,5)))
+			self:SetPos(self:LocalToWorld(Vector((4000)*(TimeNew - self.Time),d:Length()/39370 or 0.5,0)))
 			local tr = util.QuickTrace( self:GetPos(), self:GetForward()*300, {self,self.Entity}) 
 			
 			self.Time = TimeNew
