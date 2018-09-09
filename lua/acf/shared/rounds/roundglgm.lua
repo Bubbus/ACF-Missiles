@@ -1,7 +1,7 @@
 
 AddCSLuaFile()
 
-ACF.AmmoBlacklist.GLGM = { "AC", "AL", "HMG", "HW", "MG", "MO", "RAC", "SA", "SC", "SAM", "AAM", "ASM", "UAR", "GBU" }
+ACF.AmmoBlacklist.GLATGM = { "AC", "HMG", "MG", "MO", "RAC", "SA", "SC", "SAM", "AAM", "ASM", "BOMB", "FFAR", "UAR", "GBU", "GL", "SL", "FGL" }
 
 local Round = {}
 
@@ -28,7 +28,6 @@ function Round.create( Gun, BulletData )
 		glatgm:Spawn()
 	end
 end
-
 function Round.ConeCalc( ConeAngle, Radius, Length )
 	
 	local ConeLength = math.tan(math.rad(ConeAngle))*Radius
@@ -48,7 +47,7 @@ function Round.convert( Crate, PlayerData )
 	
 	if not PlayerData.PropLength then PlayerData.PropLength = 0 end
 	if not PlayerData.ProjLength then PlayerData.ProjLength = 0 end
-	if not PlayerData.Data5 then PlayerData.Data5 = 0 end
+	PlayerData.Data5 = math.max(PlayerData.Data5 or 0, 0)
 	if not PlayerData.Data6 then PlayerData.Data6 = 0 end
 	if not PlayerData.Data7 then PlayerData.Data7 = 0 end
 	if not PlayerData.Data10 then PlayerData.Data10 = 0 end
@@ -102,9 +101,10 @@ function Round.convert( Crate, PlayerData )
 	Data.ShovePower = 0.1
 	Data.PenAera = Data.FrAera^ACF.PenAreaMod
 	Data.DragCoef = ((Data.FrAera/10000)/Data.ProjMass)
-	Data.LimitVel = 10										--Most efficient penetration speed in m/s
+	Data.LimitVel = 100										--Most efficient penetration speed in m/s
 	Data.KETransfert = 0.1									--Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet = 60										--Base ricochet angle
+	Data.DetonatorAngle = 75
 	
 	Data.Detonated = false
 	Data.NotFirstPen = false
@@ -141,7 +141,7 @@ end
 
 function Round.network( Crate, BulletData )
 
-	Crate:SetNWString( "AmmoType", "GLGM" )
+	Crate:SetNWString( "AmmoType", "GLATGM" )
 	Crate:SetNWString( "AmmoID", BulletData.Id )
 	Crate:SetNWFloat( "Caliber", BulletData.Caliber )
 	Crate:SetNWFloat( "ProjMass", BulletData.ProjMass )
@@ -202,6 +202,8 @@ function Round.propimpact( Index, Bullet, Target, HitNormal, HitPos, Bone )
 	if ACF_Check( Target ) then
 			
 		if Bullet.Detonated then
+			Bullet.NotFirstPen = true
+			
 			local Speed = Bullet.Flight:Length() / ACF.VelScale
 			local Energy = ACF_Kinetic( Speed , Bullet.ProjMass, 999999 )
 			local HitRes = ACF_RoundImpact( Bullet, Speed, Energy, Target, HitPos, HitNormal , Bone )
@@ -209,8 +211,8 @@ function Round.propimpact( Index, Bullet, Target, HitNormal, HitPos, Bone )
 			if HitRes.Overkill > 0 then
 				table.insert( Bullet.Filter , Target )					--"Penetrate" (Ingoring the prop for the retry trace)
 				ACF_Spall( HitPos , Bullet.Flight , Bullet.Filter , Energy.Kinetic*HitRes.Loss , Bullet.Caliber , Target.ACF.Armour , Bullet.Owner ) --Do some spalling
-				Bullet.Flight = Bullet.Flight:GetNormalized() * (Energy.Kinetic*(1-HitRes.Loss*((not Bullet.NotFirstPen and 0.667) or 1))*2000/Bullet.ProjMass)^0.5 * 39.37 * ((Bullet.NotFirstPen and 0.333) or 1)
-				Bullet.NotFirstPen = true
+				Bullet.Flight = Bullet.Flight:GetNormalized() * math.sqrt(Energy.Kinetic * (1 - HitRes.Loss) * ((Bullet.NotFirstPen and ACF.HEATPenLayerMul) or 1) * 2000 / Bullet.ProjMass) * 39.37 
+				
 				return "Penetrated"
 			else
 				return false
@@ -318,7 +320,7 @@ end
 
 function Round.guicreate( Panel, Table )
 
-	acfmenupanel:AmmoSelect( ACF.AmmoBlacklist.GLGM )
+	acfmenupanel:AmmoSelect( ACF.AmmoBlacklist.GLATGM )
 	
 	acfmenupanel:CPanelText("BonusDisplay", "")
 	
@@ -348,7 +350,7 @@ function Round.guiupdate( Panel, Table )
 	
 	local PlayerData = {}
 		PlayerData.Id = acfmenupanel.AmmoData.Data.id			--AmmoSelect GUI
-		PlayerData.Type = "GLGM"										--Hardcoded, match ACFRoundTypes table index
+		PlayerData.Type = "GLATGM"										--Hardcoded, match ACFRoundTypes table index
 		PlayerData.PropLength = acfmenupanel.AmmoData.PropLength	--PropLength slider
 		PlayerData.ProjLength = acfmenupanel.AmmoData.ProjLength	--ProjLength slider
 		PlayerData.Data5 = acfmenupanel.AmmoData.FillerVol
@@ -383,7 +385,7 @@ function Round.guiupdate( Panel, Table )
 
 	acfmenupanel:CPanelText("Desc", ACF.RoundTypes[PlayerData.Type].desc)	--Description (Name, Desc)
 	acfmenupanel:CPanelText("LengthDisplay", "Round Length : "..(math.floor((Data.PropLength+Data.ProjLength+Data.Tracer)*100)/100).."/"..(Data.MaxTotalLength).." cm")	--Total round length (Name, Desc)
-	acfmenupanel:CPanelText("VelocityDisplay", "Command Link : "..math.floor(Data.MuzzleVel*ACF.VelScale*4).." m")	--Proj muzzle velocity (Name, Desc)	
+	acfmenupanel:CPanelText("VelocityDisplay", "Command Link: "..math.floor(Data.MuzzleVel*ACF.VelScale*4).." m")	--Proj muzzle velocity (Name, Desc)	
 	acfmenupanel:CPanelText("BlastDisplay", "Blast Radius : "..(math.floor(Data.BlastRadius*100)/100).." m")	--Proj muzzle velocity (Name, Desc)
 	acfmenupanel:CPanelText("FragDisplay", "Fragments : "..(Data.Fragments).."\n Average Fragment Weight : "..(math.floor(Data.FragMass*10000)/10).." g \n Average Fragment Velocity : "..math.floor(Data.FragVel).." m/s")	--Proj muzzle penetration (Name, Desc)
 	
@@ -399,5 +401,5 @@ function Round.guiupdate( Panel, Table )
 	
 end
 
-list.Set( "ACFRoundTypes", "GLGM", Round )  --Set the round properties
-list.Set( "ACFIdRounds", Round.netid, "GLGM" ) --Index must equal the ID entry in the table above, Data must equal the index of the table above
+list.Set( "ACFRoundTypes", "GLATGM", Round )  --Set the round properties
+list.Set( "ACFIdRounds", Round.netid, "GLATGM" ) --Index must equal the ID entry in the table above, Data must equal the index of the table above
