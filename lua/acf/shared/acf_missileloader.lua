@@ -189,5 +189,6 @@ aaa_IncludeShared("acf/shared/radars")
 
 
 include("acf/shared/rounds/roundflare.lua")
+include("acf/shared/rounds/roundglgm.lua")
 ACF.RoundTypes = list.Get("ACFRoundTypes")
 ACF.IdRounds = list.Get("ACFIdRounds")	--Lookup tables so i can get rounds classes from clientside with just an integer
