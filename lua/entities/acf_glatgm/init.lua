@@ -58,27 +58,27 @@ function ENT:Think()
 				self:Detonate()
 			end
 			local TimeNew = CurTime()
-			self:SetPos(self:LocalToWorld(Vector((1800.2)*(TimeNew - self.Time),0,0)))
+			self:SetPos(self:LocalToWorld(Vector((4000)*(TimeNew - self.Time),0.01,0)))
 			local d = Vector(0,0,0)
 			local dir = AngleRand()*0.01
+			Dist = 300
 			if IsValid(self.Guidance) and self.Guidance:GetPos():Distance(self:GetPos())<self.Distance then
 				local di = self.Guidance:WorldToLocalAngles((self:GetPos() - self.Guidance:GetPos()):Angle())
-				if di.p<5 and di.p>-5 and di.y<5 and di.y>-5 then
-					local glpos = self.Guidance:GetPos()
+				if di.p<15 and di.p>-15 and di.y<15 and di.y>-15 then
+					local glpos = self.Guidance:GetPos()+self.Guidance:GetForward()
 					if !self.Optic then
-						glpos = self.Guidance:GetAttachment(1).Pos
+						glpos = self.Guidance:GetAttachment(1).Pos+self.Guidance:GetForward()*20
 					end
 
-					local tr = util.QuickTrace( glpos+self.Guidance:GetForward()*20, self.Guidance:GetForward()*99999, {self.Guidance,self}) 
+					local tr = util.QuickTrace( glpos, self.Guidance:GetForward()*99999, {self.Guidance,self}) 
 					d = (self:GetPos() - tr.HitPos)
-					dir = self:WorldToLocalAngles(d:Angle())*0.005
+					dir = self:WorldToLocalAngles(d:Angle())*0.01
 				end
 			end
-			local Dist = d:Length()/39.37/1000
-		
-
-			self:SetAngles(self:LocalToWorldAngles(-dir+Angle(0,0,math.Round(math.random(-15,15)))+(AngleRand()*(Dist)*0.05)))
-			local tr = util.QuickTrace( self:GetPos(), self:GetForward()*100, {self,self.Entity}) 
+			local Dist = d:Length()/39.37
+	
+			self:SetAngles(self:LocalToWorldAngles(-dir+Angle(0,0,5)+((AngleRand()*Dist)*0.00001)))
+			local tr = util.QuickTrace( self:GetPos(), self:GetForward()*300, {self,self.Entity}) 
 			
 			self.Time = TimeNew
 			if(tr.Hit)then
@@ -91,29 +91,16 @@ function ENT:Think()
 end
 
 
-function ENT:OnRemove()
-
-	self:Detonate()
-
-end
 
 
 function ENT:Detonate()
-	local Radius = (self.BulletData.FillerMass)*10
+	if IsValid(self) and !self.Detonated then
+	self.Detonated = true
 	local Flash = EffectData()
 	Flash:SetOrigin( self:GetPos() )
 	Flash:SetNormal( self:GetForward() )
-	Flash:SetRadius( math.max( Radius, 100 ) )
-	util.Effect( "shaped_charge", Flash )
-	local Radius = (self.BulletData.FillerMass)^0.33*8*39.37
-	local Flash = EffectData()
-	Flash:SetOrigin( self:GetPos() )
-	Flash:SetNormal( self:GetForward() )
-	Flash:SetRadius( math.max( Radius, 1 ) )
-	
-	
-	
-	
+	Flash:SetRadius(300 )
+
 	util.Effect( "ACF_Scaled_Explosion", Flash )
 	btdat = {}
 	
@@ -174,12 +161,12 @@ function ENT:Detonate()
 	
 	
 	
-	
+
 	
 	self:Remove()
 
 
 
-
+	end
 
 end
