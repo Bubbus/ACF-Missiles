@@ -1,7 +1,7 @@
 
 AddCSLuaFile()
 
-ACF.AmmoBlacklist.GLATGM = { "AC", "HMG", "MG", "MO", "RAC", "SA", "SAM", "AAM", "ASM", "BOMB", "FFAR", "UAR", "GBU", "GL", "SL", "FGL" }
+ACF.AmmoBlacklist.GLATGM = { "AC", "HMG", "MG", "RAC", "SA", "SAM", "AAM", "ASM", "BOMB", "FFAR", "UAR", "GBU", "GL", "SL", "FGL" }
 
 local Round = {}
 
@@ -22,7 +22,7 @@ function Round.create( Gun, BulletData )
 		glatgm.DoNotDuplicate = true
 		glatgm.Guidance = Gun
 		glatgm:SetAngles(Gun:GetAngles())
-		glatgm:SetPos(Gun:GetAttachment(1).Pos+(Gun:GetForward()*20))
+		glatgm:SetPos(Gun:GetAttachment(1).Pos)
 		glatgm.BulletData = BulletData
 		glatgm.Distance = BulletData.MuzzleVel*4*39.37
 		glatgm:Spawn()
