@@ -154,7 +154,7 @@ function ENT:Detonate()
 	btdat["Ricochet"]	= self.BulletData.Ricochet
 	btdat["RoundVolume"]		= self.BulletData.RoundVolume
 	btdat["ShovePower"]		= self.BulletData.ShovePower
-	btdat["Tracer"]	= 2
+	btdat["Tracer"]	= self.BulletData.Tracer
 	
 	
 
