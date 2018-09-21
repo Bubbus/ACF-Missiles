@@ -152,6 +152,7 @@ function ENT:Detonate()
 	btdat["PropLength"]		= self.BulletData.PropLength
 	btdat["PropMass"]	= self.BulletData.PropMass
 	btdat["Ricochet"]	= self.BulletData.Ricochet
+	btdat["DetonatorAngle"] = self.BulletData.DetonatorAngle
 	btdat["RoundVolume"]		= self.BulletData.RoundVolume
 	btdat["ShovePower"]		= self.BulletData.ShovePower
 	btdat["Tracer"]	= self.BulletData.Tracer
