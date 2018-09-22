@@ -78,7 +78,7 @@ end
 
 
 GitRC = GitRC or {}
-local pagelist = "https://github.com/%s/%s/wiki/_pages"
+local pagelist = "https://github.com/Bubbus/ACF-Missiles/wiki"
 function GitRC.GetWikiPages(name, repo, callback)
 	http.Fetch(string.format(pagelist, name, repo), 
 		function(html) 	wikiPagesSuccess(html, callback) end,
@@ -97,7 +97,7 @@ end
 
 
 local StartPage = "Home"
-local Link = "http://raw.github.com/wiki/%s/%s/"
+local Link = "https://github.com/Bubbus/ACF-Missiles/wiki"
 
 local function WikiPageListCallback(Pages)
 
