@@ -101,7 +101,6 @@ ACF_defineGun("50kgBOMB", { --id
 } )
 
 
--- Balance the round in line with the 40mm pod rocket.
 ACF_defineGun("100kgBOMB", { --id
 	name = "100kg Free Falling Bomb",
 	desc = "An old 250lb WW2 bomb, as used by Soviet bombers to destroy enemies of the Motherland.",
@@ -126,7 +125,7 @@ ACF_defineGun("100kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.007,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -166,7 +165,7 @@ ACF_defineGun("250kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.005,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.4)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -207,7 +206,7 @@ ACF_defineGun("500kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.004,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.3)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -247,7 +246,7 @@ ACF_defineGun("1000kgBOMB", { --id
 		minspeed	= 1,			-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.002,		-- drag coefficient of the missile
 		finmul		= 0.004,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(0.2)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
    
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
@@ -264,3 +263,73 @@ ACF_defineGun("1000kgBOMB", { --id
 } )
 
 
+ACF_defineGun("100kgGBOMB", { --id
+	name = "100kg Glide Bomb",
+	desc = "A 250-pound bomb, fitted with fins for a longer reach.  Well suited to dive bombing, but bulkier and heavier from its fins.",
+	model = "models/missiles/micro.mdl",
+	gunclass = "BOMB",
+    rack = "1xRK",  -- Which rack to spawn this missile on?
+	length = 75,
+	caliber = 10.0,
+	weight = 150,    -- Don't scale down the weight though!
+	year = 1939,
+    modeldiameter = 21.2 * 1.4, -- in cm
+	round = {
+		model		= "models/missiles/micro.mdl",
+		rackmdl		= "models/missiles/micro.mdl",
+		maxlength	= 100,
+		casing		= 0.7,	        -- thickness of missile casing, cm
+		armour		= 25,			-- effective armour thickness of casing, in mm
+		propweight	= 0,	        -- motor mass - motor casing
+		thrust		= 1,	    	-- average thrust - kg*in/s^2
+		burnrate	= 1,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 500,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.0001,		-- drag coefficient of the missile
+		finmul		= 0.05,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+   
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	guidance    = {"Dumb"},
+	fuses       = {"Contact", "Optical", "Cluster"},
+	racks       = {["1xRK_small"] = true, ["1kRK"] = true, ["2xRK"] = true,  ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    
+	armdelay    = 1     -- minimum fuse arming delay
+})
+
+
+ACF_defineGun("250kgGBOMB", { --id
+	name = "250kg Glide Bomb",
+	desc = "A heavy 500lb bomb, fitted with fins for a gliding trajectory better suited to striking point targets.",
+	model = "models/missiles/fab250.mdl",
+	gunclass = "BOMB",
+    rack = "1xRK",  -- Which rack to spawn this missile on?
+	length = 150,
+	caliber = 12.5,
+	weight = 375,    -- Don't scale down the weight though!
+	year = 1941,
+    modeldiameter = 16.3 * 1.9, -- in cm
+	round = {
+		model		= "models/missiles/fab250.mdl",
+		rackmdl		= "models/missiles/fab250.mdl",
+		maxlength	= 250, 
+		casing		= 1.5,	        -- thickness of missile casing, cm
+		armour		= 25,			-- effective armour thickness of casing, in mm
+		propweight	= 0,	        -- motor mass - motor casing
+		thrust		= 1,	    	-- average thrust - kg*in/s^2
+		burnrate	= 1,	        -- cm^3/s at average chamber pressure
+		starterpct	= 0.005,        -- percentage of the propellant consumed in the starter motor.
+		minspeed	= 500,			-- minimum speed beyond which the fins work at 100% efficiency
+		dragcoef	= 0.001,		-- drag coefficient of the missile
+		finmul		= 0.05,			-- fin multiplier (mostly used for unpropelled guidance)
+        penmul      = math.sqrt(0.6)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+	},
+   
+    ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
+	guidance    = {"Dumb"},
+    fuses       = {"Contact", "Optical", "Cluster"},
+ 
+	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
+    armdelay    = 1     -- minimum fuse arming delay
+} )

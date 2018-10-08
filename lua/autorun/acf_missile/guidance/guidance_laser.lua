@@ -70,8 +70,9 @@ function this:GetGuidance(missile)
 		}
 		
 		local res = util.TraceLine(traceArgs)
-	
-		if res.Hit then
+		
+		local dist = res.StartPos:Distance(res.HitPos)
+		if res.Hit and dist < 80 then
 			return {}
 		end
 		

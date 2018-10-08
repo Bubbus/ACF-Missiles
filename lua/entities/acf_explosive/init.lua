@@ -276,23 +276,18 @@ function ENT:ClusterNew(bdata)
 	local MuzzlePos = self:LocalToWorld(Vector(10,0,0))
 	local MuzzleVec = self:GetForward()
 
-
 	if bdata.Type == "HEAT" then
 		Bomblets = math.Clamp(Bomblets,3,25)
 	end
-			
-			
-	
-			
 		
 	self.BulletData = {}
 	
 	self.BulletData["Accel"]			= Vector(0,0,-600)
 	self.BulletData["BoomPower"]		= bdata.BoomPower
-	self.BulletData["Caliber"]			= math.Clamp(bdata.Caliber/Bomblets*10,0.05,bdata.Caliber*0.8)
+	self.BulletData["Caliber"]			= math.Clamp(bdata.Caliber/(Bomblets*2),0.05,bdata.Caliber)
 	self.BulletData["Crate"]			= bdata.Crate
 	self.BulletData["DragCoef"]			= bdata.DragCoef/Bomblets/2
-	self.BulletData["FillerMass"]		= bdata.FillerMass/Bomblets/2
+	self.BulletData["FillerMass"]		= bdata.FillerMass/Bomblets --/2
 	self.BulletData["Filter"]			= self
 	self.BulletData["Flight"]			= bdata.Flight
 	self.BulletData["FlightTime"]		= 0
@@ -303,7 +298,7 @@ function ENT:ClusterNew(bdata)
 	--self.BulletData["Index"]			= 
 	self.BulletData["KETransfert"]		= bdata.KETransfert
 	self.BulletData["LimitVel"]			= 700
-	self.BulletData["MuzzleVel"]		= bdata.MuzzleVel*20
+	self.BulletData["MuzzleVel"]		= bdata.MuzzleVel
 	self.BulletData["Owner"]			= bdata.Owner
 	self.BulletData["PenAera"]			= bdata.PenAera
 	self.BulletData["Pos"]				= bdata.Pos
@@ -323,15 +318,15 @@ function ENT:ClusterNew(bdata)
 	
 
 	if(self.BulletData.Type == "HEAT") then
-	self.BulletData["SlugMass"]			= bdata.SlugMass/(Bomblets/4)
-	self.BulletData["SlugCaliber"]		= bdata.SlugCaliber/(Bomblets/4)
-	self.BulletData["SlugDragCoef"]		= bdata.SlugDragCoef/(Bomblets/4)
-	self.BulletData["SlugMV"]			= bdata.SlugMV/(Bomblets/4)
-	self.BulletData["SlugPenAera"]		= bdata.SlugPenAera/(Bomblets/4)
-	self.BulletData["SlugRicochet"]		= bdata.SlugRicochet/(Bomblets/4)
-	self.BulletData["ConeVol"] = bdata.SlugMass*1000/7.9/(Bomblets/4)
+	self.BulletData["SlugMass"]			= bdata.SlugMass/(Bomblets/6)
+	self.BulletData["SlugCaliber"]		= bdata.SlugCaliber/(Bomblets/6)
+	self.BulletData["SlugDragCoef"]		= bdata.SlugDragCoef/(Bomblets/6)
+	self.BulletData["SlugMV"]			= bdata.SlugMV/(Bomblets/6)
+	self.BulletData["SlugPenAera"]		= bdata.SlugPenAera/(Bomblets/6)
+	self.BulletData["SlugRicochet"]		= bdata.SlugRicochet/(Bomblets/6)
+	self.BulletData["ConeVol"] = bdata.SlugMass*600/7.9/(Bomblets/6)
 	self.BulletData["CasingMass"] = self.BulletData.ProjMass + self.BulletData.FillerMass + (self.BulletData.ConeVol*1000/7.9)
-	self.BulletData["BoomFillerMass"] = self.BulletData.FillerMass/3
+	self.BulletData["BoomFillerMass"] = self.BulletData.FillerMass/2
 	
 	--local SlugEnergy = ACF_Kinetic( self.BulletData.MuzzleVel*39.37 + self.BulletData.SlugMV*39.37 , self.BulletData.SlugMass, 999999 )
 	--local  MaxPen = (SlugEnergy.Penetration/self.BulletData.SlugPenAera)*ACF.KEtoRHA
@@ -346,14 +341,16 @@ function ENT:ClusterNew(bdata)
 		self.FakeCrate:RegisterTo(self.BulletData)
 		
 		self.BulletData["Crate"] = self.FakeCrate:EntIndex()
+		--TODO: i think these do nothing
 		local BaseInaccuracy = math.tan(math.rad(Bomblets))
 		local AddInaccuracy = math.tan(math.rad(30)) --0.577
+
 		MuzzleVec = self:GetForward()
 
 	
 	
 	
-	local Radius = (self.BulletData.FillerMass)^0.33*8*39.37*2
+	local Radius = (self.BulletData.FillerMass)^0.33*8*39.37*2 --nani the fuck??
 	local Flash = EffectData()
 	Flash:SetOrigin( self:GetPos() )
 	Flash:SetNormal( self:GetForward() )
@@ -365,10 +362,10 @@ function ENT:ClusterNew(bdata)
 		
 		timer.Simple(0.01*I,function()
 		if(IsValid(self)) then
-			Spread = ((self:GetUp() * (2 * math.random() - 1)) + (self:GetRight() * (2 * math.random() - 1)))*Bomblets/100
-			self.BulletData["Flight"] = (MuzzleVec+(Spread * 2)):GetNormalized() * self.BulletData["MuzzleVel"] * 39.37 + bdata.Flight
+			Spread = ((self:GetUp() * (2 * math.random() - 1)) + (self:GetRight() * (2 * math.random() - 1))) --* (Bomblets/100)
+			self.BulletData["Flight"] = (MuzzleVec+Spread):GetNormalized() * self.BulletData["MuzzleVel"] * 39.37 + bdata.Flight
 			
-			local MuzzlePos = self:LocalToWorld(Vector(100-(I*20),((Bomblets/2)-I)*2,0)*0.5)
+			local MuzzlePos = self:LocalToWorld(Vector(100-(I*20),((Bomblets/2)-I)*2,0) * 0.5)
 			self.BulletData.Pos = MuzzlePos
 			self.CreateShell = ACF.RoundTypes[self.BulletData.Type].create
 			self:CreateShell( self.BulletData )
