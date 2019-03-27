@@ -909,20 +909,12 @@ function ENT:CheckLegal()
 	if not self:IsSolid() then return false end
 	
 	-- make sure weight is not below stock
-	
 	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
-	-- if it's not parented we're fine
-	if not IsValid( self:GetParent() ) then return true end
-	local egh = self:GetParent()
-	if IsValid(egh) then
-		local egh2 = egh:GetParent()
-		if IsValid(egh2) then
-			if !IsValid(egh2:GetParent()) then
-				self.Physical = egh2
-				return true
-			end
-		else
-			self.Physical = egh
+	
+	-- if it's parented then we get the physical entity
+	if IsValid( self:GetParent() ) then
+		self.Physical = ACF_GetPhysicalParent(self)
+		if IsValid(self.Physical:GetPhysicsObject()) then
 			return true
 		end
 	end
