@@ -101,6 +101,7 @@ function ENT:Initialize()
 
     self.AmmoLink = {}
     
+    self.Physical = self
 end
 
 
@@ -908,8 +909,23 @@ function ENT:CheckLegal()
 	if not self:IsSolid() then return false end
 	
 	-- make sure weight is not below stock
-	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
 	
+	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
+	-- if it's not parented we're fine
+	if not IsValid( self:GetParent() ) then return true end
+	local egh = self:GetParent()
+	if IsValid(egh) then
+		local egh2 = egh:GetParent()
+		if IsValid(egh2) then
+			if !IsValid(egh2:GetParent()) then
+				self.Physical = egh2
+				return true
+			end
+		else
+			self.Physical = egh
+			return true
+		end
+	end
 	
 	return false
 	
@@ -920,7 +936,7 @@ end
 function ENT:FireMissile()
     
 	--if self.Ready and self:CheckLegal() and (self.PostReloadWait < CurTime()) then
-	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and (self.PostReloadWait < CurTime()) then
+	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and (!self:GetParent():IsValid() or self:CheckLegal())and (self.PostReloadWait < CurTime()) then
         
         local nextMsl = self:PeekMissile()
     
