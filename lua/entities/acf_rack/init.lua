@@ -99,8 +99,8 @@ function ENT:Initialize()
     
     self.Missiles = {}   
 
-    self.AmmoLink = {}
-    
+	self.AmmoLink = {}
+	
 end
 
 
@@ -909,18 +909,11 @@ function ENT:CheckLegal()
 	
 	-- make sure weight is not below stock
 	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
-	
-	-- if it's not parented we're fine
-	if not IsValid( self:GetParent() ) then return true end
-	
-	local rootparent = ACF_GetPhysicalParent(self)
 
-	--make sure it's welded to root parent
-	for k, v in pairs( constraint.FindConstraints( self, "Weld" ) ) do
-		if v.Ent1 == rootparent or v.Ent2 == rootparent then return true end
-	end
+	-- update the acfphysparent
+	ACF_GetPhysicalParent(self)
 	
-	return false
+	return self.acfphysparent:IsSolid()
 	
 end
 
@@ -928,8 +921,7 @@ end
 
 function ENT:FireMissile()
     
-	--if self.Ready and self:CheckLegal() and (self.PostReloadWait < CurTime()) then
-	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and (!self:GetParent():IsValid() or self:CheckLegal())and (self.PostReloadWait < CurTime()) then
+	if self.Ready and self:CheckLegal() and (self.PostReloadWait < CurTime()) then
         
         local nextMsl = self:PeekMissile()
     
