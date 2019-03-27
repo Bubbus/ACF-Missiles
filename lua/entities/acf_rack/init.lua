@@ -99,9 +99,8 @@ function ENT:Initialize()
     
     self.Missiles = {}   
 
-    self.AmmoLink = {}
-    
-    self.Physical = self
+	self.AmmoLink = {}
+	
 end
 
 
@@ -911,12 +910,10 @@ function ENT:CheckLegal()
 	-- make sure weight is not below stock
 	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
 	
-	-- if it's parented then we get the physical entity
-	if IsValid( self:GetParent() ) then
-		self.Physical = ACF_GetPhysicalParent(self)
-	end
+	-- update the acfphysparent
+	ACF_GetPhysicalParent(self)
 	
-	return true
+	return self.acfphysparent:IsSolid()
 	
 end
 
