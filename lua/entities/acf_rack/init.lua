@@ -909,7 +909,7 @@ function ENT:CheckLegal()
 	
 	-- make sure weight is not below stock
 	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
-	
+
 	-- update the acfphysparent
 	ACF_GetPhysicalParent(self)
 	
