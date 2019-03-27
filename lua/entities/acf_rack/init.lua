@@ -99,9 +99,8 @@ function ENT:Initialize()
     
     self.Missiles = {}   
 
-    self.AmmoLink = {}
-    
-    self.Physical = self
+	self.AmmoLink = {}
+	
 end
 
 
@@ -910,16 +909,11 @@ function ENT:CheckLegal()
 	
 	-- make sure weight is not below stock
 	if self:GetPhysicsObject():GetMass() < (self.LegalWeight or self.Mass) then return false end
+
+	-- update the acfphysparent
+	ACF_GetPhysicalParent(self)
 	
-	-- if it's parented then we get the physical entity
-	if IsValid( self:GetParent() ) then
-		self.Physical = ACF_GetPhysicalParent(self)
-		if IsValid(self.Physical:GetPhysicsObject()) then
-			return true
-		end
-	end
-	
-	return false
+	return self.acfphysparent:IsSolid()
 	
 end
 
@@ -927,8 +921,7 @@ end
 
 function ENT:FireMissile()
     
-	--if self.Ready and self:CheckLegal() and (self.PostReloadWait < CurTime()) then
-	if self.Ready and self:GetPhysicsObject():GetMass() >= (self.LegalWeight or self.Mass) and (!self:GetParent():IsValid() or self:CheckLegal())and (self.PostReloadWait < CurTime()) then
+	if self.Ready and self:CheckLegal() and (self.PostReloadWait < CurTime()) then
         
         local nextMsl = self:PeekMissile()
     
