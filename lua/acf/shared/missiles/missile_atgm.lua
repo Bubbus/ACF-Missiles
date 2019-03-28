@@ -1,7 +1,7 @@
 ACF_defineGunClass("ATGM", {
     type            = "missile",
 	spread          = 1,
-	name            = "(Missile) Anti-Tank Guided Missile",
+	name            = "Anti-Tank Guided Missile",
 	desc            = "Missiles specialized for destroying surface vehicles, especially tanks.",
 	muzzleflash     = "40mm_muzzleflash_noscale",
 	rofmod          = 1,
