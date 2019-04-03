@@ -179,37 +179,37 @@ ACF_defineGun("Ataka ASM", { --id
 
 ACF_defineGun("AT-2 ASM", { --id
 	name = "AT-2 Missile",
-	desc = "The 9M17P is a VERY powerful long-range antitank missile, which sacrifices flight speed for killing power.\nIt is an excellent long-range missile for heavy antitank work, and its size gives it good multipurpose capability.",
+	desc = "The 9M17P is a VERY powerful long-range antitank missile, which sacrifices flight speed for killing power.\nIt is an excellent long-range missile for heavy antitank work, and its size gives it good multipurpose capability. It is extremely agile.",
 	model = "models/missiles/at2.mdl",
 	gunclass = "ATGM",
     rack = "1xRK",  -- Which rack to spawn this missile on?
 	length = 55,		--Used for the physics calculations
 	caliber = 16, 
-	weight = 27,    -- Don't scale down the weight though!
+	weight = 108,    -- Don't scale down the weight though!
 	year = 1969,
 	rofmod = 0.9,
 	round = {
 		model		= "models/missiles/at2.mdl",
 		rackmdl		= "models/missiles/at2.mdl",
-		maxlength	= 55,
+		maxlength	= 75,
 		casing		= 0.1,				-- thickness of missile casing, cm
-		armour		= 5,				-- effective armour thickness of casing, in mm
+		armour		= 7,				-- effective armour thickness of casing, in mm
 		propweight	= 1,				-- motor mass - motor casing
-		thrust		= 1500,				-- average thrust - kg*in/s^2
-		burnrate	= 50,				-- cm^3/s at average chamber pressure
+		thrust		= 1300,				-- average thrust - kg*in/s^2
+		burnrate	= 35,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
 		minspeed	= 500,				-- minimum speed beyond which the fins work at 100% efficiency
 		dragcoef	= 0.001,			-- drag coefficient while falling
                 dragcoefflight  = 0.01,                 -- drag coefficient during flight
 		finmul		= 0.1,			-- fin multiplier (mostly used for unpropelled guidance)
-        penmul      = math.sqrt(5.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
+        penmul      = math.sqrt(3.5)  	-- HEAT velocity multiplier. Squared relation to penetration (math.sqrt(2) means 2x pen)
 	},
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
     guidance    = {"Dumb", "Laser", "Wire"},
     fuses       = {"Contact", "Optical"},
-	viewcone    = 90,   -- getting outside this cone will break the lock.  Divided by 2.
+	viewcone    = 120,   -- getting outside this cone will break the lock.  Divided by 2.
     racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["2x AGM-114"] = true, ["4x AGM-114"] = true, ["1xRK_small"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
-    agility     = 0.2,     -- multiplier for missile turn-rate.
+    agility     = 0.25,     -- multiplier for missile turn-rate.
     armdelay    = 1     -- minimum fuse arming delay
 } )
