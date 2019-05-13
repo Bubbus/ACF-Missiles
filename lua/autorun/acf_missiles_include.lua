@@ -15,6 +15,9 @@ AddCSLuaFile("autorun/client/cl_acfm_effectsoverride.lua")
 AddCSLuaFile("autorun/printbyname.lua")
 AddCSLuaFile("acf/client/cl_acfmenu_missileui.lua")
 
+AddCSLuaFile("wire/beam_netvars.lua")
+include("wire/beam_netvars.lua")
+
 if SERVER then
 
   include("gitrc.lua")
