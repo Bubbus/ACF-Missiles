@@ -53,17 +53,39 @@ function ACFM_ModifyRoundDisplayFuncs()
 				end
             
                 -- NOTE: if these replacements cause side-effects somehow, move to a masking-metatable approach
-            
+				
                 local MuzzleVel = data.MuzzleVel
-                local slugMV = data.SlugMV
+                --local slugMV = data.SlugMV
                 
                 data.MuzzleVel = 0
-                data.SlugMV = (slugMV or 0) * (ACF_GetGunValue(data.Id, "penmul") or 1)
+				data.SlugPenMul = ACF_GetGunValue(data.Id, "penmul")
+                --data.SlugMV = (slugMV or 0) * (ACF_GetGunValue(data.Id, "penmul") or 1)
                 
                 local ret = oldDisplayData(data)
                 
-                data.SlugMV = slugMV
+                --data.SlugMV = slugMV
                 data.MuzzleVel = MuzzleVel
+				
+				--[[
+                local MuzzleVel = data.MuzzleVel
+                data.MuzzleVel = 0
+				local ret = nil
+				
+				if data.Type == "HEAT" then -- heat needs to calculate slug mv on the fly
+					local Crushed, HEATFillerMass, BoomFillerMass = ACF.RoundTypes["HEAT"].CrushCalc(data.MuzzleVel, data.FillerMass)
+					data.BoomFillerMass = BoomFillerMass
+					local slugMV = ACF.RoundTypes["HEAT"].CalcSlugMV( data, HEATFillerMass )
+					data.SlugMV = slugMV * (ACF_GetGunValue(data.Id, "penmul") or 1)
+					
+					ret = ACFM_RoundDisplayFuncs["GLATGM"]( data ) -- use the older version of heat gui data in glatgms
+					
+					data.SlugMV = slugMV --reset slug mv
+				else 
+					ret = oldDisplayData(data)
+				end
+                
+                data.MuzzleVel = MuzzleVel -- reset mvel
+				]]--
                 
                 return ret
             end

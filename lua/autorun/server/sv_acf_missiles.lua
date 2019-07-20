@@ -222,7 +222,11 @@ function ResetVelocity.HEAT(bdata)
     
     if not bdata.Detonated then return ResetVelocity.AP(bdata) end
     
-    if not (bdata.MuzzleVel and bdata.SlugMV) then return end
+    if not bdata.MuzzleVel then return end
+	
+	if not bdata.SlugMV then -- heat needs to calculate slug mv on the fly
+		bdata.SlugMV = ACF.RoundTypes["HEAT"].CalcSlugMV( bdata, bdata.FillerMass )
+	end
     
     bdata.Flight:Normalize()
     

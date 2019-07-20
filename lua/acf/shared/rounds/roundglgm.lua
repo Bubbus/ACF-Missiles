@@ -22,9 +22,9 @@ function Round.create( Gun, BulletData )
 		glatgm.DoNotDuplicate = true
 		glatgm.Guidance = Gun
 		glatgm:SetAngles(Gun:GetAngles())
-		glatgm:SetPos(Gun:GetAttachment(1).Pos)
+		glatgm:SetPos(Gun:GetAttachment(1).Pos)-- + Gun:GetForward()*24)
 		glatgm.BulletData = BulletData
-		glatgm.Distance = BulletData.MuzzleVel*4*39.37
+		glatgm.Distance = BulletData.MuzzleVel*4*39.37 -- optical fuse distance
 		glatgm:Spawn()
 	end
 end
@@ -70,8 +70,8 @@ function Round.convert( Crate, PlayerData )
 		
 	GUIData.MinConeAng = 0
 	GUIData.MaxConeAng = math.deg( math.atan((Data.ProjLength - ConeThick )/(Data.Caliber/2)) )
-	GUIData.ConeAng = math.Clamp(PlayerData.Data6*1, GUIData.MinConeAng, GUIData.MaxConeAng)
-	ConeLength, ConeAera, AirVol = Round.ConeCalc( GUIData.ConeAng, Data.Caliber/2, Data.ProjLength )
+	Data.ConeAng = math.Clamp(PlayerData.Data6*1, GUIData.MinConeAng, GUIData.MaxConeAng)
+	ConeLength, ConeAera, AirVol = Round.ConeCalc( Data.ConeAng, Data.Caliber/2, Data.ProjLength )
 	local ConeVol = ConeAera * ConeThick
 		
 	GUIData.MinFillerVol = 0
@@ -86,9 +86,9 @@ function Round.convert( Crate, PlayerData )
 	
 	--Let's calculate the actual HEAT slug
 	Data.SlugMass = ConeVol*7.9/1000
-	local Rad = math.rad(GUIData.ConeAng/2)
+	local Rad = math.rad(Data.ConeAng/2)
 	Data.SlugCaliber =  Data.Caliber - Data.Caliber * (math.sin(Rad)*0.5+math.cos(Rad)*1.5)/2
-	Data.SlugMV = ( Data.FillerMass/2 * ACF.HEPower * math.sin(math.rad(10+GUIData.ConeAng)/2) /Data.SlugMass)^ACF.HEATMVScale --keep fillermass/2 so that penetrator stays the same
+	Data.SlugMV = ( Data.FillerMass/2 * ACF.HEPower * math.sin(math.rad(10+Data.ConeAng)/2) /Data.SlugMass)^ACF.HEATMVScale --keep fillermass/2 so that penetrator stays the same
 	
 	local SlugFrAera = 3.1416 * (Data.SlugCaliber/2)^2
 	Data.SlugPenAera = SlugFrAera^ACF.PenAreaMod
@@ -105,6 +105,7 @@ function Round.convert( Crate, PlayerData )
 	Data.KETransfert = 0.1									--Kinetic energy transfert to the target for movement purposes
 	Data.Ricochet = 60										--Base ricochet angle
 	Data.DetonatorAngle = 75
+	Data.Crate = Crate
 	
 	Data.Detonated = false
 	Data.NotFirstPen = false
@@ -140,7 +141,9 @@ end
 
 
 function Round.network( Crate, BulletData )
-
+	
+	ACF.RoundTypes["HEAT"].network( Crate, BulletData )
+	--[[
 	Crate:SetNWString( "AmmoType", "GLATGM" )
 	Crate:SetNWString( "AmmoID", BulletData.Id )
 	Crate:SetNWFloat( "Caliber", BulletData.Caliber )
@@ -153,7 +156,7 @@ function Round.network( Crate, BulletData )
 	Crate:SetNWFloat( "SlugDragCoef", BulletData.SlugDragCoef )
 	Crate:SetNWFloat( "MuzzleVel", BulletData.MuzzleVel )
 	Crate:SetNWFloat( "Tracer", BulletData.Tracer )
-
+	]]--
 end
 
 
