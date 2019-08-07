@@ -320,7 +320,7 @@ ACF_defineGun("AGM-45 ASM", { --id
 	},
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Radar", "Laser"},
+    guidance    = {"Dumb", "Infrared", "Laser"},
     fuses       = {"Contact", "Timed"}, 
 
     racks       = {["1xRK"] = true, ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["6xUARRK"] = true},    -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'
@@ -361,7 +361,7 @@ ACF_defineGun("AGM-122 ASM", { --id
 	},
 
     ent         = "acf_missile_to_rack", -- A workaround ent which spawns an appropriate rack for the missile.
-    guidance    = {"Dumb", "Radar"},
+    guidance    = {"Dumb", "Infrared"},
     fuses       = {"Contact", "Optical"},
 
 	racks       = {["1xRK"] = true,  ["2xRK"] = true, ["3xRK"] = true, ["4xRK"] = true, ["1xRK_small"] = true},   -- a whitelist for racks that this missile can load into.  can also be a 'function(bulletData, rackEntity) return boolean end'

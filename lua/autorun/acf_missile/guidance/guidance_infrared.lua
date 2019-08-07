@@ -1,5 +1,5 @@
 
-local ClassName = "Radar"
+local ClassName = "Infrared"
 
 
 ACF = ACF or {}
@@ -153,8 +153,7 @@ function this:GetGuidance(missile)
 	local mfo       = missile:GetForward()
 	local mdir      = (targetPos - missilePos):GetNormalized()
 	local dot       = mfo:Dot(mdir)
-	local tr2  = util.QuickTrace( targetPos, ((targetPos-missilePos):GetNormalized() *1000), function( tgt ) if ( tgt == game.GetWorld() ) then return true end end) 
-	if dot < self.ViewConeCos  or ((tr2.Entity) == game.GetWorld() and !tr2.HitSky) then
+	if dot < self.ViewConeCos then
 		self.Target = nil
 		return {}
 	else
