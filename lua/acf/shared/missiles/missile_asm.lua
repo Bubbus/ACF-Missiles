@@ -85,6 +85,7 @@ ACF_defineGun("BGM-71E ASM", { --id
 		casing		= 0.1,				-- thickness of missile casing, cm
 		armour		= 6,				-- effective armour thickness of casing, in mm
 		propweight	= 1.2,				-- motor mass - motor casing
+		boostthrust = 20,				--Initial velocity in m/s of rocket at launch, do not put past 20 as odd things happen past that
 		thrust		= 10000,				-- average thrust - kg*in/s^2
 		burnrate	= 200,				-- cm^3/s at average chamber pressure
 		starterpct	= 0.2,				-- percentage of the propellant consumed in the starter motor.
