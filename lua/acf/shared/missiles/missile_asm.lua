@@ -10,7 +10,7 @@ ACF_defineGunClass("ASM", {
 	sound           = "acf_extra/airfx/rocket_fire2.wav",
 	soundDistance   = " ",
 	soundNormal     = " ",
-    effect          = "Rocket Motor",
+    effect          = "Rocket Motor ATGM",
 
     reloadmul       = 8,
 
