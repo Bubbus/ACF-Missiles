@@ -27,7 +27,7 @@ function ENT:Initialize()
 	
 	timer.Simple(0.1,function()
 		self:SetCollisionGroup( COLLISION_GROUP_NONE ) -- ENABLES collisions with players/props
-		ParticleEffectAttach("Rocket_Smoke_Trail",4, self,1)
+		ParticleEffectAttach("Rocket Motor GLATGM",4, self,1)
 		end )
 	
 	self.KillTime = CurTime()+20
