@@ -116,7 +116,7 @@ function ENT:CalcFlight()
 
 	if TargetPos then
 		local Dist = Pos:Distance(TargetPos)
-		TargetPos = TargetPos + (Vector(0,0,self.Gravity * Dist / 100000))
+		TargetPos = TargetPos + (Vector(0,0,self.Gravity / Speed * math.min(Dist/1200 , 2.5)))	--Better Compensates for low speed flight
 		local LOS = (TargetPos - Pos):GetNormalized()
 		local LastLOS = self.LastLOS
 		local NewDir = Dir
@@ -382,6 +382,8 @@ function ENT:ConfigureFlight()
     local Time = CurTime()
 	local noThrust = ACF_GetGunValue(self.BulletData, "nothrust")
 
+	self.boost = Round.boostthrust* 39.37 or 0
+	
 	if noThrust then
 		self.MotorLength = 0
 		self.Motor = 0
@@ -403,7 +405,7 @@ function ENT:ConfigureFlight()
 	self.LastPos = self.CurPos
     self.Hit = false
 	self.HitNorm = Vector(0,0,0)
-	self.FirstThink = true
+	self.FirstThink = true 
     self.MinArmingDelay = math.max(Round.armdelay or GunData.armdelay, GunData.armdelay)
 
     local Mass = GunData.weight
@@ -536,7 +538,12 @@ function ENT:Think()
 		if self.FirstThink == true then
 			self.FirstThink = false
 			self.LastThink = CurTime() - self.ThinkDelay
+			if self.boost > 0 then
+--			print(self.boost)
+			self.LastVel = self.Launcher.acfphysparent:GetVelocity() * self.ThinkDelay + self.Launcher:GetForward() * self.boost + Vector(0,0,-self.Gravity*0.2)
+			else
 			self.LastVel = self.Launcher.acfphysparent:GetVelocity() * self.ThinkDelay
+			end
 		end
 		self:CalcFlight()
 
